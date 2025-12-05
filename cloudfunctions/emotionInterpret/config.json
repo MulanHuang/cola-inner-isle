@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "openapi": []
+  },
+  "timeout": 10,
+  "vpc": false,
+  "publicNet": true,
+  "eip": false
+}
+

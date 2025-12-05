@@ -1,0 +1,208 @@
+<!--pages/oh/oh.wxml-->
+<!-- ============================================================ -->
+<!-- OH卡自我探索页面 -->
+<!-- 模式: imageOnly（自由图卡） | imageAndWord（图卡+字卡） -->
+
+<view class="container oh-container">
+
+  <!-- 顶部区域 -->
+  <view class="header-section">
+    <view class="oh-title">🎴 OH卡</view>
+    <view class="oh-subtitle">用图像和词语，探索你此刻的内在。</view>
+  </view>
+
+  <!-- 模式切换区域 -->
+  <view class="mode-switch">
+    <view
+      class="mode-tab {{mode === 'imageOnly' ? 'active' : ''}}"
+      bindtap="switchMode"
+      data-mode="imageOnly"
+    >
+      自由图卡
+    </view>
+
+    <view
+      class="mode-tab {{mode === 'imageAndWord' ? 'active' : ''}}"
+      bindtap="switchMode"
+      data-mode="imageAndWord"
+    >
+      图卡 + 字卡
+    </view>
+  </view>
+
+  <!-- 未抽卡区域 -->
+  <view class="card-deck-section" wx:if="{{!selectedImageCard}}">
+    <view class="oh-hero">
+
+      <view class="deck-wrapper" bindtap="drawCards">
+        <block wx:for="{{deckLayers}}" wx:key="*this">
+          <image
+            class="deck-image deck-layer {{index === deckLayers.length - 1 ? 'breathing' : ''}}"
+            src="{{backImage}}"
+            mode="aspectFit"
+            style="left: {{120 + (index - (deckLayers.length - 1) / 1.5) * 20}}rpx; bottom: 0; transform: rotate({{(index - (deckLayers.length - 1) / 2) * 9}}deg); z-index: {{index}};"
+          />
+        </block>
+
+        <view class="deck-glow"></view>
+      </view>
+
+      <button
+        class="btn-draw btn-draw-move"
+        bindtap="drawCards"
+        disabled="{{drawing}}"
+        hover-class="none"
+      >
+        {{drawing ? '抽取中...' : (mode === 'imageOnly' ? '抽一张OH卡' : '抽一张图卡与字卡')}}
+      </button>
+
+      <view class="pre-draw-hint">
+        先抽一张图卡，看看它和你此刻的状态有什么联系。
+      </view>
+
+      <view class="micro-copy">
+        不需要想到「正确答案」，只要对这张卡片的一点点感觉，就已经足够开始了。
+      </view>
+
+    </view>
+  </view>
+
+  <!-- 已抽卡展示区 -->
+  <view class="result-section" wx:if="{{selectedImageCard}}">
+
+    <view class="card-display">
+
+      <!-- 仅图卡模式 -->
+      <view
+        class="image-card-wrapper image-only-mode"
+        wx:if="{{mode === 'imageOnly'}}"
+      >
+        <image
+          class="card-image"
+          src="{{selectedImageCard.fileId}}"
+          mode="aspectFit"
+          bindtap="previewImage"
+          data-url="{{selectedImageCard.fileId}}"
+        />
+      </view>
+
+      <!-- 图卡 + 字卡模式 -->
+      <view
+        class="combo-card-wrapper"
+        wx:if="{{mode === 'imageAndWord' && selectedWordCard}}"
+        bindtap="previewImage"
+        data-url="{{selectedImageCard.fileId}}"
+      >
+        <view class="combo-text combo-text-top">
+          {{selectedWordCard.name}}
+        </view>
+
+        <view class="combo-middle">
+
+          <view class="combo-text combo-text-left">
+            {{selectedWordCard.name}}
+          </view>
+
+          <view class="combo-image-container">
+            <image
+              class="combo-image"
+              src="{{selectedImageCard.fileId}}"
+              mode="aspectFit"
+            />
+          </view>
+
+          <view class="combo-text combo-text-right">
+            {{selectedWordCard.name}}
+          </view>
+
+        </view>
+
+        <view class="combo-text combo-text-bottom">
+          {{selectedWordCard.name}}
+        </view>
+
+      </view>
+    </view>
+
+    <!-- 用户输入区 -->
+    <view class="input-section">
+      <view class="input-guide">
+        「看到这张卡，你的第一感受是什么？」
+      </view>
+
+      <view class="input-guide-sub">
+        「你现在最想探索的是什么问题？」
+      </view>
+
+      <textarea
+        class="user-input {{inputJustShown ? 'just-drawn' : ''}}"
+        placeholder="写下你的第一反应、当下的问题或情绪..."
+        value="{{userInput}}"
+        bindinput="onInputChange"
+        maxlength="500"
+        focus="{{!!selectedImageCard && !aiResult.insight}}"
+      ></textarea>
+
+      <view class="char-count {{charNearLimit ? 'warning' : ''}}">
+        {{userInput.length}}/500
+      </view>
+    </view>
+
+    <!-- AI 解读按钮 -->
+    <button
+      class="btn-interpret"
+      bindtap="handleAskOhMaster"
+      disabled="{{loading}}"
+      hover-class="none"
+    >
+      {{loading ? '正在解读...' : '请OH卡导师解读'}}
+    </button>
+
+    <!-- AI 解读结果 -->
+    <view class="ai-result-section" wx:if="{{aiResult.insight}}">
+
+      <view class="result-card">
+        <view class="result-title">🔮 心理洞察</view>
+        <text class="result-content" user-select="{{true}}">
+          {{aiResult.insight}}
+        </text>
+      </view>
+
+      <view class="result-card">
+        <view class="result-title">🌙 潜意识线索</view>
+        <text class="result-content" user-select="{{true}}">
+          {{aiResult.subconscious}}
+        </text>
+      </view>
+
+      <view class="result-card">
+        <view class="result-title">🔥 行动建议</view>
+        <text class="result-content" user-select="{{true}}">
+          {{aiResult.actions}}
+        </text>
+      </view>
+
+      <view class="result-card">
+        <view class="result-title">💭 可以问自己的问题</view>
+        <text class="result-content" user-select="{{true}}">
+          {{aiResult.reflectionQuestions}}
+        </text>
+      </view>
+
+      <view class="result-card">
+        <view class="result-title">💛 温柔收尾</view>
+        <text class="result-content" user-select="{{true}}">
+          {{aiResult.closing}}
+        </text>
+      </view>
+
+    </view>
+
+    <!-- 重置按钮 -->
+    <button class="btn-reset" bindtap="resetDraw" hover-class="none">
+      重新抽取
+    </button>
+
+  </view>
+
+</view>

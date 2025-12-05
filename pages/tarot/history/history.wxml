@@ -1,0 +1,48 @@
+<!-- pages/tarot/history/history.wxml -->
+<view class="history-container">
+  <view class="section-header">
+    <view class="title">塔罗历史</view>
+    <view class="subtitle">记录你的问题、解读与行动</view>
+  </view>
+
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty">
+    <view class="empty-emoji">🔮</view>
+    <view class="empty-text">还没有塔罗记录，去抽一张牌吧~</view>
+    <button class="goto-btn" bindtap="goToTarot">去抽牌</button>
+  </view>
+
+  <scroll-view scroll-y class="list" lower-threshold="80" bindscrolltolower="onReachBottom">
+    <block wx:for="{{list}}" wx:key="_id">
+      <view class="card">
+        <view class="card-left">
+          <image class="card-image" src="{{item.cardImage}}" mode="aspectFit"></image>
+        </view>
+        <view class="card-right">
+          <view class="card-name">{{item.cardName}}</view>
+          <view class="card-date">{{item.date}}</view>
+          <view wx:if="{{item.question}}" class="card-field">
+            <text class="label">问题：</text><text class="value" user-select="{{true}}">{{item.question}}</text>
+          </view>
+          <view wx:if="{{item.interpretation}}" class="card-field">
+            <text class="label">解读：</text><text class="value" user-select="{{true}}">{{item.interpretation}}</text>
+          </view>
+          <view wx:if="{{item.actionPlans && item.actionPlans.length}}" class="card-field">
+            <text class="label">行动：</text>
+            <view class="value action-list">
+              <view wx:for="{{item.actionPlans}}" wx:key="index" class="action-line">
+                <text class="dot">•</text><text user-select="{{true}}">{{item}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+    <view class="loading" wx:if="{{!hasMore && list.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+  </scroll-view>
+</view>

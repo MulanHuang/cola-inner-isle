@@ -1,0 +1,8 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- 脉轮图标 - 七个圆点排列 -->
+  <circle cx="12" cy="4" r="2" stroke="#666666" stroke-width="1.2" fill="none"/>
+  <circle cx="12" cy="9" r="2" stroke="#666666" stroke-width="1.2" fill="none"/>
+  <circle cx="12" cy="14" r="2" stroke="#666666" stroke-width="1.2" fill="none"/>
+  <circle cx="12" cy="19" r="2" stroke="#666666" stroke-width="1.2" fill="none"/>
+</svg>
+

@@ -1,0 +1,189 @@
+/* components/audio-float/audio-float.wxss */
+
+/* 悬浮容器 */
+.audio-float-container {
+  position: fixed;
+  z-index: 9999;
+  animation: fadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.1s ease-out;
+}
+
+/* 拖拽状态 - 禁用过渡动画 */
+.audio-float-container.dragging {
+  transition: none;
+}
+
+/* 悬浮按钮主体 */
+.audio-float-button {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 28rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  backdrop-filter: blur(20rpx);
+  border-radius: 60rpx;
+  box-shadow: 0 12rpx 40rpx rgba(102, 126, 234, 0.4),
+    0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 260rpx;
+}
+
+.audio-float-container:active .audio-float-button {
+  transform: scale(0.95);
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.3),
+    0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+}
+
+/* 音乐图标容器 */
+.music-icon {
+  width: 56rpx;
+  height: 56rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.music-icon::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3));
+  animation: shimmer 2s infinite;
+}
+
+/* 音乐符号 */
+.music-note {
+  font-size: 32rpx;
+  color: #ffffff;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.music-note.playing {
+  animation: bounce 0.6s ease-in-out infinite;
+}
+
+/* 音频信息区域 */
+.audio-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  min-width: 0;
+}
+
+/* 音频标题 */
+.audio-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.5rpx;
+}
+
+/* 状态条 */
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+/* 播放状态指示器（小圆点） */
+.status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.status-dot.playing {
+  background: #52c41a;
+  box-shadow: 0 0 12rpx rgba(82, 196, 26, 0.8);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 状态文字 */
+.status-text {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.5rpx;
+}
+
+/* 停止按钮 */
+.stop-button {
+  width: 48rpx;
+  height: 48rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.stop-button:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.9);
+}
+
+/* 停止图标 */
+.stop-icon {
+  font-size: 32rpx;
+  color: #ffffff;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* 淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 脉冲动画（播放状态指示器） */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.3);
+  }
+}
+
+/* 跳动动画（音乐符号） */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6rpx);
+  }
+}
+
+/* 闪光动画（图标背景） */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(45deg);
+  }
+}

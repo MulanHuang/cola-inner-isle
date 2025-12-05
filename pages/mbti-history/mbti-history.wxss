@@ -1,0 +1,152 @@
+/* pages/mbti-history/mbti-history.wxss */
+.history-container {
+  min-height: 100vh;
+  background: #f5f1e8;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.section-header {
+  margin-bottom: 24rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #2f2418;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: #8b7355;
+  margin-top: 6rpx;
+}
+
+.list {
+  max-height: calc(100vh - 140rpx);
+}
+
+.card {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 20rpx rgba(139, 115, 85, 0.12);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.type-badge {
+  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 700;
+  padding: 8rpx 20rpx;
+  border-radius: 8rpx;
+  margin-right: 16rpx;
+}
+
+.type-name {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2f2418;
+}
+
+.test-date {
+  font-size: 24rpx;
+  color: #8b7355;
+}
+
+.card-body {
+  padding-top: 8rpx;
+}
+
+.type-desc {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+}
+
+/* 维度简要显示 */
+.dimensions-brief {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.dim-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.dim-left,
+.dim-right {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #999;
+  width: 32rpx;
+  text-align: center;
+}
+
+.dim-left.active,
+.dim-right.active {
+  color: #8b7355;
+}
+
+.dim-bar {
+  flex: 1;
+  height: 12rpx;
+  background: #e5dcc8;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.dim-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b8956a 0%, #8b7355 100%);
+  border-radius: 6rpx;
+  transition: width 0.3s;
+}
+
+/* 空状态 */
+.empty {
+  padding: 120rpx 0 40rpx;
+  text-align: center;
+  color: #8b7355;
+}
+
+.empty-emoji {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  margin-bottom: 30rpx;
+}
+
+.goto-btn {
+  margin: 0 auto;
+  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  color: #fff;
+  border: none;
+  padding: 20rpx 60rpx;
+  border-radius: 999rpx;
+  box-shadow: 0 8rpx 18rpx rgba(139, 115, 85, 0.3);
+  font-size: 30rpx;
+}
+
+.loading {
+  text-align: center;
+  color: #999;
+  padding: 20rpx 0 30rpx;
+  font-size: 26rpx;
+}
+

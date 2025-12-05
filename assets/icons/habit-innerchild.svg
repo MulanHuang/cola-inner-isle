@@ -1,0 +1,8 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- 内在小孩图标 - 简约小人 -->
+  <circle cx="12" cy="6" r="3" stroke="#666666" stroke-width="1.5" fill="none"/>
+  <path d="M12 10V15" stroke="#666666" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M8 12L12 14L16 12" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M9 21L12 16L15 21" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
+

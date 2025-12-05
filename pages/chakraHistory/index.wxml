@@ -1,0 +1,82 @@
+<!--pages/chakraHistory/index.wxml-->
+<view class="container chakra-history-container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-icon">📊</view>
+    <view class="header-title">脉轮测试历史</view>
+    <view class="header-subtitle">回顾你的能量成长之旅</view>
+  </view>
+
+  <!-- 从本地存储加载 载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-icon">⏳</view>
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{historyList.length === 0}}" class="empty-container">
+    <view class="empty-icon">🌱</view>
+    <view class="empty-title">还没有测试记录</view>
+    <view class="empty-desc">完成一次脉轮测试，开启你的能量探索之旅</view>
+    <button class="btn-primary" bindtap="goToTest">
+      开始测试
+    </button>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <view wx:else class="history-list">
+    <view 
+      wx:for="{{historyList}}" 
+      wx:key="id" 
+      class="history-card card"
+      bindtap="viewDetail"
+      data-index="{{index}}"
+    >
+      <!-- 卡片头部 -->
+      <view class="card-header">
+        <view class="test-date">
+          <text class="date-icon">📅</text>
+          <text class="date-text">{{item.dateText}}</text>
+        </view>
+        <view class="test-time">{{item.timeText}}</view>
+      </view>
+
+      <!-- 整体状态 -->
+      <view class="overall-status">
+        <view class="status-icon">{{item.statusIcon}}</view>
+        <view class="status-text">{{item.statusText}}</view>
+      </view>
+
+      <!-- 脉轮能量预览 -->
+      <view class="chakra-preview">
+        <view wx:for="{{item.chakraPreview}}" wx:for-item="chakra" wx:key="type" class="preview-item">
+          <view class="preview-emoji">{{chakra.emoji}}</view>
+          <view class="preview-bar">
+            <view 
+              class="preview-bar-fill" 
+              style="width: {{chakra.percentage}}%; background: {{chakra.color}}"
+            ></view>
+          </view>
+          <view class="preview-percentage">{{chakra.percentage}}%</view>
+        </view>
+      </view>
+
+      <!-- 查看详情提示 -->
+      <view class="view-detail-hint">
+        <text>点击查看详细结果</text>
+        <text class="arrow-icon">→</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view wx:if="{{historyList.length > 0}}" class="bottom-actions">
+    <button class="btn-secondary" bindtap="goToTest">
+      🔄 重新测试
+    </button>
+    <button class="btn-primary" bindtap="backToHome">
+      返回首页
+    </button>
+  </view>
+</view>
+

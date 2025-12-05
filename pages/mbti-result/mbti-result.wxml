@@ -1,0 +1,138 @@
+<!--pages/mbti-result/mbti-result.wxml-->
+<view class="container result-container">
+  <!-- 页面标题 -->
+  <view class="page-header fade-in">
+    <view class="header-badge">✨ 测试完成</view>
+    <view class="header-title">你的性格档案</view>
+    <view class="header-line"></view>
+  </view>
+
+  <!-- 结果主卡片 - 仪式感设计 -->
+  <view class="result-card slide-up">
+    <view class="card-glow"></view>
+    <view class="result-badge">
+      <text class="badge-icon">🎯</text>
+      <text class="badge-text">MBTI 类型</text>
+    </view>
+    <view class="result-type-wrapper">
+      <view class="result-type">{{type}}</view>
+      <view class="type-underline"></view>
+    </view>
+    <view class="result-name">{{typeInfo.name}}</view>
+    <view class="result-divider"></view>
+    <view class="result-desc">{{typeInfo.desc}}</view>
+  </view>
+
+  <!-- 个性总结区块 -->
+  <view class="summary-card slide-up delay-1">
+    <view class="summary-header">
+      <text class="summary-icon">💫</text>
+      <text class="summary-title">个性速览</text>
+    </view>
+    <view class="summary-tags">
+      <view class="summary-tag tag-{{item.colorType}}" wx:for="{{dimensions}}" wx:key="name">
+        <text class="tag-letter">{{item.leftPercent > item.rightPercent ? item.left : item.right}}</text>
+        <text class="tag-desc">{{item.leftPercent > item.rightPercent ? item.leftDesc : item.rightDesc}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 维度对比区域 -->
+  <view class="dimensions-section slide-up delay-2">
+    <view class="section-header">
+      <view class="section-icon">📊</view>
+      <view class="section-title-wrapper">
+        <view class="section-title">四个维度分析</view>
+        <view class="section-subtitle">深入了解你的性格倾向</view>
+      </view>
+    </view>
+
+    <view class="dimensions-list">
+      <view
+        wx:for="{{dimensions}}"
+        wx:key="name"
+        class="dimension-card dimension-{{item.colorType}}"
+        style="animation-delay: {{index * 100 + 300}}ms">
+
+        <!-- 维度主要结果标题 -->
+        <view class="dimension-result-header">
+          <text class="result-percent">{{item.leftPercent > item.rightPercent ? item.leftPercent : item.rightPercent}}%</text>
+          <text class="result-label">{{item.leftPercent > item.rightPercent ? item.leftDesc : item.rightDesc}}</text>
+        </view>
+
+        <!-- 胶囊式进度条 -->
+        <view class="capsule-bar-container">
+          <view class="capsule-label label-left">
+            <text class="label-text">{{item.leftLabel}}</text>
+          </view>
+
+          <view class="capsule-bar">
+            <view class="capsule-fill-left animate-bar" style="width: {{item.leftPercent}}%"></view>
+            <view class="capsule-indicator" style="left: {{item.leftPercent}}%"></view>
+            <view class="capsule-fill-right animate-bar" style="width: {{item.rightPercent}}%"></view>
+          </view>
+
+          <view class="capsule-label label-right">
+            <text class="label-text">{{item.rightLabel}}</text>
+          </view>
+        </view>
+
+        <!-- 维度说明 -->
+        <view class="dimension-hint">
+          <text class="hint-text">{{item.hint}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- AI 解读按钮 - 突出设计 -->
+  <view class="ai-section slide-up delay-3" wx:if="{{!showAnalysis}}">
+    <view class="ai-card">
+      <view class="ai-decoration">
+        <view class="ai-circle circle-1"></view>
+        <view class="ai-circle circle-2"></view>
+        <view class="ai-circle circle-3"></view>
+      </view>
+      <view class="ai-content">
+        <view class="ai-icon">🤖</view>
+        <view class="ai-title">小岛深度解读</view>
+        <view class="ai-desc">基于你的测试结果，获取专属性格分析报告</view>
+      </view>
+      <button class="ai-btn glow-btn" bindtap="getAiAnalysis">
+        <text class="btn-spark">✨</text>
+        <text class="btn-text">开启解读</text>
+        <view class="btn-shine"></view>
+      </button>
+    </view>
+  </view>
+
+  <!-- AI 解读内容 -->
+  <view class="analysis-content slide-up" wx:if="{{showAnalysis}}">
+    <view class="analysis-header">
+      <view class="analysis-icon">🤖</view>
+      <view class="analysis-title">小岛深度解读</view>
+      <view class="analysis-badge">专属报告</view>
+    </view>
+    <view class="analysis-body">
+      <view class="analysis-text">{{analysis}}</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮区域 -->
+  <view class="action-section slide-up delay-4">
+    <view class="action-buttons">
+      <button class="btn-secondary" bindtap="retakeTest">
+        <text class="btn-icon">🔄</text>
+        <text>重新测试</text>
+      </button>
+      <button class="btn-primary" bindtap="goHome">
+        <text class="btn-icon">🏠</text>
+        <text>返回首页</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 底部留白 -->
+  <view class="footer-space"></view>
+</view>
+

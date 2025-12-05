@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- 心语：对话气泡图标 -->
+  <path d="M40 6H8C5.8 6 4 7.8 4 10V30C4 32.2 5.8 34 8 34H14V42L24 34H40C42.2 34 44 32.2 44 30V10C44 7.8 42.2 6 40 6Z" fill="#8B7355"/>
+  <!-- 三个小圆点表示对话 -->
+  <circle cx="16" cy="20" r="3" fill="#FFFFFF"/>
+  <circle cx="24" cy="20" r="3" fill="#FFFFFF"/>
+  <circle cx="32" cy="20" r="3" fill="#FFFFFF"/>
+</svg>
+

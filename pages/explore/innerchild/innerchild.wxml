@@ -1,0 +1,72 @@
+<!--pages/explore/innerchild/innerchild.wxml-->
+<view class="container innerchild-container">
+  <view class="header">
+    <view class="header-title">👶 内在小孩</view>
+    <view class="header-subtitle">疗愈童年的自己</view>
+  </view>
+
+  <!-- 介绍卡片 -->
+  <view class="intro-card">
+    <view class="intro-icon">💝</view>
+    <view class="intro-title">什么是内在小孩？</view>
+    <view class="intro-text">
+      内在小孩是我们心中那个童年的自己，承载着童年的情感、记忆和需求。通过与内在小孩对话，我们可以疗愈过去的创伤，找回内心的完整。
+    </view>
+  </view>
+
+  <!-- 疗愈练�  -->
+  <view class="practice-section">
+    <view class="section-title">疗愈练� </view>
+    
+    <view class="practice-list">
+      <view class="practice-item" bindtap="goToMeditation" data-category="innerchild">
+        <view class="practice-icon">🎵</view>
+        <view class="practice-content">
+          <view class="practice-name">内在小孩冥想</view>
+          <view class="practice-desc">通过冥想与内在小孩连接</view>
+        </view>
+        <view class="practice-arrow">→</view>
+      </view>
+
+      <view class="practice-item" bindtap="goToChat">
+        <view class="practice-icon">💬</view>
+        <view class="practice-content">
+          <view class="practice-name">与AI对话</view>
+          <view class="practice-desc">倾诉童年的感受和经历</view>
+        </view>
+        <view class="practice-arrow">→</view>
+      </view>
+
+      <view class="practice-item" bindtap="writeJournal">
+        <view class="practice-icon">📝</view>
+        <view class="practice-content">
+          <view class="practice-name">写给内在小孩</view>
+          <view class="practice-desc">写一封信给童年的自己</view>
+        </view>
+        <view class="practice-arrow">→</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 疗愈提示 -->
+  <view class="tips-section">
+    <view class="section-title">💡 疗愈提示</view>
+    <view class="tip-item">
+      <view class="tip-number">1</view>
+      <view class="tip-text">允许自己感受童年的情绪，不评判、不压抑</view>
+    </view>
+    <view class="tip-item">
+      <view class="tip-number">2</view>
+      <view class="tip-text">用成年人的视角理解童年的经历</view>
+    </view>
+    <view class="tip-item">
+      <view class="tip-number">3</view>
+      <view class="tip-text">给予内在小孩爱、接纳和安全感</view>
+    </view>
+    <view class="tip-item">
+      <view class="tip-number">4</view>
+      <view class="tip-text">疗愈是一个过程，请耐心对待自己</view>
+    </view>
+  </view>
+</view>
+

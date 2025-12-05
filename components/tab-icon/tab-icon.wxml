@@ -1,0 +1,33 @@
+<!-- 🎨 TabBar 图标组件 - 使用 SVG 路径实现统一风格 -->
+<view class="tab-icon {{active ? 'active' : ''}}">
+  <!-- 首页图标 -->
+  <view wx:if="{{name === 'home'}}" class="icon-svg">
+    <svg class="svg-element" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+  </view>
+
+  <!-- 陪伴图标（对话气泡） -->
+  <view wx:elif="{{name === 'chat'}}" class="icon-svg">
+    <svg class="svg-element" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  </view>
+
+  <!-- 冥想图标（莲花/打坐） -->
+  <view wx:elif="{{name === 'meditation'}}" class="icon-svg">
+    <svg class="svg-element" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path>
+    </svg>
+  </view>
+
+  <!-- 我的图标（用户） -->
+  <view wx:elif="{{name === 'profile'}}" class="icon-svg">
+    <svg class="svg-element" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+  </view>
+</view>

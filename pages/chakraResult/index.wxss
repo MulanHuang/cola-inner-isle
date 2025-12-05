@@ -1,0 +1,939 @@
+/* pages/chakraResult/index.wxss */
+.chakra-result-container {
+  padding-bottom: 40rpx;
+}
+
+/* ?? */
+.header {
+  text-align: center;
+  padding: 40rpx 20rpx 30rpx;
+}
+
+.header-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.header-title {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.header-subtitle {
+  font-size: 26rpx;
+  color: #999999;
+  font-style: italic;
+}
+
+/* ????? */
+.radar-section {
+  margin: 0 20rpx 30rpx;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #fff9f0 0%, #ffffff 100%);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 8rpx;
+}
+
+.section-subtitle {
+  font-size: 24rpx;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+/* ???????? */
+.analysis-section {
+  margin: 0 20rpx 30rpx;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #fff9f0 100%);
+}
+
+.analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.analysis-title {
+  display: flex;
+  align-items: center;
+}
+
+.analysis-emoji {
+  font-size: 48rpx;
+  margin-right: 12rpx;
+}
+
+.analysis-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.analysis-score {
+  padding: 12rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.analysis-status {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.status-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.status-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #8b7355;
+}
+
+.analysis-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.content-block {
+  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12rpx;
+}
+
+.block-label {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #8b7355;
+  margin-bottom: 12rpx;
+}
+
+.block-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #666666;
+}
+
+.traits-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.trait-tag {
+  padding: 8rpx 16rpx;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  color: #2e7d32;
+}
+
+.practice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.practice-item {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #666666;
+  padding-left: 8rpx;
+}
+
+.affirmation-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #8b7355;
+  font-style: italic;
+  text-align: center;
+  padding: 12rpx 0;
+}
+
+/* ========== ???????????? ========== */
+.overall-analysis-section {
+  margin: 0 20rpx 30rpx;
+}
+
+/* ???????? */
+.overall-loading {
+  padding: 60rpx 30rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+}
+
+.overall-loading-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10rpx);
+  }
+}
+
+.overall-loading-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 20rpx;
+}
+
+.overall-loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.overall-loading-dots .dot {
+  width: 16rpx;
+  height: 16rpx;
+  background: #4caf50;
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.overall-loading-dots .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.overall-loading-dots .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* ???????? */
+.overall-error {
+  padding: 50rpx 30rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+}
+
+.overall-error-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.overall-error-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #e65100;
+  margin-bottom: 12rpx;
+}
+
+.overall-error-subtext {
+  font-size: 24rpx;
+  color: #ff9800;
+  margin-bottom: 20rpx;
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: #ffffff;
+  font-size: 26rpx;
+  padding: 16rpx 40rpx;
+  border-radius: 30rpx;
+  border: none;
+}
+
+/* ???????? */
+.overall-result {
+  padding: 30rpx;
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+}
+
+.overall-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid rgba(46, 125, 50, 0.15);
+}
+
+.overall-header-icon {
+  font-size: 48rpx;
+  margin-right: 16rpx;
+}
+
+.overall-header-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+/* ??????? */
+.overall-block {
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 16rpx;
+}
+
+.overall-block-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #388e3c;
+  margin-bottom: 12rpx;
+}
+
+.overall-block-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #555555;
+}
+
+/* ??????? */
+.overall-advice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.overall-advice-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 16rpx;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 12rpx;
+}
+
+.advice-number {
+  width: 40rpx;
+  height: 40rpx;
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: 600;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.advice-text {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #555555;
+  flex: 1;
+}
+
+/* ???? */
+.focus-block {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 193, 7, 0.15) 0%,
+    rgba(255, 152, 0, 0.15) 100%
+  );
+}
+
+.focus-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.focus-item {
+  padding: 16rpx 20rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #e65100;
+  border-left: 6rpx solid #ff9800;
+}
+
+/* ???? */
+.overall-encouragement {
+  margin-top: 10rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+  border-radius: 16rpx;
+  text-align: center;
+}
+
+.encouragement-icon {
+  font-size: 40rpx;
+  margin-bottom: 12rpx;
+}
+
+.encouragement-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #c2185b;
+  font-style: italic;
+}
+
+/* ========== AI ?????? ========== */
+.ai-analysis-section {
+  margin: 0 20rpx 30rpx;
+}
+
+/* AI ???? */
+.ai-loading {
+  padding: 60rpx 30rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+}
+
+.loading-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+.loading-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1976d2;
+  margin-bottom: 12rpx;
+}
+
+.loading-subtext {
+  font-size: 24rpx;
+  color: #64b5f6;
+}
+
+/* AI ???? */
+.ai-error {
+  padding: 50rpx 30rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #fff9f0 0%, #ffe8d6 100%);
+}
+
+.error-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.error-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #8b7355;
+  margin-bottom: 12rpx;
+}
+
+.error-subtext {
+  font-size: 24rpx;
+  color: #b8956a;
+  line-height: 1.6;
+}
+
+/* AI ???? */
+.ai-result {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+/* ?????? */
+.ai-summary {
+  padding: 30rpx;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.summary-icon {
+  font-size: 40rpx;
+  margin-right: 12rpx;
+}
+
+.summary-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.summary-content {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #1b5e20;
+}
+
+/* ??????? */
+.ai-chakra-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.ai-chakra-card {
+  padding: 30rpx;
+  background: #ffffff;
+}
+
+.ai-chakra-header {
+  margin-bottom: 20rpx;
+}
+
+.ai-chakra-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.ai-chakra-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.ai-chakra-score {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #8b7355;
+  padding: 6rpx 16rpx;
+  background: rgba(184, 149, 106, 0.1);
+  border-radius: 12rpx;
+}
+
+.ai-chakra-status {
+  font-size: 24rpx;
+  color: #666666;
+  padding: 8rpx 16rpx;
+  background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+  border-radius: 12rpx;
+  display: inline-block;
+}
+
+/* ???? */
+.ai-feelings-section {
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+  border-radius: 12rpx;
+}
+
+.ai-label {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #6a1b9a;
+  margin-bottom: 12rpx;
+}
+
+.ai-feelings-text {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #4a148c;
+}
+
+/* ???? */
+.ai-suggestions-section {
+  padding: 20rpx;
+  background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+  border-radius: 12rpx;
+}
+
+.ai-suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.ai-suggestion-item {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #00695c;
+  padding-left: 8rpx;
+}
+
+/* ?????? */
+.ai-bottom-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 10rpx;
+}
+
+.ai-strengths {
+  padding: 30rpx;
+  background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+}
+
+.ai-growth {
+  padding: 30rpx;
+  background: linear-gradient(135deg, #ffccbc 0%, #ffab91 100%);
+}
+
+.ai-practices {
+  padding: 30rpx;
+  background: linear-gradient(135deg, #b2ebf2 0%, #80deea 100%);
+}
+
+.bottom-section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 16rpx;
+}
+
+.bottom-section-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.bottom-section-item {
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #555555;
+  padding: 12rpx 16rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8rpx;
+}
+
+/* ????? */
+.chakra-chart {
+  margin: 0 20rpx 30rpx;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #fff9f0 0%, #ffffff 100%);
+}
+
+.chart-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.chakra-item {
+  margin-bottom: 30rpx;
+}
+
+.chakra-item:last-child {
+  margin-bottom: 0;
+}
+
+.chakra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.chakra-name {
+  display: flex;
+  align-items: center;
+}
+
+.chakra-emoji {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.chakra-name-text {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333333;
+}
+
+.chakra-percentage {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.chakra-bar {
+  height: 16rpx;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8rpx;
+  overflow: hidden;
+  margin-bottom: 8rpx;
+}
+
+.chakra-bar-fill {
+  height: 100%;
+  border-radius: 8rpx;
+  transition: width 1s ease;
+}
+
+.chakra-keyword {
+  font-size: 22rpx;
+  color: #999999;
+  text-align: right;
+}
+
+/* ???? */
+.interpretation-section {
+  padding: 0 20rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.interpretation-card {
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+  background: #ffffff;
+}
+
+.interpretation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+
+.interpretation-title {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.chakra-emoji-large {
+  font-size: 56rpx;
+  margin-right: 16rpx;
+}
+
+.title-text {
+  flex: 1;
+}
+
+.chakra-name-main {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 4rpx;
+}
+
+.chakra-english {
+  font-size: 22rpx;
+  color: #999999;
+}
+
+.interpretation-score {
+  padding: 12rpx 24rpx;
+  border-radius: 20rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-left: 16rpx;
+}
+
+/* ???? */
+.interpretation-level {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.level-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.level-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #8b7355;
+}
+
+/* ???? */
+.interpretation-desc {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #666666;
+  margin-bottom: 20rpx;
+}
+
+/* ???? */
+.interpretation-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.trait-tag {
+  padding: 8rpx 20rpx;
+  background: rgba(184, 149, 106, 0.1);
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #8b7355;
+}
+
+/* ?? */
+.suggestions {
+  margin-top: 20rpx;
+}
+
+.suggestion-item {
+  margin-bottom: 24rpx;
+}
+
+.suggestion-item:last-child {
+  margin-bottom: 0;
+}
+
+.suggestion-label {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.suggestion-text {
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #666666;
+  padding: 16rpx 20rpx;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 12rpx;
+}
+
+.practice-list {
+  padding: 16rpx 20rpx;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-radius: 12rpx;
+}
+
+.practice-item {
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #666666;
+  margin-bottom: 8rpx;
+}
+
+.practice-item:last-child {
+  margin-bottom: 0;
+}
+
+.affirmation-text {
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #666666;
+  padding: 16rpx 20rpx;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 12rpx;
+  font-style: italic;
+}
+
+/* ??? */
+.closing-card {
+  margin: 30rpx 20rpx 20rpx;
+  padding: 40rpx 30rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #f0e8ff 0%, #e0d5f5 100%);
+}
+
+.closing-icon {
+  font-size: 64rpx;
+  margin-bottom: 20rpx;
+}
+
+.closing-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #666666;
+  font-style: italic;
+}
+
+/* ??? */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  padding: 0 20rpx;
+  margin-top: 20rpx;
+}
+
+.button-group button {
+  flex: 1;
+  min-width: 200rpx;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  padding: 28rpx 32rpx;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #8b7355;
+  border: 2rpx solid rgba(139, 115, 85, 0.3);
+  box-shadow: 0 4rpx 12rpx rgba(139, 115, 85, 0.08);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  color: #ffffff;
+  box-shadow: 0 8rpx 16rpx rgba(139, 115, 85, 0.25);
+  font-weight: 600;
+}
+
+button:active {
+  transform: scale(0.98);
+}

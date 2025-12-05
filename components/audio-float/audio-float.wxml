@@ -1,0 +1,31 @@
+<!--components/audio-float/audio-float.wxml-->
+<view
+  class="audio-float-container {{isDragging ? 'dragging' : ''}}"
+  wx:if="{{visible}}"
+  style="left: {{left}}px; top: {{top}}px;"
+  bindtouchstart="onTouchStart"
+  bindtouchmove="onTouchMove"
+  bindtouchend="onTouchEnd"
+  catchtouchmove="onTouchMove">
+
+  <view class="audio-float-button">
+    <!-- 音乐图标 -->
+    <view class="music-icon">
+      <view class="music-note {{playing ? 'playing' : ''}}">♪</view>
+    </view>
+
+    <!-- 音频信息 -->
+    <view class="audio-info">
+      <text class="audio-title">{{title}}</text>
+      <view class="status-bar">
+        <view class="status-dot {{playing ? 'playing' : ''}}"></view>
+        <text class="status-text">{{playing ? '正在播放' : '已暂停'}}</text>
+      </view>
+    </view>
+
+    <!-- 停止按钮 -->
+    <view class="stop-button">
+      <text class="stop-icon">✕</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,76 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/chat/chat",
+    "pages/meditation/meditation",
+    "pages/meditation/player/player",
+    "pages/emotion/emotion",
+    "pages/emotion/history/history",
+    "pages/explore/explore",
+    "pages/explore/mbti/mbti",
+    "pages/explore/zodiac/zodiac",
+    "pages/explore/innerchild/innerchild",
+    "pages/mbti-test/mbti-test",
+    "pages/mbti-result/mbti-result",
+    "pages/mbti-history/mbti-history",
+    "pages/chakraTest/index",
+    "pages/chakraResult/index",
+    "pages/chakraHistory/index",
+    "pages/profile/profile",
+    "pages/meditation/history/history",
+    "pages/tarot/tarot",
+    "pages/tarot/history/history",
+    "pages/dreamGrid/dreamGrid",
+    "pages/habitCalendar/habitCalendar",
+    "pages/oh/oh"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F5F1E8",
+    "navigationBarTitleText": "可乐心岛",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F5F1E8"
+  },
+  "tabBar": {
+    "custom": true,
+    "position": "bottom",
+    "color": "#B0B0B0",
+    "selectedColor": "#6E4A2F",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/chat/chat",
+        "text": "陪伴",
+        "iconPath": "images/tab/chat.png",
+        "selectedIconPath": "images/tab/chat-active.png"
+      },
+      {
+        "pagePath": "pages/meditation/meditation",
+        "text": "冥想",
+        "iconPath": "images/tab/meditation.png",
+        "selectedIconPath": "images/tab/meditation-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tab/profile.png",
+        "selectedIconPath": "images/tab/profile-active.png"
+      }
+    ]
+  },
+  "requiredBackgroundModes": ["audio"],
+  "usingComponents": {
+    "audio-float": "/components/audio-float/audio-float",
+    "chakra-radar": "/components/chakra-radar/chakra-radar"
+  },
+  "cloud": true,
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

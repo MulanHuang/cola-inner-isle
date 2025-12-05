@@ -1,0 +1,96 @@
+<!--pages/emotion/history/history.wxml-->
+<view class="container history-container">
+  <!-- 统计卡片 -->
+  <view class="stats-card">
+    <view class="stat-item">
+      <view class="stat-value">{{totalCount}}</view>
+      <view class="stat-label">总记录</view>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <view class="stat-value">{{recentDays}}</view>
+      <view class="stat-label">连续记录天数</view>
+    </view>
+  </view>
+
+  <!-- 情绪列表 -->
+  <view class="emotion-list">
+    <view wx:for="{{emotions}}" wx:key="_id" class="emotion-record">
+      <!-- 头部：情绪 + 时间 -->
+      <view class="record-header">
+        <view class="record-emotion">
+          <text class="emotion-icon">{{item.emotionIcon}}</text>
+          <text class="emotion-name">{{item.emotionName}}</text>
+        </view>
+        <view class="record-time">{{item.timeStr}}</view>
+      </view>
+
+      <!-- 能量指数 -->
+      <view wx:if="{{item.energyLevel > 0}}" class="record-energy">
+        <text class="energy-label">⚡ 能量指数</text>
+        <view class="energy-stars">
+          <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{item.energyLevel >= item ? 'active' : ''}}">★</text>
+        </view>
+      </view>
+
+      <!-- 感恩小事 -->
+      <view wx:if="{{item.gratitudeItems && item.gratitudeItems.length > 0}}" class="record-section gratitude-section">
+        <view class="section-header">
+          <text class="section-icon">🙏</text>
+          <text class="section-title">今日感恩小事</text>
+        </view>
+        <view class="section-list">
+          <view wx:for="{{item.gratitudeItems}}" wx:key="index" wx:for-item="gratitude" class="section-item">
+            <text class="item-number">{{index + 1}}</text>
+            <text class="item-text" user-select="{{true}}">{{gratitude}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 小成就 -->
+      <view wx:if="{{item.successItems && item.successItems.length > 0}}" class="record-section success-section">
+        <view class="section-header">
+          <text class="section-icon">🌟</text>
+          <text class="section-title">今日小成就</text>
+        </view>
+        <view class="section-list">
+          <view wx:for="{{item.successItems}}" wx:key="index" wx:for-item="success" class="section-item">
+            <text class="item-number">{{index + 1}}</text>
+            <text class="item-text" user-select="{{true}}">{{success}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 自由输入内容 -->
+      <view wx:if="{{item.description}}" class="record-description">
+        <view class="description-header">
+          <text class="description-icon">✍️</text>
+          <text class="description-title">想说的话</text>
+        </view>
+        <text class="description-content" user-select="{{true}}">{{item.description}}</text>
+      </view>
+
+      <!-- � �签 -->
+      <view wx:if="{{item.tagsDisplay && item.tagsDisplay.length > 0}}" class="record-tags">
+        <view class="tags-header">
+          <text class="tags-icon">🏷️</text>
+          <text class="tags-title">� �签</text>
+        </view>
+        <view class="tags-list">
+          <view wx:for="{{item.tagsDisplay}}" wx:key="id" wx:for-item="tag" class="record-tag">
+            <text class="tag-icon">{{tag.icon}}</text>
+            <text class="tag-name">{{tag.name}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{emotions.length === 0}}" class="empty">
+      <view class="empty-icon">💭</view>
+      <view class="empty-text">还没有情绪记录</view>
+      <view class="empty-hint">记录� 的感受，了解自己的情绪变化</view>
+    </view>
+  </view>
+</view>
+

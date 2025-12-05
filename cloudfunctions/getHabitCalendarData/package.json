@@ -1,0 +1,9 @@
+{
+  "name": "getHabitCalendarData",
+  "version": "1.0.0",
+  "description": "获取习惯日历数据云函数 - 聚合用户真实使用记录",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

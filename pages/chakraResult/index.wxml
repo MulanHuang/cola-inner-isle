@@ -1,0 +1,346 @@
+<!--pages/chakraResult/index.wxml-->
+<view class="container chakra-result-container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-icon">🌈</view>
+    <view class="header-title">脉轮能量分析报告</view>
+    <view class="header-subtitle">探索你的内在能量状态</view>
+  </view>
+
+  <!-- 雷达图区域 -->
+  <view class="radar-section card">
+    <view class="section-title">✨ 脉轮能量分布</view>
+    <view class="section-subtitle">点击查看各脉轮详情</view>
+
+    <!-- 雷达图组件 -->
+    <chakra-radar
+      id="chakraRadar"
+      chakraData="{{radarData}}"
+      selectedChakra="{{selectedChakra}}"
+      bind:chakrachange="onChakraChange"
+    ></chakra-radar>
+  </view>
+
+  <!-- 选中脉轮详情分析 -->
+  <view class="analysis-section card">
+    <view class="analysis-header">
+      <view class="analysis-title">
+        <text class="analysis-emoji">{{selectedChakraInfo.emoji}}</text>
+        <text class="analysis-name">{{selectedChakraInfo.name}}</text>
+      </view>
+      <view class="analysis-score" style="background: {{selectedChakraInfo.color}}">
+        {{selectedChakraInfo.percentage}}%
+      </view>
+    </view>
+
+    <view class="analysis-status">
+      <text class="status-icon">{{selectedChakraInfo.statusIcon}}</text>
+      <text class="status-title">{{selectedChakraInfo.statusTitle}}</text>
+    </view>
+
+    <view class="analysis-content">
+      <!-- 状态描述 -->
+      <view class="content-block">
+        <view class="block-label">📝 状态描述</view>
+        <text class="block-text" user-select="{{true}}">{{selectedChakraInfo.description}}</text>
+      </view>
+
+      <!-- 当前特征 -->
+      <view class="content-block">
+        <view class="block-label">🏷️ 当前特征</view>
+        <view class="traits-list">
+          <text wx:for="{{selectedChakraInfo.traits}}" wx:key="*this" class="trait-tag" user-select="{{true}}">
+            {{item}}
+          </text>
+        </view>
+      </view>
+
+      <!-- 建议练习 -->
+      <view class="content-block">
+        <view class="block-label">🧘‍♀️ 建议练习</view>
+        <view class="practice-list">
+          <text wx:for="{{selectedChakraInfo.practices}}" wx:key="*this" class="practice-item" user-select="{{true}}">
+            • {{item}}
+          </text>
+        </view>
+      </view>
+
+      <!-- 肯定语 -->
+      <view class="content-block">
+        <view class="block-label">💫 肯定语</view>
+        <view class="affirmation-text">{{selectedChakraInfo.affirmation}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 整体综合分析区域 -->
+  <view wx:if="{{showOverallSection}}" class="overall-analysis-section">
+    <!-- 加载中状态 -->
+    <view wx:if="{{isOverallAnalyzing}}" class="overall-loading card">
+      <view class="overall-loading-icon">🔮✨</view>
+      <view class="overall-loading-text">正在为你生成综合分析...</view>
+      <view class="overall-loading-dots">
+        <view class="dot"></view>
+        <view class="dot"></view>
+        <view class="dot"></view>
+      </view>
+    </view>
+
+    <!-- 分析错误状态 -->
+    <view wx:elif="{{overallAnalysisError}}" class="overall-error card">
+      <view class="overall-error-icon">😔</view>
+      <view class="overall-error-text">综合分析加载失败</view>
+      <view class="overall-error-subtext">请检查网络后重试</view>
+      <button class="retry-btn" bindtap="retryOverallAnalysis">🔄 重试</button>
+    </view>
+
+    <!-- 分析结果 - 整体综合分析 -->
+    <view wx:elif="{{overallAnalysis}}" class="overall-result card">
+      <view class="overall-header">
+        <view class="overall-header-icon">🌟✨</view>
+        <view class="overall-header-title">整体综合分析</view>
+      </view>
+
+      <!-- 整体能量状态 -->
+      <view class="overall-block">
+        <view class="overall-block-label">🌈 整体能量状态</view>
+        <text class="overall-block-text" user-select="{{true}}">{{overallAnalysis.overall_state}}</text>
+      </view>
+
+      <!-- 能量分布特点 -->
+      <view class="overall-block">
+        <view class="overall-block-label">⚡ 能量分布特点</view>
+        <text class="overall-block-text" user-select="{{true}}">{{overallAnalysis.energy_distribution}}</text>
+      </view>
+
+      <!-- 脉轮间的联系 -->
+      <view class="overall-block">
+        <view class="overall-block-label">🔗 脉轮间的联系</view>
+        <text class="overall-block-text" user-select="{{true}}">{{overallAnalysis.chakra_connections}}</text>
+      </view>
+
+      <!-- 个性化建议 -->
+      <view wx:if="{{overallAnalysis.personalized_advice && overallAnalysis.personalized_advice.length > 0}}" class="overall-block">
+        <view class="overall-block-label">💡 个性化建议</view>
+        <view class="overall-advice-list">
+          <view wx:for="{{overallAnalysis.personalized_advice}}" wx:key="*this" class="overall-advice-item">
+            <view class="advice-number">{{index + 1}}</view>
+            <text class="advice-text" user-select="{{true}}">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 重点关注 -->
+      <view wx:if="{{overallAnalysis.focus_areas && overallAnalysis.focus_areas.length > 0}}" class="overall-block focus-block">
+        <view class="overall-block-label">🎯 重点关注</view>
+        <view class="focus-list">
+          <view wx:for="{{overallAnalysis.focus_areas}}" wx:key="*this" class="focus-item">
+            <text user-select="{{true}}">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 温馨鼓励 -->
+      <view wx:if="{{overallAnalysis.encouragement}}" class="overall-encouragement">
+        <view class="encouragement-icon">💖</view>
+        <text class="encouragement-text" user-select="{{true}}">{{overallAnalysis.encouragement}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- AI 深度分析区域 -->
+  <view wx:if="{{showAiSection}}" class="ai-analysis-section">
+    <!-- 加载中状态 -->
+    <view wx:if="{{isAnalyzing}}" class="ai-loading card">
+      <view class="loading-icon">🤖</view>
+      <view class="loading-text">AI 正在深度分析中...</view>
+      <view class="loading-subtext">请稍候片刻</view>
+    </view>
+
+    <!-- 分析错误状态 -->
+    <!-- <view wx:elif="{{analysisError}}" class="ai-error card">
+      <view class="error-icon">😔</view>
+      <view class="error-text">分析加载失败</view>
+      <view class="error-subtext">请检查网络连接后重试</view>
+    </view> -->
+
+    <!-- 分析结果 - 显示 AI 分析内容 -->
+    <view wx:elif="{{aiAnalysis}}" class="ai-result">
+      <!-- 总体概述 -->
+      <view class="ai-summary card">
+        <view class="summary-header">
+          <view class="summary-icon">🔮</view>
+          <view class="summary-title">AI 总体分析</view>
+        </view>
+        <view class="summary-content">{{aiAnalysis.overall_summary}}</view>
+      </view>
+
+      <!-- 各脉轮详细分析 -->
+      <view wx:if="{{aiAnalysis.chakra_details && aiAnalysis.chakra_details.length > 0}}" class="ai-chakra-details">
+        <view class="section-title">📊 各脉轮深度解读</view>
+
+        <view wx:for="{{aiAnalysis.chakra_details}}" wx:key="name" class="ai-chakra-card card">
+          <view class="ai-chakra-header">
+            <view class="ai-chakra-title">
+              <text class="ai-chakra-name">{{item.name}}</text>
+              <text class="ai-chakra-score">{{item.score}}分</text>
+            </view>
+            <view class="ai-chakra-status">{{item.status}}</view>
+          </view>
+
+          <view class="ai-feelings-section">
+            <view class="ai-label">💭 你可能有这些感受</view>
+            <text class="ai-feelings-text" user-select="{{true}}">{{item.possible_feelings}}</text>
+          </view>
+
+          <view class="ai-suggestions-section">
+            <view class="ai-label">🌱 温柔的建议</view>
+            <view class="ai-suggestions-list">
+              <text wx:for="{{item.suggestions}}" wx:for-item="suggestion" wx:key="*this" class="ai-suggestion-item" user-select="{{true}}">
+                • {{suggestion}}
+              </text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 底部总结区域 -->
+      <view class="ai-bottom-summary">
+        <!-- 你的能量优势 -->
+        <view wx:if="{{aiAnalysis.strengths && aiAnalysis.strengths.length > 0}}" class="ai-strengths card">
+          <view class="bottom-section-title">💪 你的能量优势</view>
+          <view class="bottom-section-list">
+            <view wx:for="{{aiAnalysis.strengths}}" wx:key="*this" class="bottom-section-item">
+              {{item}}
+            </view>
+          </view>
+        </view>
+
+        <!-- 成长关注方向 -->
+        <view wx:if="{{aiAnalysis.growth_focus && aiAnalysis.growth_focus.length > 0}}" class="ai-growth card">
+          <view class="bottom-section-title">🌱 成长关注方向</view>
+          <view class="bottom-section-list">
+            <view wx:for="{{aiAnalysis.growth_focus}}" wx:key="*this" class="bottom-section-item">
+              {{item}}
+            </view>
+          </view>
+        </view>
+
+        <!-- 简单小练习 -->
+        <view wx:if="{{aiAnalysis.simple_practices && aiAnalysis.simple_practices.length > 0}}" class="ai-practices card">
+          <view class="bottom-section-title">🧘‍♀️ 简单小练习</view>
+          <view class="bottom-section-list">
+            <view wx:for="{{aiAnalysis.simple_practices}}" wx:key="*this" class="bottom-section-item">
+              {{item}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 脉轮柱状图 -->
+  <view class="chakra-chart card">
+    <view class="chart-title">七大脉轮能量图</view>
+
+    <view wx:for="{{chakraList}}" wx:key="type" class="chakra-item">
+      <view class="chakra-header">
+        <view class="chakra-name">
+          <text class="chakra-emoji">{{item.info.emoji}}</text>
+          <text class="chakra-name-text">{{item.info.name}}</text>
+        </view>
+        <view class="chakra-percentage" style="color: {{item.info.color}}">
+          {{item.result.percentage}}%
+        </view>
+      </view>
+
+      <view class="chakra-bar">
+        <view
+          class="chakra-bar-fill"
+          style="width: {{item.result.percentage}}%; background: {{item.info.color}}"
+        ></view>
+      </view>
+
+      <view class="chakra-keyword">{{item.info.keyword}}</view>
+    </view>
+  </view>
+
+  <!-- 详细解读 -->
+  <view class="interpretation-section">
+    <view class="section-title">📖 详细解读</view>
+
+    <view wx:for="{{chakraList}}" wx:key="type" class="interpretation-card card">
+      <view class="interpretation-header">
+        <view class="interpretation-title">
+          <text class="chakra-emoji-large">{{item.info.emoji}}</text>
+          <view class="title-text">
+            <view class="chakra-name-main">{{item.info.name}}</view>
+            <view class="chakra-english">{{item.info.englishName}}</view>
+          </view>
+        </view>
+        <view class="interpretation-score" style="background: {{item.info.color}}">
+          {{item.result.percentage}}%
+        </view>
+      </view>
+
+      <view class="interpretation-level">
+        <text class="level-icon">{{item.interpretation.percentage >= 80 ? '✨' : item.interpretation.percentage >= 50 ? '🌱' : '⚠️'}}</text>
+        <text class="level-title">{{item.interpretation.title}}</text>
+      </view>
+
+      <view class="interpretation-desc">{{item.interpretation.description}}</view>
+
+      <view class="interpretation-traits">
+        <view wx:for="{{item.interpretation.traits}}" wx:for-item="trait" wx:key="*this" class="trait-tag">
+          {{trait}}
+        </view>
+      </view>
+
+      <view class="divider"></view>
+
+      <view class="suggestions">
+        <view class="suggestion-item">
+          <view class="suggestion-label">🧘‍♀️ 冥想建议</view>
+          <view class="suggestion-text">{{item.info.suggestions.meditation}}</view>
+        </view>
+
+        <view class="suggestion-item">
+          <view class="suggestion-label">🌿 日常练习</view>
+          <view class="practice-list">
+            <view wx:for="{{item.info.suggestions.practice}}" wx:for-item="practice" wx:key="*this" class="practice-item">
+              • {{practice}}
+            </view>
+          </view>
+        </view>
+
+        <view class="suggestion-item">
+          <view class="suggestion-label">💫 肯定语</view>
+          <view class="affirmation-text">{{item.info.suggestions.affirmation}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 结束语 -->
+  <view class="closing-card card">
+    <view class="closing-icon">🌸</view>
+    <view class="closing-text">
+      愿你的每一个脉轮都充满光芒<br/>
+      在探索中遇见更好的自己
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="button-group">
+    <button class="btn-secondary" bindtap="retakeTest">
+      🔄 重新测试
+    </button>
+    <button class="btn-secondary" bindtap="viewHistory">
+      📊 历史记录
+    </button>
+    <button class="btn-primary" bindtap="backToHome">
+      🏠 返回首页
+    </button>
+  </view>
+</view>
+

@@ -1,0 +1,7 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "description": "Shared OpenAI proxy client for all cloud functions",
+  "main": "index.js",
+  "dependencies": {}
+}

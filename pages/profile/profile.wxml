@@ -1,0 +1,84 @@
+<!--pages/profile/profile.wxml-->
+<!-- 自定义导航栏 -->
+<view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
+  <view class="navbar-content">
+    <image class="navbar-logo" src="/images/logo.png" mode="aspectFit"></image>
+    <view class="navbar-title">可乐心岛</view>
+  </view>
+</view>
+
+<view class="profile-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+    <view class="user-info">
+      <view class="user-name">{{userInfo.name || '未设置昵称'}}</view>
+      <view class="user-meta">
+        <text wx:if="{{userInfo.zodiac}}">{{userInfo.zodiac}} · </text>
+        <text wx:if="{{userInfo.mbti}}">{{userInfo.mbti}}</text>
+      </view>
+    </view>
+    <view class="edit-btn" bindtap="editProfile">
+      <text class="icon">✏️</text>
+    </view>
+  </view>
+
+  <!-- 统计数据 -->
+  <view class="stats-grid">
+    <view class="stat-item">
+      <view class="stat-value">{{stats.emotionCount}}</view>
+      <view class="stat-label">情绪记录</view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-value">{{stats.chatCount}}</view>
+      <view class="stat-label">对话次数</view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-value">{{stats.meditationCount}}</view>
+      <view class="stat-label">冥想次数</view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-value">{{stats.tarotCount}}</view>
+      <view class="stat-label">塔罗记录</view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="menu-list">
+    <view class="menu-item" bindtap="goToEmotionHistory">
+      <view class="menu-icon">💭</view>
+      <view class="menu-text">情绪历史</view>
+      <view class="menu-arrow">→</view>
+    </view>
+
+    <view class="menu-item" bindtap="goToMeditationHistory">
+      <view class="menu-icon">🧘</view>
+      <view class="menu-text">冥想记录</view>
+      <view class="menu-arrow">→</view>
+    </view>
+
+    <view class="menu-item" bindtap="goToTarotHistory">
+      <view class="menu-icon">🔮</view>
+      <view class="menu-text">塔罗历史</view>
+      <view class="menu-arrow">→</view>
+    </view>
+
+    <view class="menu-item" bindtap="goToExplore">
+      <view class="menu-icon">🌱</view>
+      <view class="menu-text">自我探索</view>
+      <view class="menu-arrow">→</view>
+    </view>
+  </view>
+
+  <!-- 设置 -->
+  <view class="settings-section">
+    <view class="menu-item" bindtap="showAbout">
+      <view class="menu-icon">ℹ️</view>
+      <view class="menu-text">关于 可乐心岛</view>
+      <view class="menu-arrow">→</view>
+    </view>
+  </view>
+</view>
+
+<!-- 全局悬浮音乐控制按钮 -->
+<audio-float />

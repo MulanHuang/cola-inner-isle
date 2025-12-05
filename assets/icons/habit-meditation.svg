@@ -1,0 +1,10 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- 类似 figure.mind.and.body / lotus 风格线性图标 -->
+  <!-- 盘腿打坐的人形 -->
+  <circle cx="12" cy="5" r="2" stroke="#666666" stroke-width="1.5" fill="none"/>
+  <path d="M12 8V13" stroke="#666666" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M8 11L12 13L16 11" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M6 18C6 16 8.5 14 12 14C15.5 14 18 16 18 18" stroke="#666666" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <path d="M5 21C5 19.5 8 18 12 18C16 18 19 19.5 19 21" stroke="#666666" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+</svg>
+

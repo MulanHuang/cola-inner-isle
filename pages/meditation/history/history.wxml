@@ -1,0 +1,30 @@
+<view class="page">
+  <view class="hero">
+    <view class="stat">
+      <text class="stat-num">{{totalCount}}</text>
+      <text class="stat-label">冥想次数</text>
+    </view>
+    <view class="stat">
+      <text class="stat-num">{{recentDays}}</text>
+      <text class="stat-label">连续天数</text>
+    </view>
+  </view>
+
+  <view class="section-title">最近记录</view>
+
+  <block wx:if="{{history.length}}">
+    <view class="list">
+      <block wx:for="{{history}}" wx:key="createTime">
+        <view class="item">
+          <view class="item-icon">🎧</view>
+          <view class="item-body">
+            <view class="title">{{item.audioTitle || '未命名冥想'}}</view>
+            <view class="meta">{{item.categoryText}} · {{item.timeStr}}</view>
+          </view>
+          <text class="arrow">›</text>
+        </view>
+      </block>
+    </view>
+  </block>
+  <view wx:else class="empty">暂无冥想记录</view>
+</view>

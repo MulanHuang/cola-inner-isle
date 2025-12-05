@@ -1,0 +1,213 @@
+<!--pages/habitCalendar/habitCalendar.wxml-->
+<!-- 自定义导航栏 -->
+<view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
+  <view class="navbar-content">
+    <view class="navbar-back" bindtap="goBack">
+      <image class="back-icon" src="/assets/icons/chevron-left.svg" mode="aspectFit" />
+    </view>
+    <view class="navbar-title">我的练习</view>
+    <view class="navbar-placeholder"></view>
+  </view>
+</view>
+
+<view class="page-container" style="padding-top: {{navBarHeight}}px;">
+  <!-- Tab Pills -->
+  <view class="tab-pills">
+    <view class="tab-pill {{currentTab === 'day' ? 'active' : ''}}" bindtap="switchView" data-tab="day">日视图</view>
+    <view class="tab-pill {{currentTab === 'week' ? 'active' : ''}}" bindtap="switchView" data-tab="week">周视图</view>
+    <view class="tab-pill {{currentTab === 'month' ? 'active' : ''}}" bindtap="switchView" data-tab="month">月视图</view>
+  </view>
+
+  <!-- ========== 日视图 Day View ========== -->
+  <view class="view-content day-view" wx:if="{{currentTab === 'day'}}">
+    <!-- 顶部日期卡片 -->
+    <view class="day-date-card">
+      <view class="day-date-left">
+        <text class="day-date-text">{{dayData.dateDisplay}}</text>
+        <text class="day-date-hint">今天给自己一点温柔的坚持 💛</text>
+      </view>
+      <view class="day-status-tag {{dayData.statusType}}">
+        <text>{{dayData.statusLabel}}</text>
+      </view>
+    </view>
+
+    <!-- 今日练习清单 -->
+    <view class="day-checklist-card">
+      <view class="card-title">今日练习清单</view>
+      <view class="day-habits-list">
+        <view class="day-habit-item"
+              wx:for="{{dayData.habits}}"
+              wx:key="key"
+              bindtap="onHabitTap"
+              data-key="{{item.key}}"
+              data-status="{{item.status}}"
+              data-url="{{item.url}}"
+              data-is-tab="{{item.isTab}}"
+              data-name="{{item.name}}">
+          <view class="habit-item-left">
+            <text class="habit-emoji">{{item.emoji}}</text>
+            <text class="habit-name">{{item.name}}</text>
+          </view>
+          <view class="habit-item-right">
+            <view wx:if="{{item.status === 'done'}}" class="habit-status done">
+              <view class="status-dot-filled"></view>
+              <text class="status-text">已练习</text>
+            </view>
+            <view wx:elif="{{item.status === 'undone'}}" class="habit-status undone">
+              <view class="status-dot-empty"></view>
+              <text class="status-text go">去完成</text>
+            </view>
+            <view wx:else class="habit-status na">
+              <text class="status-text">-</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部今日一句 -->
+    <view class="day-summary-card">
+      <text class="summary-text">{{dayData.summary}}</text>
+    </view>
+  </view>
+
+  <!-- ========== 周视图 Week View ========== -->
+  <view class="view-content week-view" wx:if="{{currentTab === 'week'}}">
+    <!-- 顶部标题区 -->
+    <view class="week-header-card">
+      <text class="week-title">{{weekData.title}}</text>
+      <text class="week-subtitle">{{weekData.subtitle}}</text>
+    </view>
+
+    <!-- 周矩阵表格 -->
+    <view class="week-matrix-card">
+      <!-- 表头：星期 -->
+      <view class="week-table-header">
+        <view class="week-label-cell"></view>
+        <view class="week-days-row">
+          <text class="week-day-label" wx:for="{{weekData.weekDays}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="week-count-cell">次数</view>
+      </view>
+
+      <!-- 热度条 -->
+      <view class="week-heat-row">
+        <view class="week-label-cell"></view>
+        <view class="week-days-row">
+          <view class="heat-bar-wrapper" wx:for="{{weekData.dailyCompletedCounts}}" wx:key="index">
+            <view class="heat-bar" style="height: {{item * 8}}rpx;"></view>
+          </view>
+        </view>
+        <view class="week-count-cell"></view>
+      </view>
+
+      <!-- 习惯行 -->
+      <view class="week-habit-row" wx:for="{{weekData.habits}}" wx:key="name">
+        <view class="week-label-cell">
+          <text class="week-habit-emoji">{{item.emoji}}</text>
+          <text class="week-habit-name">{{item.name}}</text>
+        </view>
+        <view class="week-days-row">
+          <view class="week-dot-wrapper" wx:for="{{item.days}}" wx:for-item="dayStatus" wx:key="index">
+            <view wx:if="{{dayStatus === 'done'}}" class="week-dot done"></view>
+            <view wx:elif="{{dayStatus === 'undone'}}" class="week-dot undone"></view>
+            <view wx:else class="week-dot na"></view>
+          </view>
+        </view>
+        <view class="week-count-cell">
+          <text class="week-count">· {{item.weekCount}}次</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部统计卡片 -->
+    <view class="week-stats-card">
+      <view class="stats-row">
+        <view class="stat-block completion">
+          <text class="stat-label">本周完成率</text>
+          <view class="progress-bar-wrapper">
+            <view class="progress-bar-bg">
+              <view class="progress-bar-fill" style="width: {{weekData.stats.completionPercent}}%;"></view>
+            </view>
+            <text class="progress-text">{{weekData.stats.completionRate}}</text>
+          </view>
+        </view>
+        <view class="stat-block streak">
+          <text class="stat-label">连续练习</text>
+          <text class="stat-value">{{weekData.stats.streak}} 天</text>
+        </view>
+      </view>
+      <view class="best-day-banner">
+        <text class="best-day-text">{{weekData.stats.bestDayText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 月视图 Month View ========== -->
+  <view class="view-content month-view" wx:if="{{currentTab === 'month'}}">
+    <!-- 顶部标题区 -->
+    <view class="month-header-card">
+      <text class="month-title">{{monthData.title}}</text>
+      <text class="month-subtitle">{{monthData.subtitle}}</text>
+    </view>
+
+    <!-- 日历网格 -->
+    <view class="month-calendar-card">
+      <!-- 星期表头 -->
+      <view class="month-weekdays-row">
+        <text class="month-weekday" wx:for="{{monthData.weekDays}}" wx:key="*this">{{item}}</text>
+      </view>
+
+      <!-- 日期网格 -->
+      <view class="month-days-grid">
+        <view class="month-day-cell {{item.status}} {{monthData.selectedDay === item.day ? 'selected' : ''}} heat-{{item.heatLevel}}"
+              wx:for="{{monthData.days}}"
+              wx:key="index"
+              bindtap="onMonthDayTap"
+              data-day="{{item.day}}"
+              data-date-str="{{item.dateStr}}"
+              data-completed-count="{{item.completedCount}}"
+              data-completed-habits="{{item.completedHabits}}"
+              data-status="{{item.status}}">
+          <text wx:if="{{item.day}}" class="day-num">{{item.day}}</text>
+          <view wx:if="{{item.heatLevel > 0}}" class="heat-dot heat-{{item.heatLevel}}"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 选中日期摘要 -->
+    <view class="month-day-summary" wx:if="{{monthData.selectedDaySummary}}">
+      <view class="summary-content">
+        <text class="summary-text">{{monthData.selectedDaySummary}}</text>
+        <view class="summary-action" bindtap="viewSelectedDayDetail">
+          <text>查看详情</text>
+          <text class="arrow">></text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部统计 -->
+    <view class="month-stats-card">
+      <view class="month-stats-row">
+        <view class="month-stat-item">
+          <text class="stat-value">{{monthData.stats.totalCompleted}}</text>
+          <text class="stat-label">月总完成</text>
+        </view>
+        <view class="month-stat-item">
+          <text class="stat-value">{{monthData.stats.avgPerDay}}</text>
+          <text class="stat-label">日均次数</text>
+        </view>
+        <view class="month-stat-item">
+          <text class="stat-value">{{monthData.stats.bestStreak}}</text>
+          <text class="stat-label">最佳连续</text>
+        </view>
+      </view>
+      <view class="month-summary-banner">
+        <text class="summary-banner-text">{{monthData.stats.summaryText}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 底部安全区域 -->
+<view class="safe-area-bottom"></view>

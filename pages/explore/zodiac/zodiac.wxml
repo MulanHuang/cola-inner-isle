@@ -1,0 +1,41 @@
+<!--pages/explore/zodiac/zodiac.wxml-->
+<view class="container zodiac-container">
+  <view class="header">
+    <view class="header-title">⭐ 星座档案</view>
+    <view class="header-subtitle">探索你的星座特质</view>
+  </view>
+
+  <!-- 当前星座 -->
+  <view wx:if="{{currentZodiac}}" class="current-zodiac">
+    <view class="zodiac-icon">{{zodiacInfo[currentZodiac].icon}}</view>
+    <view class="zodiac-name">{{zodiacInfo[currentZodiac].name}}</view>
+    <view class="zodiac-date">{{zodiacInfo[currentZodiac].date}}</view>
+    <view class="zodiac-desc">{{zodiacInfo[currentZodiac].desc}}</view>
+  </view>
+
+  <!-- 生日输入 -->
+  <view class="birthday-section">
+    <view class="section-title">设置你的生日</view>
+    <picker mode="date" value="{{birthday}}" bindchange="onBirthdayChange">
+      <view class="birthday-picker">
+        <text wx:if="{{birthday}}">{{birthday}}</text>
+        <text wx:else class="placeholder">选择生日日期</text>
+      </view>
+    </picker>
+    <button class="btn-primary save-btn" bindtap="saveBirthday" disabled="{{!birthday}}">
+      保存生日
+    </button>
+  </view>
+
+  <!-- 星座列表 -->
+  <view class="zodiac-list">
+    <view class="section-title">十二星座</view>
+    <view class="zodiac-grid">
+      <view wx:for="{{zodiacList}}" wx:key="id" class="zodiac-item">
+        <view class="zodiac-item-icon">{{item.icon}}</view>
+        <view class="zodiac-item-name">{{item.name}}</view>
+        <view class="zodiac-item-date">{{item.date}}</view>
+      </view>
+    </view>
+  </view>
+</view>

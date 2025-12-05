@@ -1,0 +1,2098 @@
+/* pages/tarot/tarot.wxss */
+/* ============================================================ */
+/* 塔罗牌抽取页面 - 专业级动画与交互样式                          */
+/* 阶段: idle → shuffling → spreading → selecting → selected → result */
+/* 升级版: 神秘、温柔、灵性、治愈、iOS级别质感                      */
+/* ============================================================ */
+
+/* ============================================================ */
+/* CSS 变量 - 可配置参数                                         */
+/* ============================================================ */
+page {
+  --shuffle-duration: 3.5s;
+  --spread-duration: 0.8s;
+  --fly-duration: 0.5s;
+  --fade-duration: 0.4s;
+  --card-width: 70rpx;
+  --card-height: 112rpx;
+  --fly-scale: 1.4;
+  --card-select-scale: 2.8;
+  --card-select-duration: 0.4s;
+  /* 升级色彩系统 - 神秘紫金配色 */
+  --primary-gold: #d4af37;
+  --primary-gold-light: #f0d78c;
+  --primary-gold-dark: #b8942d;
+  --primary-purple: #4a3a6b;
+  --primary-purple-light: #6b5a8e;
+  --primary-purple-dark: #2d2440;
+  --accent-violet: #7b68a6;
+  --bg-mystical: linear-gradient(
+    180deg,
+    #1a1428 0%,
+    #2d2440 30%,
+    #3d2a5c 60%,
+    #4a3a6b 100%
+  );
+  --bg-cream: #f5f1e8;
+  --glow-gold: rgba(212, 175, 55, 0.6);
+  --glow-purple: rgba(123, 104, 166, 0.4);
+}
+
+.tarot-container {
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+  padding-top: env(safe-area-inset-top);
+  min-height: 100vh;
+  overflow: hidden;
+  /* 神秘渐变背景 */
+  background: linear-gradient(
+    180deg,
+    #1a1428 0%,
+    #2d2440 25%,
+    #3d2a5c 50%,
+    #4a3a6b 75%,
+    #5a4a7b 100%
+  );
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* 顶部柔光径向渐变 */
+.tarot-container::before {
+  content: "";
+  position: fixed;
+  top: -100rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200%;
+  height: 600rpx;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(212, 175, 55, 0.15) 0%,
+    rgba(123, 104, 166, 0.1) 30%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 中央柔光氛围 - 让视觉重心落在卡牌 */
+.tarot-container::after {
+  content: "";
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 500rpx;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(212, 175, 55, 0.08) 0%,
+    rgba(123, 104, 166, 0.05) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  animation: ambient-glow 8s ease-in-out infinite;
+}
+
+@keyframes ambient-glow {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* ============================================================ */
+/* 抽牌区域基础样式                                              */
+/* ============================================================ */
+.draw-section {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  /* 页面加载淡入动画 */
+  animation: page-fade-in 0.8s ease-out;
+}
+
+@keyframes page-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30rpx;
+  padding-top: calc(20rpx + env(safe-area-inset-top));
+  margin-bottom: 16rpx;
+  /* 标题淡入动画 */
+  animation: title-fade-in 1s ease-out 0.2s both;
+}
+
+@keyframes title-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-10rpx);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.tarot-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  /* 金色渐变标题 */
+  background: linear-gradient(135deg, #f0d78c 0%, #d4af37 50%, #b8942d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2rpx 8rpx rgba(212, 175, 55, 0.3);
+}
+
+.history-link {
+  font-size: 26rpx;
+  color: var(--primary-gold-light);
+  text-decoration: none;
+  padding: 10rpx 20rpx;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+  border-radius: 999rpx;
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s ease;
+}
+
+.history-link:active {
+  background: rgba(212, 175, 55, 0.25);
+  transform: scale(0.96);
+}
+
+.pill {
+  padding: 10rpx 20rpx;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--primary-gold-light);
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  backdrop-filter: blur(8rpx);
+}
+
+.tarot-subtitle {
+  font-size: 26rpx;
+  color: rgba(240, 215, 140, 0.7);
+  margin-bottom: 24rpx;
+  padding: 0 30rpx;
+  animation: title-fade-in 1s ease-out 0.4s both;
+}
+
+.draw-count {
+  font-size: 26rpx;
+  color: var(--primary-gold-light);
+  margin-bottom: 24rpx;
+}
+
+/* ============================================================ */
+/* 流程步骤指示器 - 神秘风格升级                                   */
+/* ============================================================ */
+.flow-steps {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 30rpx;
+  margin-bottom: 24rpx;
+  animation: title-fade-in 1s ease-out 0.6s both;
+}
+
+.step-item {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(240, 215, 140, 0.5);
+  font-size: 26rpx;
+  margin: 0 8rpx;
+  transition: all 0.3s ease;
+  border: 1rpx solid rgba(212, 175, 55, 0.1);
+  backdrop-filter: blur(8rpx);
+}
+
+.step-item.active {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.3),
+    rgba(184, 148, 45, 0.2)
+  );
+  color: var(--primary-gold-light);
+  box-shadow: 0 6rpx 20rpx rgba(212, 175, 55, 0.25),
+    inset 0 0 20rpx rgba(212, 175, 55, 0.1);
+  font-weight: 600;
+  border: 1rpx solid rgba(212, 175, 55, 0.4);
+}
+
+.step-item.done {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--primary-gold);
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+}
+
+.step-item.current {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.2),
+    rgba(123, 104, 166, 0.15)
+  );
+  color: var(--primary-gold-light);
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+  animation: pulse-step-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-step-glow {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 15rpx rgba(212, 175, 55, 0.2);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 25rpx rgba(212, 175, 55, 0.4);
+  }
+}
+
+/* ============================================================ */
+/* 牌阵交互区域容器                                              */
+/* ============================================================ */
+.cards-area-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 320rpx;
+  margin: 24rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* idle阶段的静态预览区域 */
+.phase-idle .cards-area-wrapper {
+  min-height: 320rpx;
+  margin-top: 32rpx;
+}
+
+/* ============================================================ */
+/* 洗牌动画 (Shuffling Phase)                                    */
+/* ============================================================ */
+.shuffle-animation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx 0;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+/* 静态预览状态 - 半透明待激活 */
+.shuffle-animation-container.shuffle-static {
+  opacity: 0.7;
+  filter: grayscale(30%);
+}
+
+/* 动画播放状态 */
+.shuffle-animation-container.shuffle-animating {
+  opacity: 1;
+  filter: none;
+}
+
+/* 洗牌结束后淡出过渡 */
+.shuffle-animation-container.shuffle-fade-out {
+  animation: shuffle-fade-out 0.4s ease-out forwards;
+}
+
+@keyframes shuffle-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(-30rpx);
+  }
+}
+
+.shuffle-deck {
+  position: relative;
+  width: 180rpx;
+  height: 260rpx;
+  perspective: 1000rpx;
+}
+
+/* 洗牌中的每张牌 - 神秘风格 */
+.shuffle-card {
+  position: absolute;
+  width: 90rpx;
+  height: 144rpx;
+  border-radius: 10rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.4),
+    0 0 20rpx rgba(212, 175, 55, 0.15);
+  overflow: hidden;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
+  background: linear-gradient(135deg, #2d2440 0%, #3d2a5c 100%);
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.shuffle-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 静态摆放状态 - 8张牌整齐摆放 */
+.shuffle-card-static {
+  animation: none !important;
+}
+.shuffle-card-static:nth-child(1) {
+  transform: translate(-50%, -50%) rotate(-2deg);
+  z-index: 8;
+}
+.shuffle-card-static:nth-child(2) {
+  transform: translate(-50%, -50%) rotate(1deg) translateX(2rpx);
+  z-index: 7;
+}
+.shuffle-card-static:nth-child(3) {
+  transform: translate(-50%, -50%) rotate(-1deg) translateX(-2rpx);
+  z-index: 6;
+}
+.shuffle-card-static:nth-child(4) {
+  transform: translate(-50%, -50%) rotate(2deg) translateY(2rpx);
+  z-index: 5;
+}
+.shuffle-card-static:nth-child(5) {
+  transform: translate(-50%, -50%) rotate(-1.5deg) translateY(-2rpx);
+  z-index: 4;
+}
+.shuffle-card-static:nth-child(6) {
+  transform: translate(-50%, -50%) rotate(1.5deg);
+  z-index: 3;
+}
+.shuffle-card-static:nth-child(7) {
+  transform: translate(-50%, -50%) rotate(-0.5deg);
+  z-index: 2;
+}
+.shuffle-card-static:nth-child(8) {
+  transform: translate(-50%, -50%) rotate(0.5deg);
+  z-index: 1;
+}
+
+/* 洗牌动画 - 神秘、轻盈、有仪式感 (与3.5秒音效同步) */
+.shuffle-card-0 {
+  animation: shuffle-mystical-0 var(--shuffle-duration, 3.5s) ease-in-out
+    infinite;
+  z-index: 8;
+}
+.shuffle-card-1 {
+  animation: shuffle-mystical-1 var(--shuffle-duration, 3.5s) ease-in-out
+    infinite 0.15s;
+  z-index: 7;
+}
+.shuffle-card-2 {
+  animation: shuffle-mystical-2 var(--shuffle-duration, 3.5s) ease-in-out
+    infinite 0.3s;
+  z-index: 6;
+}
+.shuffle-card-3 {
+  animation: shuffle-mystical-3 var(--shuffle-duration, 3.5s) ease-in-out
+    infinite 0.45s;
+  z-index: 5;
+}
+.shuffle-card-4 {
+  animation: shuffle-mystical-4 var(--shuffle-duration, 3.5s) ease-in-out
+    infinite 0.6s;
+  z-index: 4;
+}
+.shuffle-card-5 {
+  animation: shuffle-mystical-5 var(--shuffle-duration, 3.5s) ease-in-out
+    infinite 0.75s;
+  z-index: 3;
+}
+.shuffle-card-6 {
+  animation: shuffle-mystical-6 var(--shuffle-duration, 3.5s) ease-in-out
+    infinite 0.9s;
+  z-index: 2;
+}
+.shuffle-card-7 {
+  animation: shuffle-mystical-7 var(--shuffle-duration, 3.5s) ease-in-out
+    infinite 1.05s;
+  z-index: 1;
+}
+
+/* 神秘洗牌动画关键帧 - 旋转 + 缩放 + 浮动 */
+@keyframes shuffle-mystical-0 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1) translateY(0);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(-15deg) scale(1.05)
+      translateY(-20rpx);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(8deg) scale(0.95) translateY(10rpx);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(-5deg) scale(1.02)
+      translateY(-10rpx);
+  }
+}
+
+@keyframes shuffle-mystical-1 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(5deg) scale(1) translateY(0);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(20deg) scale(0.96) translateY(15rpx);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-12deg) scale(1.04)
+      translateY(-25rpx);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(3deg) scale(0.98) translateY(5rpx);
+  }
+}
+
+@keyframes shuffle-mystical-2 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-8deg) scale(0.98) translateY(5rpx);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(12deg) scale(1.03)
+      translateY(-15rpx);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-18deg) scale(0.95)
+      translateY(20rpx);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(6deg) scale(1.01) translateY(-8rpx);
+  }
+}
+
+@keyframes shuffle-mystical-3 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(10deg) scale(1.02)
+      translateY(-10rpx);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(-8deg) scale(0.97) translateY(18rpx);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(1.06)
+      translateY(-22rpx);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(-3deg) scale(0.99) translateY(8rpx);
+  }
+}
+
+@keyframes shuffle-mystical-4 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-5deg) scale(0.97) translateY(12rpx);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(18deg) scale(1.04)
+      translateY(-18rpx);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-10deg) scale(0.94)
+      translateY(25rpx);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(8deg) scale(1.02) translateY(-5rpx);
+  }
+}
+
+@keyframes shuffle-mystical-5 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(12deg) scale(1) translateY(-8rpx);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(-15deg) scale(0.96)
+      translateY(22rpx);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(6deg) scale(1.05) translateY(-20rpx);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(-8deg) scale(0.98) translateY(10rpx);
+  }
+}
+
+@keyframes shuffle-mystical-6 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-12deg) scale(0.96)
+      translateY(15rpx);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(10deg) scale(1.02)
+      translateY(-12rpx);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-6deg) scale(0.98) translateY(18rpx);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(1.04)
+      translateY(-15rpx);
+  }
+}
+
+@keyframes shuffle-mystical-7 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(8deg) scale(1.01) translateY(-5rpx);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(-12deg) scale(0.95)
+      translateY(20rpx);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(5deg) scale(1.03) translateY(-18rpx);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(-10deg) scale(0.97)
+      translateY(12rpx);
+  }
+}
+
+.shuffle-text {
+  margin-top: 32rpx;
+  font-size: 26rpx;
+  /* 金色渐变文字 */
+  background: linear-gradient(135deg, #f0d78c 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+  letter-spacing: 4rpx;
+  transition: opacity 0.3s ease;
+  padding: 12rpx 24rpx;
+  background-color: rgba(26, 20, 40, 0.6);
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  border-radius: 999rpx;
+  backdrop-filter: blur(8rpx);
+}
+
+/* 静态状态下的提示文字 */
+.shuffle-static .shuffle-text {
+  opacity: 0.7;
+  animation: none;
+}
+
+/* 动画状态下的发光文字 */
+.shuffle-animating .shuffle-text {
+  animation: text-glow 2s ease-in-out infinite;
+}
+
+@keyframes text-glow {
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 10rpx rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    opacity: 0.8;
+    text-shadow: 0 0 20rpx rgba(212, 175, 55, 0.6);
+  }
+}
+
+/* ============================================================ */
+/* 72张牌扇形展开 (Spreading/Selecting Phase)                    */
+/* 升级版 - 神秘立体扇形布局 + 呼吸动画                            */
+/* ============================================================ */
+.fan-container {
+  position: relative;
+  width: 100%;
+  height: 520rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 40rpx;
+  animation: fan-container-fade-in 0.6s ease-out forwards;
+}
+
+/* 扇形区域淡入动画 - 从洗牌区域平滑过渡 */
+@keyframes fan-container-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(30rpx);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.fan-deck {
+  position: relative;
+  width: 100%;
+  height: 420rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* 扇形底部柔光 */
+  filter: drop-shadow(0 20rpx 40rpx rgba(212, 175, 55, 0.15));
+}
+
+/* 每张扇形牌 - 神秘风格升级 */
+.fan-card-item {
+  position: absolute;
+  width: var(--card-width, 70rpx);
+  height: var(--card-height, 112rpx);
+  border-radius: 10rpx;
+  /* 增强阴影分离度 - 更立体 */
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.3), 0 8rpx 16rpx rgba(0, 0, 0, 0.2),
+    0 2rpx 4rpx rgba(212, 175, 55, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transform-origin: center calc(100% + 400rpx);
+  transform: rotate(0deg);
+  opacity: 0;
+  transition: box-shadow 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+  z-index: var(--z-index, 1);
+  bottom: 0;
+  left: 50%;
+  margin-left: calc(var(--card-width, 70rpx) / -2);
+  /* 金色边框 */
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+}
+
+/* 铺开后的状态 + 呼吸动画 */
+.fan-card-item.spread {
+  opacity: 1;
+  animation: spread-out var(--spread-duration, 0.8s) ease-out forwards,
+    card-breathe 4s ease-in-out infinite 1s;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* 轻微漂浮呼吸动画 - 不夸张 */
+@keyframes card-breathe {
+  0%,
+  100% {
+    transform: rotate(var(--angle, 0deg)) translateY(0);
+  }
+  50% {
+    transform: rotate(var(--angle, 0deg)) translateY(-3rpx);
+  }
+}
+
+/* 扇形展开动画 */
+@keyframes spread-out {
+  0% {
+    transform: rotate(0deg) scale(0.85);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--angle, 0deg)) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 触摸效果 - 金色边光 + 放大 */
+.fan-card-item.spread:active {
+  filter: brightness(1.15);
+  box-shadow: 0 12rpx 30rpx rgba(212, 175, 55, 0.5),
+    0 0 20rpx rgba(212, 175, 55, 0.4), inset 0 0 10rpx rgba(212, 175, 55, 0.2);
+  transform: rotate(var(--angle, 0deg)) scale(1.15) translateY(-5rpx);
+  border-color: rgba(212, 175, 55, 0.8);
+}
+
+.fan-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 选中后飞出的牌 */
+.fan-card-item.card-flying {
+  animation: fly-to-center var(--fly-duration, 0.5s) ease-out forwards !important;
+  z-index: 100 !important;
+}
+
+@keyframes fly-to-center {
+  0% {
+    transform: rotate(var(--angle, 0deg)) scale(1);
+    opacity: 1;
+    box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    transform: rotate(0deg) scale(var(--fly-scale, 1.4));
+    opacity: 0;
+    box-shadow: 0 20rpx 50rpx rgba(212, 175, 55, 0.6);
+  }
+}
+
+/* 其他牌淡出 */
+.fan-card-item.card-dimmed {
+  animation: fade-out-cards var(--fade-duration, 0.4s) ease-out forwards;
+  animation-delay: var(--fade-delay, 100ms);
+}
+
+@keyframes fade-out-cards {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.1;
+    filter: blur(3rpx) brightness(0.7);
+  }
+}
+
+/* ============================================================ */
+/* 选牌提示 - 神秘风格升级                                        */
+/* ============================================================ */
+.select-hint {
+  margin-top: 120rpx;
+  padding: 24rpx 24rpx;
+  position: absolute;
+  top: 30%; /* 原来可能是 50%，再往下调一点 */
+  transform: translateX(-50%);
+  /* 柔光背景框 */
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.15) 0%,
+    rgba(123, 104, 166, 0.1) 100%
+  );
+  border-radius: 24rpx;
+  animation: hint-mystical-pulse 3s ease-in-out infinite;
+  box-shadow: 0 8rpx 24rpx rgba(212, 175, 55, 0.2),
+    inset 0 0 30rpx rgba(212, 175, 55, 0.05);
+  border: 1rpx solid rgba(212, 175, 55, 0.25);
+  backdrop-filter: blur(10rpx);
+  position: relative;
+}
+
+/* Tarot装饰符号 */
+.select-hint::before {
+  content: "✦";
+  position: absolute;
+  left: 20rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24rpx;
+  color: rgba(212, 175, 55, 0.7);
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.select-hint::after {
+  content: "✦";
+  position: absolute;
+  right: 20rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24rpx;
+  color: rgba(212, 175, 55, 0.7);
+  animation: twinkle 2s ease-in-out infinite 0.5s;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.2);
+  }
+}
+
+.select-hint text {
+  font-size: 30rpx;
+  /* 金色渐变字体 */
+  background: linear-gradient(135deg, #f0d78c 0%, #d4af37 50%, #f0d78c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+  letter-spacing: 3rpx;
+  text-shadow: 0 2rpx 8rpx rgba(212, 175, 55, 0.3);
+}
+
+@keyframes hint-mystical-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8rpx 24rpx rgba(212, 175, 55, 0.2),
+      inset 0 0 30rpx rgba(212, 175, 55, 0.05);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 12rpx 32rpx rgba(212, 175, 55, 0.3),
+      inset 0 0 40rpx rgba(212, 175, 55, 0.08);
+  }
+}
+
+/* ============================================================ */
+/* 选牌进度指示器 - 进度条风格升级                                  */
+/* ============================================================ */
+.card-progress {
+  width: 100%;
+  padding: 24rpx 30rpx;
+  margin-bottom: 24rpx;
+  background: linear-gradient(
+    180deg,
+    rgba(26, 20, 40, 0.9) 0%,
+    rgba(26, 20, 40, 0) 100%
+  );
+  position: relative;
+}
+
+/* 进度条背景 */
+.card-progress::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 30rpx;
+  right: 30rpx;
+  height: 4rpx;
+  background: rgba(212, 175, 55, 0.15);
+  border-radius: 2rpx;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.progress-label {
+  font-size: 32rpx;
+  font-weight: 700;
+  /* 金色渐变 */
+  background: linear-gradient(135deg, #f0d78c 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.progress-count {
+  font-size: 28rpx;
+  color: var(--primary-gold-light);
+  font-weight: 600;
+  /* 数字动态更新动画 */
+  animation: count-update 0.3s ease-out;
+}
+
+@keyframes count-update {
+  0% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.progress-slots {
+  display: flex;
+  gap: 16rpx;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.progress-slot {
+  min-width: 100rpx;
+  padding: 16rpx 20rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16rpx;
+  border: 2rpx dashed rgba(212, 175, 55, 0.3);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: inset 0 0 10rpx rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8rpx);
+}
+
+.progress-slot.filled {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.25) 0%,
+    rgba(184, 148, 45, 0.15) 100%
+  );
+  border: 2rpx solid rgba(212, 175, 55, 0.6);
+  box-shadow: 0 8rpx 20rpx rgba(212, 175, 55, 0.3),
+    inset 0 0 15rpx rgba(212, 175, 55, 0.1);
+  transform: translateY(-4rpx) scale(1.02);
+  /* 填充动画 */
+  animation: slot-fill 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slot-fill {
+  0% {
+    transform: translateY(0) scale(0.9);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-8rpx) scale(1.05);
+  }
+  100% {
+    transform: translateY(-4rpx) scale(1.02);
+    opacity: 1;
+  }
+}
+
+.slot-label {
+  font-size: 24rpx;
+  color: rgba(240, 215, 140, 0.6);
+  text-align: center;
+  display: block;
+}
+
+.progress-slot.filled .slot-label {
+  color: var(--primary-gold-light);
+  font-weight: 700;
+  text-shadow: 0 1rpx 4rpx rgba(212, 175, 55, 0.3);
+}
+
+/* ============================================================ */
+/* 已选中牌标记 - 放大动画与视觉反馈                               */
+/* （配合 WXML 中的 card-chosen 类）                             */
+/* ============================================================ */
+.fan-card-item.card-chosen {
+  /* 选中后放大并上移，创造"提起"的视觉效果 */
+  animation: card-select-pop var(--card-select-duration, 0.4s) ease-out forwards !important;
+  z-index: 50 !important;
+  filter: brightness(1.15) drop-shadow(0 8rpx 24rpx rgba(202, 165, 119, 0.6));
+}
+
+/* 选中弹出动画 - 平滑放大并添加发光效果 */
+@keyframes card-select-pop {
+  0% {
+    transform: rotate(var(--angle, 0deg)) translateX(var(--x, 0))
+      translateY(var(--y, 0)) scale(1);
+  }
+  50% {
+    transform: rotate(calc(var(--angle, 0deg) * 0.3))
+      translateX(calc(var(--x, 0) * 0.5)) translateY(calc(var(--y, 0) - 60rpx))
+      scale(1.5);
+  }
+  100% {
+    transform: rotate(calc(var(--angle, 0deg) * 0.5))
+      translateX(calc(var(--x, 0) * 0.6)) translateY(calc(var(--y, 0) - 40rpx))
+      scale(var(--card-select-scale, 1.6));
+  }
+}
+
+/* 选中牌的发光边框效果 */
+.fan-card-item.card-chosen::after {
+  content: "";
+  position: absolute;
+  top: -4rpx;
+  left: -4rpx;
+  right: -4rpx;
+  bottom: -4rpx;
+  border-radius: 10rpx;
+  background: linear-gradient(
+    135deg,
+    rgba(202, 165, 119, 0.8),
+    rgba(161, 121, 82, 0.8)
+  );
+  z-index: -1;
+  animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    box-shadow: 0 0 15rpx rgba(202, 165, 119, 0.5);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 30rpx rgba(202, 165, 119, 0.8);
+  }
+}
+
+.card-selected-badge {
+  position: absolute;
+  top: -14rpx;
+  right: -14rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: linear-gradient(135deg, #caa577, #a17952);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(161, 121, 82, 0.5);
+  z-index: 10;
+  animation: badge-pop 0.3s ease-out;
+}
+
+@keyframes badge-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.card-selected-badge text {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ============================================================ */
+/* 飞出放大的选中牌覆盖层（overlay）                              */
+/* ============================================================ */
+.flying-card-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 253, 245, 0.95);
+  z-index: 1000;
+  animation: overlay-fade-in 0.3s ease-out;
+}
+
+@keyframes overlay-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.flying-card {
+  width: 180rpx;
+  height: 288rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: card-float 2s ease-in-out infinite;
+}
+
+@keyframes card-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15rpx) rotate(1deg);
+  }
+}
+
+.flying-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flying-card-hint {
+  margin-top: 40rpx;
+  font-size: 28rpx;
+  color: #8b7355;
+  font-weight: 500;
+  animation: text-glow 2s ease-in-out infinite;
+}
+
+/* 未洗牌时牌阵半透明提示 */
+.card-item.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.cards-display {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin: 20rpx 0 60rpx;
+}
+
+.card-item {
+  width: 160rpx;
+  height: 256rpx;
+  transition: transform 0.3s;
+  position: relative;
+}
+
+.card-item.selected {
+  transform: translateY(-20rpx);
+}
+
+.card-back {
+  width: 160rpx;
+  height: 256rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.card-pos {
+  position: absolute;
+  top: 12rpx;
+  left: 12rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-hint {
+  position: absolute;
+  bottom: 12rpx;
+  left: 12rpx;
+  right: 12rpx;
+  padding: 10rpx 12rpx;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fbe9c8;
+  font-size: 22rpx;
+  line-height: 1.3;
+  border-radius: 10rpx;
+  box-sizing: border-box;
+}
+
+.draw-btn {
+  width: 420rpx;
+  margin: 40rpx auto 20rpx;
+  font-size: 32rpx;
+  padding: 26rpx 32rpx;
+}
+
+/* ============================================================ */
+/* 结果展示区域 (Result Phase)                                   */
+/* ============================================================ */
+.result-section {
+  padding: 20rpx;
+  animation: result-fade-in 0.6s ease-out;
+}
+
+@keyframes result-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-result {
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+/* 抽牌结果卡片揭示动画 */
+.card-reveal-animation {
+  animation: card-reveal 0.8s ease-out;
+}
+
+@keyframes card-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotateY(180deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) rotateY(90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+/* ============================================================ */
+/* 多卡结果展示区域 - 神秘风格                                     */
+/* ============================================================ */
+.spread-result-header {
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.spread-result-title {
+  font-size: 40rpx;
+  font-weight: 600;
+  /* 金色渐变标题 */
+  background: linear-gradient(135deg, #f0d78c 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 8rpx;
+}
+
+.spread-result-count {
+  font-size: 26rpx;
+  color: rgba(240, 215, 140, 0.7);
+}
+
+/* 多卡横向滚动容器 */
+.cards-scroll {
+  width: 100%;
+  margin-bottom: 24rpx;
+}
+
+.cards-result-row {
+  display: inline-flex;
+  gap: 24rpx;
+  padding: 16rpx 30rpx;
+  min-width: 100%;
+  justify-content: center;
+}
+
+/* 多卡结果单项 - 神秘风格 */
+.card-result-item {
+  flex-shrink: 0;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16rpx;
+  padding: 16rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.3),
+    inset 0 0 20rpx rgba(212, 175, 55, 0.05);
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  backdrop-filter: blur(8rpx);
+  animation-fill-mode: both;
+}
+
+.card-position-label {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.2),
+    rgba(184, 148, 45, 0.15)
+  );
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--primary-gold-light);
+  margin-bottom: 12rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+}
+
+.card-image-small {
+  width: 160rpx;
+  height: 256rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.3);
+  margin-bottom: 12rpx;
+}
+
+.card-name-small {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--primary-gold-light);
+  margin-bottom: 6rpx;
+  max-width: 160rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-keywords-small {
+  font-size: 20rpx;
+  color: rgba(240, 215, 140, 0.6);
+  max-width: 160rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 单卡结果样式 */
+.card-image {
+  width: 280rpx;
+  height: 448rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 12rpx 24rpx rgba(0, 0, 0, 0.3),
+    0 0 30rpx rgba(212, 175, 55, 0.15);
+  margin-bottom: 24rpx;
+}
+
+.card-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  /* 金色渐变 */
+  background: linear-gradient(135deg, #f0d78c 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 12rpx;
+}
+
+.card-keywords {
+  font-size: 26rpx;
+  color: rgba(240, 215, 140, 0.7);
+}
+
+/* 问题展示 - 神秘风格 */
+.question-display {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: var(--primary-gold-light);
+  text-align: left;
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  backdrop-filter: blur(8rpx);
+}
+
+/* 问题输入区域 - 神秘风格升级 */
+.question-section {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 24rpx;
+  padding: 30rpx;
+  margin: 0 20rpx 16rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2),
+    inset 0 0 30rpx rgba(212, 175, 55, 0.03);
+  border: 1rpx solid rgba(212, 175, 55, 0.15);
+  backdrop-filter: blur(12rpx);
+  animation: title-fade-in 1s ease-out 0.8s both;
+}
+
+.template-scroll {
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+  padding: 4rpx 0;
+}
+
+/* 胶囊按钮 pill-style - 神秘风格 */
+.template-chip {
+  display: inline-block;
+  padding: 14rpx 24rpx;
+  margin-right: 16rpx;
+  margin-bottom: 8rpx;
+  /* 淡金色描边与柔光 */
+  background: rgba(212, 175, 55, 0.08);
+  border: 1rpx solid rgba(212, 175, 55, 0.25);
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  color: rgba(240, 215, 140, 0.8);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(8rpx);
+}
+
+/* 胶囊按钮 hover/active 效果 */
+.template-chip:active {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.5);
+  color: var(--primary-gold-light);
+  transform: scale(0.96);
+  box-shadow: 0 4rpx 16rpx rgba(212, 175, 55, 0.3);
+}
+
+/* 牌阵信息区域 */
+.spread-info {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20rpx;
+  padding: 20rpx;
+  margin-top: 12rpx;
+  margin-bottom: 12rpx;
+  color: var(--primary-gold-light);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  border: 1rpx solid rgba(212, 175, 55, 0.15);
+  backdrop-filter: blur(8rpx);
+}
+
+.spread-info.compact {
+  margin-bottom: 20rpx;
+}
+
+/* 紧凑版牌阵信息 - 单行内联显示 */
+.spread-info-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14rpx 24rpx;
+  margin: 12rpx 20rpx;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 999rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  backdrop-filter: blur(8rpx);
+}
+
+.spread-label {
+  font-size: 24rpx;
+  color: rgba(240, 215, 140, 0.6);
+}
+
+.spread-name-inline {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--primary-gold-light);
+  margin: 0 6rpx;
+}
+
+.spread-desc-inline {
+  font-size: 22rpx;
+  color: rgba(240, 215, 140, 0.5);
+}
+
+.spread-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+}
+
+.spread-desc {
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.spread-positions {
+  margin-top: 12rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.pos-chip {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 10rpx 14rpx;
+  border-radius: 12rpx;
+  background: #fff;
+  color: #8b7355;
+  font-size: 24rpx;
+  box-shadow: inset 0 0 0 1rpx rgba(139, 115, 85, 0.1);
+}
+
+.pos-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30rpx;
+  height: 30rpx;
+  border-radius: 50%;
+  background: #e7d4bc;
+  color: #6b4a2c;
+  font-weight: 700;
+  font-size: 22rpx;
+}
+
+.pos-label {
+  line-height: 1.4;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  /* 金色渐变标题 */
+  background: linear-gradient(135deg, #f0d78c 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 20rpx;
+}
+
+.question-input {
+  width: 100%;
+  min-height: 200rpx;
+  /* 神秘风格输入框 */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+  margin-bottom: 12rpx;
+  color: var(--primary-gold-light);
+}
+
+.question-input::placeholder {
+  color: rgba(240, 215, 140, 0.4);
+}
+
+/* 紧凑版问题输入 - idle阶段使用 */
+.question-input-compact {
+  min-height: 100rpx;
+  max-height: 120rpx;
+  padding: 16rpx;
+  font-size: 26rpx;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 24rpx;
+  color: rgba(240, 215, 140, 0.5);
+  margin-bottom: 20rpx;
+}
+
+/* 解读结果 - 神秘风格 */
+.interpretation-section {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2),
+    inset 0 0 30rpx rgba(212, 175, 55, 0.03);
+  border: 1rpx solid rgba(212, 175, 55, 0.15);
+  backdrop-filter: blur(12rpx);
+}
+
+.save-record-btn {
+  margin-top: 20rpx;
+}
+
+.interpretation-content {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: rgba(240, 215, 140, 0.9);
+  white-space: pre-wrap;
+}
+
+.action-section {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2),
+    inset 0 0 30rpx rgba(212, 175, 55, 0.03);
+  border: 1rpx solid rgba(212, 175, 55, 0.15);
+  backdrop-filter: blur(12rpx);
+  margin-top: 20rpx;
+}
+
+.action-title {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.action-hint {
+  font-size: 24rpx;
+  color: rgba(240, 215, 140, 0.5);
+  margin: -10rpx 0 20rpx;
+}
+
+.action-onebox {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 18rpx;
+  padding: 20rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.1);
+  box-shadow: inset 0 0 15rpx rgba(0, 0, 0, 0.1);
+}
+
+.action-input.single {
+  width: 100%;
+  min-height: 220rpx;
+  line-height: 1.8;
+  font-size: 28rpx;
+  color: var(--primary-gold-light);
+  background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 56rpx,
+      rgba(212, 175, 55, 0.1) 56rpx,
+      rgba(212, 175, 55, 0.1) 58rpx
+    ),
+    transparent;
+}
+
+.action-onebox .action-count {
+  text-align: right;
+  font-size: 24rpx;
+  color: rgba(240, 215, 140, 0.4);
+  margin-top: 12rpx;
+}
+
+.action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 10rpx;
+}
+
+.action-item {
+  position: relative;
+  background: #f7f2ea;
+  border-radius: 14rpx;
+  padding: 24rpx 22rpx 18rpx 22rpx;
+  box-shadow: inset 0 0 0 1rpx rgba(139, 115, 85, 0.08);
+}
+
+.action-index {
+  position: absolute;
+  top: -16rpx;
+  left: 20rpx;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f0e3d3, #dec8ac);
+  color: #6a4b2e;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 12rpx rgba(106, 75, 46, 0.12);
+}
+
+.action-input {
+  width: 100%;
+  min-height: 150rpx;
+  background: transparent;
+  border-radius: 12rpx;
+  padding: 12rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+  color: #3d3125;
+}
+
+.action-count {
+  text-align: right;
+  font-size: 22rpx;
+  color: #b3a89c;
+}
+
+.btn-secondary {
+  margin-top: 12rpx;
+  background: #f0e7d8;
+  color: #8b7355;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 16rpx;
+  margin: 20rpx 0;
+}
+
+.action-buttons .btn-secondary {
+  flex: 1;
+  margin-top: 0;
+}
+
+.action-buttons .btn-primary {
+  flex: 1;
+}
+
+/* ============================================================ */
+/* 按钮类型 - 神秘风格升级                                        */
+/* ============================================================ */
+.btn-primary {
+  background: linear-gradient(135deg, #d4af37 0%, #b8942d 50%, #d4af37 100%);
+  border-radius: 999rpx;
+  color: #1a1428;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 24rpx 36rpx;
+  box-shadow: 0 8rpx 24rpx rgba(212, 175, 55, 0.4),
+    0 0 30rpx rgba(212, 175, 55, 0.2),
+    inset 0 2rpx 4rpx rgba(255, 255, 255, 0.3);
+  border: none;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 按钮按下效果 */
+.btn-primary:active {
+  transform: scale(0.96);
+  box-shadow: 0 4rpx 16rpx rgba(212, 175, 55, 0.5),
+    0 0 20rpx rgba(212, 175, 55, 0.3);
+}
+
+/* 按钮禁用状态 */
+.btn-primary[disabled] {
+  background: rgba(212, 175, 55, 0.3);
+  color: rgba(26, 20, 40, 0.5);
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.4);
+  color: var(--primary-gold-light);
+  font-size: 30rpx;
+  padding: 22rpx 30rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8rpx);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:active {
+  background: rgba(212, 175, 55, 0.15);
+  transform: scale(0.96);
+}
+
+.btn-secondary.solid {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.2),
+    rgba(184, 148, 45, 0.15)
+  );
+  border: 1rpx solid rgba(212, 175, 55, 0.5);
+  color: var(--primary-gold-light);
+  box-shadow: 0 8rpx 20rpx rgba(212, 175, 55, 0.25),
+    inset 0 0 15rpx rgba(212, 175, 55, 0.1);
+}
+
+/* 导航按钮样式 */
+.nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.4);
+  color: var(--primary-gold-light);
+  font-size: 30rpx;
+  padding: 20rpx 26rpx;
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.04);
+  text-decoration: none;
+}
+
+/* ============================================================ */
+/* 阶段特定样式覆盖                                              */
+/* ============================================================ */
+
+/* idle 阶段 - 正常显示 */
+.phase-idle .draw-section {
+  opacity: 1;
+}
+
+/* shuffling 阶段 - 聚焦洗牌 */
+.phase-shuffling .question-section,
+.phase-shuffling .spread-info {
+  display: none;
+}
+
+/* selecting 阶段 - 可交互 */
+.phase-selecting .fan-card-item {
+  cursor: pointer;
+}
+
+/* selected 阶段 - 高亮选中牌 */
+.phase-selected .fan-deck {
+  pointer-events: none;
+}
+
+/* ============================================================ */
+/* 现代化聊天输入栏 - 神秘风格                                     */
+/* ============================================================ */
+
+.chat-input-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: rgba(26, 20, 40, 0.95);
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.3);
+  border-top: 1rpx solid rgba(212, 175, 55, 0.15);
+  backdrop-filter: blur(20rpx);
+  z-index: 100;
+  gap: 16rpx;
+}
+
+/* 左侧 + 按钮 */
+.chat-input-plus-btn {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.plus-icon {
+  font-size: 56rpx;
+  font-weight: 300;
+  color: rgba(212, 175, 55, 0.6);
+  line-height: 1;
+}
+
+.chat-input-plus-btn:active .plus-icon {
+  color: var(--primary-gold-light);
+  transform: scale(0.95);
+}
+
+/* 中间圆角输入框容器 */
+.chat-input-field-wrapper {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  border-radius: 50rpx;
+  padding: 16rpx 24rpx;
+  min-height: 72rpx;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* 输入框 */
+.chat-input-field {
+  width: 100%;
+  min-height: 40rpx;
+  max-height: 200rpx;
+  font-size: 30rpx;
+  line-height: 1.5;
+  color: var(--primary-gold-light);
+  background: transparent;
+}
+
+.chat-input-field::placeholder {
+  color: rgba(240, 215, 140, 0.4);
+}
+
+/* 右侧动态按钮容器 */
+.chat-input-action-btn {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+/* 图标通用样式 */
+.chat-action-icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+/* 麦克风图标 */
+.mic-icon {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.chat-input-action-btn:active .mic-icon {
+  opacity: 1;
+}
+
+/* 发送按钮圆形 - 金色风格 */
+.send-btn-circle {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d4af37 0%, #b8942d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(212, 175, 55, 0.4),
+    0 0 20rpx rgba(212, 175, 55, 0.2);
+  transition: all 0.2s ease;
+}
+
+.send-btn-circle:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(212, 175, 55, 0.5);
+}
+
+/* 发送图标 - 白色 (SVG已内置白色) */
+.send-icon {
+  width: 36rpx;
+  height: 36rpx;
+}
+
+/* 为结果页面增加底部内边距，避免被输入栏遮挡 */
+.result-section {
+  padding-bottom: 160rpx;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================ */
+/* 星光粒子效果 - 细腻轻柔                                        */
+/* ============================================================ */
+.stars-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  width: 4rpx;
+  height: 4rpx;
+  background: rgba(240, 215, 140, 0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 6rpx rgba(212, 175, 55, 0.6);
+  animation: star-float 15s ease-in-out infinite;
+}
+
+/* 星星位置和动画延迟 - 随机分布 */
+.star-1 {
+  top: 8%;
+  left: 15%;
+  width: 3rpx;
+  height: 3rpx;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.star-2 {
+  top: 12%;
+  right: 20%;
+  width: 5rpx;
+  height: 5rpx;
+  animation-delay: -3s;
+  animation-duration: 20s;
+}
+
+.star-3 {
+  top: 25%;
+  left: 8%;
+  width: 4rpx;
+  height: 4rpx;
+  animation-delay: -6s;
+  animation-duration: 16s;
+}
+
+.star-4 {
+  top: 35%;
+  right: 12%;
+  width: 3rpx;
+  height: 3rpx;
+  animation-delay: -9s;
+  animation-duration: 22s;
+}
+
+.star-5 {
+  top: 55%;
+  left: 25%;
+  width: 5rpx;
+  height: 5rpx;
+  animation-delay: -2s;
+  animation-duration: 17s;
+}
+
+.star-6 {
+  top: 68%;
+  right: 30%;
+  width: 4rpx;
+  height: 4rpx;
+  animation-delay: -5s;
+  animation-duration: 19s;
+}
+
+.star-7 {
+  top: 78%;
+  left: 40%;
+  width: 3rpx;
+  height: 3rpx;
+  animation-delay: -8s;
+  animation-duration: 21s;
+}
+
+.star-8 {
+  top: 85%;
+  right: 15%;
+  width: 4rpx;
+  height: 4rpx;
+  animation-delay: -11s;
+  animation-duration: 16s;
+}
+
+/* 星星漂浮动画 */
+@keyframes star-float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translateY(-15rpx) translateX(8rpx) scale(1.2);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-8rpx) translateX(-5rpx) scale(0.9);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-20rpx) translateX(10rpx) scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+/* 星星闪烁效果 - 叠加在漂浮上 */
+.star::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.4) 0%,
+    transparent 70%
+  );
+  animation: star-glow 3s ease-in-out infinite;
+}
+
+@keyframes star-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+}

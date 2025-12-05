@@ -1,0 +1,61 @@
+{ "id": 1, "question": "你会经常避免某些特定的情境吗？", "chakra": "root", "reverse": true }
+{ "id": 2, "question": "你容易记住自己的梦境吗？", "chakra": "sacral", "reverse": false }
+{ "id": 3, "question": "你在社交场合容易被动或犹豫吗？", "chakra": "solar", "reverse": true }
+{ "id": 4, "question": "你常常依赖他人的洞察或意见吗？", "chakra": "solar", "reverse": true }
+{ "id": 5, "question": "你容易紧张，或会避免让你紧张的情况吗？", "chakra": "root", "reverse": true }
+{ "id": 6, "question": "你觉得自己真正住在自己的身体里吗？", "chakra": "root", "reverse": false }
+{ "id": 7, "question": "你表达爱时会很小心，害怕受伤吗？", "chakra": "heart", "reverse": true }
+{ "id": 8, "question": "你会用创作（音乐、绘画、写作等）来表达自己吗？", "chakra": "sacral", "reverse": false }
+{ "id": 9, "question": "你意志力很强，总是想掌控局面吗？", "chakra": "solar", "reverse": false }
+{ "id": 10, "question": "你觉得生活中的巧合往往是有意义的？", "chakra": "crown", "reverse": false }
+
+{ "id": 11, "question": "你是团队合作型的人吗？", "chakra": "solar", "reverse": false }
+{ "id": 12, "question": "你是一个情绪丰富、充满激情的人吗？", "chakra": "sacral", "reverse": false }
+{ "id": 13, "question": "你擅长写作沟通吗？", "chakra": "throat", "reverse": false }
+{ "id": 14, "question": "你沟通时能平衡说与听吗？", "chakra": "throat", "reverse": false }
+{ "id": 15, "question": "你倾向提前准备，而不是即兴行动吗？", "chakra": "solar", "reverse": true }
+{ "id": 16, "question": "你在团体里通常能掌控局面吗？", "chakra": "solar", "reverse": false }
+{ "id": 17, "question": "你总是感觉踏实、稳定、不易动摇吗？", "chakra": "root", "reverse": false }
+{ "id": 18, "question": "你很依赖直觉吗？", "chakra": "thirdEye", "reverse": false }
+{ "id": 19, "question": "你有创造力吗？", "chakra": "sacral", "reverse": false }
+{ "id": 20, "question": "你能顺其自然接受生活发生的一切吗？", "chakra": "crown", "reverse": false }
+
+{ "id": 21, "question": "你常常清楚知道自己的喜好与需要吗？", "chakra": "solar", "reverse": false }
+{ "id": 22, "question": "你觉得难以在脑中视觉化事物吗？", "chakra": "thirdEye", "reverse": true }
+{ "id": 23, "question": "你有自信吗？", "chakra": "solar", "reverse": false }
+{ "id": 24, "question": "你信任大多数人吗？", "chakra": "crown", "reverse": false }
+{ "id": 25, "question": "你觉得自己与宇宙和万物有连结吗？", "chakra": "crown", "reverse": false }
+{ "id": 26, "question": "你对亲密、欲望感到自在吗？", "chakra": "sacral", "reverse": false }
+{ "id": 27, "question": "你天生友善吗？", "chakra": "heart", "reverse": false }
+{ "id": 28, "question": "你的声音是否清晰、响亮？", "chakra": "throat", "reverse": false }
+{ "id": 29, "question": "冲突时你会考虑对方的感受吗？", "chakra": "heart", "reverse": false }
+{ "id": 30, "question": "你在任何地方都能感到像在家一样自在吗？", "chakra": "root", "reverse": false }
+
+{ "id": 31, "question": "你擅长洞察事物本质吗？", "chakra": "thirdEye", "reverse": false }
+{ "id": 32, "question": "你通常能自由地按照自己的意愿行动吗？", "chakra": "solar", "reverse": false }
+{ "id": 33, "question": "你能自在表达自己的性与身体欲望吗？", "chakra": "sacral", "reverse": false }
+{ "id": 34, "question": "你容易对自己的冲动感到羞耻吗？", "chakra": "sacral", "reverse": true }
+{ "id": 35, "question": "你能自由表达自己的情绪，不压抑吗？", "chakra": "sacral", "reverse": false }
+{ "id": 36, "question": "你是否觉得自己是更大存在的一部分？", "chakra": "crown", "reverse": false }
+{ "id": 37, "question": "你会努力让关系保持和谐吗？", "chakra": "heart", "reverse": false }
+{ "id": 38, "question": "你是否很依恋某些人或关系？", "chakra": "heart", "reverse": true }
+{ "id": 39, "question": "你常常进行自我克制吗？", "chakra": "solar", "reverse": true }
+{ "id": 40, "question": "你是否强烈需要与他人情感连结？", "chakra": "heart", "reverse": true }
+
+{ "id": 41, "question": "你喜欢大多数人吗？", "chakra": "heart", "reverse": false }
+{ "id": 42, "question": "你总是感到安全、不焦虑吗？", "chakra": "root", "reverse": false }
+{ "id": 43, "question": "你经常有新颖原创的想法吗？", "chakra": "thirdEye", "reverse": false }
+{ "id": 44, "question": "你有良好的自我觉察吗？", "chakra": "thirdEye", "reverse": false }
+{ "id": 45, "question": "你很难表达自己想要的，会选择沉默吗？", "chakra": "throat", "reverse": true }
+{ "id": 46, "question": "你擅长符号、概念、抽象思维吗？", "chakra": "thirdEye", "reverse": false }
+{ "id": 47, "question": "你是否担心金钱或家里的安全问题？", "chakra": "root", "reverse": true }
+{ "id": 48, "question": "你说话会特别多吗？", "chakra": "throat", "reverse": true }
+{ "id": 49, "question": "必要时你能坚定表达自己吗？", "chakra": "throat", "reverse": false }
+{ "id": 50, "question": "你是否幻想很多？", "chakra": "thirdEye", "reverse": false }
+
+{ "id": 51, "question": "你是否有预感或灵感？", "chakra": "thirdEye", "reverse": false }
+{ "id": 52, "question": "你能把发生的一切当作学习吗？", "chakra": "crown", "reverse": false }
+{ "id": 53, "question": "你是否经常为别人付出太多？", "chakra": "heart", "reverse": true }
+{ "id": 54, "question": "你对别人和自己容易生出慈悲吗？", "chakra": "heart", "reverse": false }
+{ "id": 55, "question": "你是否常常孤独或把人拒之门外？", "chakra": "root", "reverse": true }
+{ "id": 56, "question": "你是否习惯隐藏情绪，保持扑克脸？", "chakra": "throat", "reverse": true }

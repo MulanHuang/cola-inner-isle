@@ -1,0 +1,66 @@
+<!--pages/explore/mbti/mbti.wxml-->
+<view class="container mbti-container">
+  <view class="header">
+    <view class="header-title">🧩 MBTI 人格类型</view>
+    <view class="header-subtitle">16种人格，你是哪一种？</view>
+  </view>
+
+  <!-- 当前MBTI -->
+  <view wx:if="{{currentMBTI}}" class="current-mbti">
+    <view class="mbti-type">{{currentMBTI}}</view>
+    <view class="mbti-name">{{mbtiInfo[currentMBTI].name}}</view>
+    <view class="mbti-desc">{{mbtiInfo[currentMBTI].desc}}</view>
+  </view>
+
+  <!-- MBTI选择 -->
+  <view class="mbti-selector">
+    <view class="selector-title">选择你的 MBTI 类型</view>
+    
+    <view class="mbti-grid">
+      <view 
+        wx:for="{{mbtiTypes}}" 
+        wx:key="type"
+        class="mbti-item {{selectedMBTI === item.type ? 'selected' : ''}}"
+        bindtap="selectMBTI"
+        data-type="{{item.type}}">
+        <view class="mbti-type-text">{{item.type}}</view>
+        <view class="mbti-name-text">{{item.name}}</view>
+      </view>
+    </view>
+
+    <button class="btn-primary save-btn" bindtap="saveMBTI" disabled="{{!selectedMBTI}}">
+      保存我的类型
+    </button>
+  </view>
+
+  <!-- 历史记录入口 -->
+  <view class="history-section" bindtap="viewHistory">
+    <view class="history-card">
+      <view class="history-icon">📋</view>
+      <view class="history-content">
+        <view class="history-title">查看测试历史</view>
+        <view class="history-desc">查看你的所有 MBTI 测试记录</view>
+      </view>
+      <view class="history-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 测试入口 -->
+  <view class="test-section">
+    <view class="test-card">
+      <view class="test-icon">📝</view>
+      <view class="test-title">不知道自己的类型？</view>
+      <view class="test-desc">通过 70 道专业测试题，准确了解你的 MBTI 性格类型</view>
+      <button class="btn-primary test-btn" bindtap="startTest">
+        开始 MBTI 测试
+      </button>
+    </view>
+  </view>
+
+  <!-- 提示 -->
+  <view class="hint-section">
+    <view class="hint-title">💡 关于 MBTI</view>
+    <view class="hint-text">MBTI 是一种性格分类指标，通过 4 个维度（E-I、S-N、T-F、J-P）将人格分为 16 种类型</view>
+  </view>
+</view>
+

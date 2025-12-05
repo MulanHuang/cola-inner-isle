@@ -1,0 +1,238 @@
+/* pages/chakraTest/index.wxss */
+.chakra-test-container {
+  padding-bottom: 40rpx;
+}
+
+/* 头部 */
+.header {
+  position: relative;
+  text-align: center;
+  padding: 40rpx 20rpx 30rpx;
+}
+
+.header-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10rpx);
+  }
+}
+
+.header-title {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.header-subtitle {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.header-action {
+  position: absolute;
+  top: 40rpx;
+  right: 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12rpx 16rpx;
+  background: rgba(139, 115, 85, 0.08);
+  border-radius: 12rpx;
+  transition: all 0.3s;
+}
+
+.header-action:active {
+  transform: scale(0.95);
+  background: rgba(139, 115, 85, 0.15);
+}
+
+.action-icon {
+  font-size: 32rpx;
+  margin-bottom: 4rpx;
+}
+
+.action-text {
+  font-size: 20rpx;
+  color: #8b7355;
+  font-weight: 500;
+}
+
+/* 进度条 */
+.progress-section {
+  padding: 0 40rpx 30rpx;
+}
+
+.progress-bar {
+  height: 8rpx;
+  background: rgba(139, 115, 85, 0.1);
+  border-radius: 4rpx;
+  overflow: hidden;
+  margin-bottom: 12rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b8956a 0%, #8b7355 100%);
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 24rpx;
+  color: #8b7355;
+  font-weight: 500;
+}
+
+/* 题目卡片 */
+.question-card {
+  margin: 0 20rpx 30rpx;
+  padding: 40rpx 30rpx;
+  background: linear-gradient(135deg, #fff9f0 0%, #ffffff 100%);
+}
+
+.question-number {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  color: #ffffff;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.question-text {
+  font-size: 32rpx;
+  line-height: 1.8;
+  color: #333333;
+  margin-bottom: 40rpx;
+  font-weight: 500;
+}
+
+/* 选项 */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 28rpx;
+  background: #ffffff;
+  border: 2rpx solid rgba(139, 115, 85, 0.15);
+  border-radius: 16rpx;
+  transition: all 0.3s;
+}
+
+.option-item.selected {
+  background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+  border-color: #b8956a;
+  box-shadow: 0 4rpx 12rpx rgba(184, 149, 106, 0.2);
+}
+
+.option-radio {
+  width: 40rpx;
+  height: 40rpx;
+  border: 3rpx solid rgba(139, 115, 85, 0.3);
+  border-radius: 50%;
+  margin-right: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.option-item.selected .option-radio {
+  border-color: #b8956a;
+}
+
+.option-radio-inner {
+  width: 20rpx;
+  height: 20rpx;
+  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  border-radius: 50%;
+}
+
+.option-label {
+  font-size: 28rpx;
+  color: #333333;
+  flex: 1;
+}
+
+.option-item.selected .option-label {
+  color: #8b7355;
+  font-weight: 500;
+}
+
+/* 按钮组 */
+.button-group {
+  display: flex;
+  gap: 20rpx;
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.button-group button {
+  flex: 1;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  padding: 28rpx 32rpx;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #8b7355;
+  border: 2rpx solid rgba(139, 115, 85, 0.3);
+  box-shadow: 0 4rpx 12rpx rgba(139, 115, 85, 0.08);
+}
+
+.btn-primary,
+.btn-submit {
+  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  color: #ffffff;
+  box-shadow: 0 8rpx 16rpx rgba(139, 115, 85, 0.25);
+  font-weight: 600;
+}
+
+.btn-primary.disabled,
+.btn-submit.disabled {
+  opacity: 0.5;
+}
+
+.btn-primary.active,
+.btn-submit.active {
+  opacity: 1;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #ff9a8b 0%, #ff6b9d 100%);
+  box-shadow: 0 8rpx 16rpx rgba(255, 107, 157, 0.35);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* 提示文字 */
+.hint-text {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999999;
+  padding: 0 40rpx;
+  line-height: 1.6;
+}

@@ -1,0 +1,157 @@
+<!--pages/meditation/player/player.wxml-->
+<view class="container player-container">
+  <!-- 背景 -->
+  <view class="player-bg" style="background-image: url({{audio.cover}})"></view>
+  <view class="player-overlay"></view>
+
+  <!-- 内容 -->
+  <view class="player-content">
+    <!-- 封面 -->
+    <view class="cover-wrapper">
+      <image class="cover-image {{playing ? 'rotating' : ''}}" src="{{audio.cover}}" mode="aspectFill"></image>
+    </view>
+
+    <!-- 音频信息 -->
+    <view class="audio-info">
+      <view class="audio-title">{{audio.title}}</view>
+      <text class="audio-desc" user-select="{{true}}">{{audio.description}}</text>
+    </view>
+
+    <!-- ========== 下半部分：旗舰级冥想播放器 UI ========== -->
+    <view class="bottom-section">
+      <!-- 柔光背景层 -->
+      <view class="bottom-glow"></view>
+
+      <!-- 进度条区域 - Apple Music 风格 -->
+      <view class="progress-section">
+        <text class="progress-time time-left">{{currentTimeStr}}</text>
+        <view class="progress-track">
+          <slider
+            class="progress-slider"
+            value="{{progress}}"
+            min="0"
+            max="100"
+            block-size="18"
+            backgroundColor="rgba(255,255,255,0.2)"
+            activeColor="rgba(255,255,255,0.8)"
+            bindchange="onProgressChange"
+          />
+        </view>
+        <text class="progress-time time-right">{{durationStr}}</text>
+      </view>
+
+      <!-- 主播放控制区 - 三个圆形按钮 -->
+      <view class="play-controls">
+        <!-- 上一段 / 后退 -->
+        <view class="ctrl-btn ctrl-btn-side" bindtap="seekBackward">
+          <image class="ctrl-icon" src="/images/icons/skip-back.svg" mode="aspectFit"></image>
+        </view>
+        <!-- 播放 / 暂停（主按钮） -->
+        <view class="ctrl-btn ctrl-btn-main" bindtap="togglePlay">
+          <view class="main-btn-glow"></view>
+          <image class="ctrl-icon ctrl-icon-main" src="{{playing ? '/images/icons/pause.svg' : '/images/icons/play.svg'}}" mode="aspectFit"></image>
+        </view>
+        <!-- 下一段 / 前进 -->
+        <view class="ctrl-btn ctrl-btn-side" bindtap="seekForward">
+          <image class="ctrl-icon" src="/images/icons/skip-forward.svg" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 功能控制区 - 统一 Toolbar -->
+      <view class="func-toolbar">
+        <!-- 定时 -->
+        <view class="func-item {{sleepTimer > 0 ? 'active' : ''}}" bindtap="showSleepTimerPicker">
+          <image class="func-icon" src="/images/icons/clock.svg" mode="aspectFit"></image>
+          <text class="func-label">{{sleepTimer > 0 ? sleepTimerStr : '定时'}}</text>
+        </view>
+        <!-- 循环 -->
+        <view class="func-item {{loopMode ? 'active' : ''}}" bindtap="toggleLoop">
+          <image class="func-icon" src="/images/icons/repeat.svg" mode="aspectFit"></image>
+          <text class="func-label">循环</text>
+        </view>
+        <!-- 倍速 -->
+        <view class="func-item {{speed !== 1.0 ? 'active' : ''}}" bindtap="showSpeedPicker">
+          <image class="func-icon" src="/images/icons/zap.svg" mode="aspectFit"></image>
+          <text class="func-label">{{speed}}x</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部安全区域 -->
+    <view class="safe-bottom"></view>
+  </view>
+
+  <!-- ========== 定时关闭弹窗 - 粉色治愈系风格 ========== -->
+  <view class="timer-modal {{timerPanelVisible ? 'visible' : ''}}" catchtouchmove="preventTouchMove">
+    <!-- 遮罩层 - 柔和粉色 -->
+    <view class="timer-mask" bindtap="hideTimerPanel"></view>
+
+    <!-- 底部面板 - 浅粉毛玻璃 -->
+    <view class="timer-panel" catchtap="stopPropagation">
+      <!-- 拖拽指示条 -->
+      <view class="panel-handle"></view>
+
+      <!-- 标题区 -->
+      <view class="panel-header">
+        <text class="panel-title">定时关闭</text>
+        <text class="panel-subtitle">选择自动停止播放的时间</text>
+      </view>
+
+      <!-- 定时选项区 - 柔光胶囊条 -->
+      <view class="timer-capsule">
+        <scroll-view
+          class="timer-scroll"
+          scroll-x="{{true}}"
+          enhanced="{{true}}"
+          show-scrollbar="{{false}}"
+          scroll-into-view="timer-opt-{{selectedTimerIndex}}"
+          scroll-with-animation="{{true}}"
+        >
+          <view class="timer-options">
+            <block wx:for="{{timerOptions}}" wx:key="index">
+              <view
+                id="timer-opt-{{index}}"
+                class="timer-opt {{selectedTimerIndex === index ? 'active' : ''}}"
+                data-index="{{index}}"
+                data-minutes="{{item}}"
+                bindtap="onTimerOptionTap"
+              >
+                <text class="opt-text">{{item === 0 ? '关' : item}}</text>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 单位提示 -->
+      <view class="timer-unit-hint">
+        <text class="unit-text">单位：分钟</text>
+      </view>
+
+      <!-- 底部快捷按钮 -->
+      <view class="timer-actions">
+        <view class="action-card" bindtap="onEndOfTrackTap">
+          <view class="action-icon-wrap">
+            <image class="action-icon" src="/images/icons/clock.svg" mode="aspectFit"></image>
+          </view>
+          <view class="action-content">
+            <text class="action-title">本集结束后关闭</text>
+            <text class="action-desc">{{remainingTimeStr}}</text>
+          </view>
+        </view>
+        <view class="action-card" bindtap="onLastTimerTap">
+          <view class="action-icon-wrap">
+            <image class="action-icon" src="/images/icons/repeat.svg" mode="aspectFit"></image>
+          </view>
+          <view class="action-content">
+            <text class="action-title">上次定时时间</text>
+            <text class="action-desc">{{lastTimerMinutes > 0 ? lastTimerMinutes + ' 分钟' : '未设置'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 底部安全区 -->
+      <view class="panel-safe-bottom"></view>
+    </view>
+  </view>
+</view>

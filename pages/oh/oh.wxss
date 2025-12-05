@@ -1,0 +1,581 @@
+/* pages/oh/oh.wxss */
+/* ============================================================ */
+/* OH卡自我探索页面 - 冥想疗愈 + 现代 iOS 渐变风格                  */
+/* ============================================================ */
+
+/* CSS 变量 */
+page {
+  --primary-teal: #5fbdbd;
+  --primary-teal-light: #7dd4d4;
+  --primary-teal-dark: #4aa3a3;
+  --bg-gradient-start: #e8f4f8;
+  --bg-gradient-mid: #f0e6f6;
+  --bg-gradient-end: #ffffff;
+  --card-bg: #ffffff;
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --text-muted: #b2bec3;
+  --shadow-light: 0 4rpx 20rpx rgba(95, 189, 189, 0.15);
+  --shadow-card: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+  --border-radius: 24rpx;
+}
+
+/* 容器基础样式 */
+.oh-container {
+  min-height: 100vh;
+  padding: 30rpx;
+  padding-top: calc(30rpx + env(safe-area-inset-top));
+  padding-bottom: calc(60rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  /* 浅蓝 → 浅紫 → 白色 渐变背景 */
+  background: linear-gradient(
+    180deg,
+    var(--bg-gradient-start) 0%,
+    var(--bg-gradient-mid) 50%,
+    var(--bg-gradient-end) 100%
+  );
+}
+
+/* 顶部区域 */
+.header-section {
+  text-align: center;
+  margin-bottom: 40rpx;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.oh-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12rpx;
+}
+
+.oh-subtitle {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 模式切换区域 */
+.mode-switch {
+  display: flex;
+  background: var(--card-bg);
+  border-radius: 999rpx;
+  padding: 8rpx;
+  margin-bottom: 40rpx;
+  box-shadow: var(--shadow-light);
+}
+
+.mode-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  border-radius: 999rpx;
+  transition: all 0.3s ease;
+}
+
+.mode-tab.active {
+  background: linear-gradient(
+    135deg,
+    var(--primary-teal) 0%,
+    var(--primary-teal-light) 100%
+  );
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: var(--shadow-light);
+}
+
+/* ============================================================ */
+/* 抽卡区域：冥想疗愈 + iOS 浮起卡片                              */
+/* ============================================================ */
+
+/* 整个抽卡区 */
+.card-deck-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40rpx;
+  margin-bottom: 40rpx;
+}
+
+/* 玻璃态浮起壳（WXML 中有 oh-hero 时生效） */
+.oh-hero {
+  width: 100%;
+  padding: 40rpx 40rpx 50rpx;
+  border-radius: 40rpx;
+  background: rgba(255, 255, 255, 0.46);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(18rpx);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 牌堆容器 */
+.deck-wrapper {
+  position: relative;
+  width: 220rpx;
+  height: 260rpx;
+  margin-top: 100rpx; /* 抽卡牌堆的纵向位置，喜欢可以再微调 */
+  margin-bottom: 40rpx;
+  animation: breathe-slow 4s ease-in-out infinite;
+}
+
+/* 牌堆整体轻轻呼吸（冥想感） */
+@keyframes breathe-slow {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6rpx) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 卡背图片（多层堆叠也适用） */
+.deck-image {
+  position: absolute;
+  width: 140rpx;
+  height: 200rpx;
+  border-radius: 18rpx;
+  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.18);
+}
+
+/* 若最上层一张 breathing，可有额外呼吸效果 */
+.breathing {
+  animation: deckBreath 2.8s ease-in-out infinite;
+}
+
+@keyframes deckBreath {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6rpx) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 牌堆柔光效果 */
+.deck-glow {
+  position: absolute;
+  left: 50%;
+  bottom: -10rpx;
+  transform: translateX(-50%);
+  width: 260rpx;
+  height: 80rpx;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(95, 189, 189, 0.4) 0%,
+    rgba(95, 189, 189, 0) 70%
+  );
+  filter: blur(8rpx);
+  z-index: -1;
+}
+
+/* 如果按钮用了 btn-draw-move，可单独控制抽卡按钮的向下偏移 */
+.btn-draw-move {
+  margin-top: 200rpx; /* 数字越大按钮越往下，可按视觉再调 */
+}
+
+/* 抽卡按钮 */
+.btn-draw {
+  position: relative;
+  overflow: hidden;
+  width: 420rpx;
+  padding: 28rpx 0;
+  background: linear-gradient(
+    135deg,
+    var(--primary-teal) 0%,
+    var(--primary-teal-light) 100%
+  );
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 999rpx;
+  border: none;
+  box-shadow: 0 10rpx 28rpx rgba(95, 189, 189, 0.45);
+  transition: all 0.25s ease;
+}
+
+.btn-draw:active {
+  transform: scale(0.97);
+  box-shadow: 0 6rpx 18rpx rgba(95, 189, 189, 0.55);
+}
+
+/* 按钮柔和脉动光（冥想能量点） */
+.btn-draw::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 40rpx rgba(95, 189, 189, 0.5);
+  animation: pulse 2.2s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scale(0.95);
+  }
+}
+
+.btn-draw[disabled] {
+  background: linear-gradient(135deg, #b2bec3 0%, #dfe6e9 100%);
+  box-shadow: none;
+}
+
+/* 抽卡提示文案 */
+.pre-draw-hint {
+  margin-top: 24rpx;
+  font-size: 26rpx;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.micro-copy {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ============================================================ */
+/* 抽卡后结果区域                                                 */
+/* ============================================================ */
+
+.result-section {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 卡片展示区域 */
+.card-display {
+  display: flex;
+  justify-content: center;
+  gap: 30rpx;
+  margin-bottom: 40rpx;
+  flex-wrap: wrap;
+}
+
+.image-card-wrapper,
+.word-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 20rpx;
+  box-shadow: var(--shadow-card);
+  animation: popIn 0.35s ease-out;
+}
+
+/* 抽出卡片时轻微弹出 */
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 自由图卡模式下移除底部多余空间 */
+.image-card-wrapper.image-only-mode {
+  padding-bottom: 20rpx;
+}
+
+.card-image {
+  width: 300rpx;
+  height: 420rpx;
+  border-radius: 16rpx;
+  object-fit: contain;
+}
+
+/* 小光点动画占位（以后要加漂浮粒子可以复用） */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-10rpx);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+}
+
+/* ============================================================ */
+/* 图卡 + 字卡 组合样式                                           */
+/* ============================================================ */
+
+.combo-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 16rpx;
+  box-shadow: var(--shadow-card);
+  max-width: 600rpx;
+  margin: 0 auto;
+  animation: popIn 0.35s ease-out;
+}
+
+/* 顶部和底部文字 - 水平居中 */
+.combo-text-top,
+.combo-text-bottom {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--primary-teal-dark);
+  text-align: center;
+  padding: 16rpx 0;
+  letter-spacing: 8rpx;
+}
+
+/* 中间区域布局：左文字 + 图卡 + 右文字 */
+.combo-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* 左右竖向文字 */
+.combo-text-left,
+.combo-text-right {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--primary-teal-dark);
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  letter-spacing: 8rpx;
+  padding: 0 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320rpx;
+}
+
+/* 中间图卡容器 */
+.combo-image-container {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx;
+}
+
+/* 组合卡中的图卡 */
+.combo-image {
+  width: 260rpx;
+  height: 364rpx;
+  border-radius: 16rpx;
+  object-fit: contain;
+}
+
+/* ============================================================ */
+/* 用户输入区域                                                   */
+/* ============================================================ */
+
+.input-section {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.input-guide {
+  font-size: 28rpx;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+  line-height: 1.6;
+}
+
+.input-guide-sub {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  margin-bottom: 20rpx;
+  line-height: 1.6;
+}
+
+.user-input {
+  width: 100%;
+  min-height: 160rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: #f8fafa;
+  border: 2rpx solid #e8f4f8;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+}
+
+.user-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* 抽到卡后，输入框轻轻高亮一次（需在 JS 里给 just-drawn 类） */
+.user-input.just-drawn {
+  animation: inputHighlight 1.4s ease-out 1;
+}
+
+@keyframes inputHighlight {
+  0% {
+    box-shadow: 0 0 0rpx rgba(95, 189, 189, 0);
+    border-color: #e8f4f8;
+  }
+  40% {
+    box-shadow: 0 0 16rpx rgba(95, 189, 189, 0.35);
+    border-color: var(--primary-teal-light);
+  }
+  100% {
+    box-shadow: 0 0 0rpx rgba(95, 189, 189, 0);
+    border-color: #e8f4f8;
+  }
+}
+
+.char-count {
+  text-align: right;
+  font-size: 24rpx;
+  color: var(--text-muted);
+  margin-top: 10rpx;
+}
+
+/* 字数接近上限时的提醒颜色（需配合 charNearLimit） */
+.char-count.warning {
+  color: #ff7675;
+}
+
+/* ============================================================ */
+/* AI 解读结果区域                                                 */
+/* ============================================================ */
+
+.btn-interpret {
+  width: 100%;
+  padding: 28rpx 0;
+  background: linear-gradient(
+    135deg,
+    var(--primary-teal) 0%,
+    var(--primary-teal-light) 100%
+  );
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 999rpx;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(95, 189, 189, 0.4);
+  margin-bottom: 30rpx;
+  transition: all 0.3s ease;
+}
+
+.btn-interpret:active {
+  transform: scale(0.98);
+}
+
+.btn-interpret[disabled] {
+  background: linear-gradient(135deg, #b2bec3 0%, #dfe6e9 100%);
+  box-shadow: none;
+}
+
+.ai-result-section {
+  margin-bottom: 30rpx;
+}
+
+.result-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: var(--shadow-card);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 2rpx solid #e8f4f8;
+}
+
+.result-content {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+}
+
+/* 重置按钮 */
+.btn-reset {
+  width: 100%;
+  padding: 24rpx 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 30rpx;
+  border: 2rpx solid var(--text-muted);
+  border-radius: 999rpx;
+  margin-top: 20rpx;
+  transition: all 0.3s ease;
+}
+
+.btn-reset:active {
+  background: #f8fafa;
+  border-color: var(--primary-teal);
+  color: var(--primary-teal);
+}

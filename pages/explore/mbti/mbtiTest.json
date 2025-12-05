@@ -1,0 +1,630 @@
+{
+  "id": 1,
+  "dimension": "EI",
+  "question": "在派对上，你通常会：",
+  "options": [
+    { "key": "A", "text": "和很多人互动，包括陌生人", "value": "E" },
+    { "key": "B", "text": "只和少数认识的人互动", "value": "I" }
+  ]
+}
+{
+  "id": 2,
+  "dimension": "SN",
+  "question": "你更倾向于：",
+  "options": [
+    { "key": "A", "text": "比起推测，更现实、脚踏实地", "value": "S" },
+    { "key": "B", "text": "比起现实，更喜欢推测与想象", "value": "N" }
+  ]
+}
+{
+  "id": 3,
+  "dimension": "SN",
+  "question": "哪一种更糟？",
+  "options": [
+    { "key": "A", "text": "整天“飘在云端”、不接地气", "value": "S" },
+    { "key": "B", "text": "陷入“一成不变的老套路”", "value": "N" }
+  ]
+}
+{
+  "id": 4,
+  "dimension": "TF",
+  "question": "什么更容易打动你？",
+  "options": [
+    { "key": "A", "text": "原则、道理", "value": "T" },
+    { "key": "B", "text": "情感、感受", "value": "F" }
+  ]
+}
+{
+  "id": 5,
+  "dimension": "TF",
+  "question": "你更容易被下面哪一种吸引？",
+  "options": [
+    { "key": "A", "text": "有说服力的论点", "value": "T" },
+    { "key": "B", "text": "感人的表达", "value": "F" }
+  ]
+}
+{
+  "id": 6,
+  "dimension": "JP",
+  "question": "你更喜欢怎样安排工作？",
+  "options": [
+    { "key": "A", "text": "按照明确的截止日期来完成", "value": "J" },
+    { "key": "B", "text": "随心所欲，想做的时候再做", "value": "P" }
+  ]
+}
+{
+  "id": 7,
+  "dimension": "JP",
+  "question": "在做选择时，你通常：",
+  "options": [
+    { "key": "A", "text": "比较谨慎、小心地选择", "value": "J" },
+    { "key": "B", "text": "有点冲动、迅速地做决定", "value": "P" }
+  ]
+}
+{
+  "id": 8,
+  "dimension": "EI",
+  "question": "在派对上，你通常：",
+  "options": [
+    { "key": "A", "text": "待到很晚，而且越待越有精神", "value": "E" },
+    { "key": "B", "text": "比较早离开，待久了会更累", "value": "I" }
+  ]
+}
+{
+  "id": 9,
+  "dimension": "SN",
+  "question": "你更容易被哪种人吸引？",
+  "options": [
+    { "key": "A", "text": "脚踏实地、务实的人", "value": "S" },
+    { "key": "B", "text": "富有想象力、有创意的人", "value": "N" }
+  ]
+}
+{
+  "id": 10,
+  "dimension": "SN",
+  "question": "你更感兴趣的是：",
+  "options": [
+    { "key": "A", "text": "当下真实正在发生的事情", "value": "S" },
+    { "key": "B", "text": "未来可能会发生的事情", "value": "N" }
+  ]
+}
+{
+  "id": 11,
+  "dimension": "TF",
+  "question": "在评价别人时，你更容易被什么影响？",
+  "options": [
+    { "key": "A", "text": "法律、规则比情况更重要", "value": "T" },
+    { "key": "B", "text": "具体情境比法律更重要", "value": "F" }
+  ]
+}
+{
+  "id": 12,
+  "dimension": "TF",
+  "question": "在接近别人时，你更倾向于：",
+  "options": [
+    { "key": "A", "text": "以比较客观、理性的方式接近", "value": "T" },
+    { "key": "B", "text": "带着个人情感、比较主观地接近", "value": "F" }
+  ]
+}
+{
+  "id": 13,
+  "dimension": "JP",
+  "question": "你更是那种：",
+  "options": [
+    { "key": "A", "text": "很守时、按时的人", "value": "J" },
+    { "key": "B", "text": "悠闲随意、不太在意时间的人", "value": "P" }
+  ]
+}
+{
+  "id": 14,
+  "dimension": "JP",
+  "question": "什么更让你烦？",
+  "options": [
+    { "key": "A", "text": "事情没有完成、悬在那儿", "value": "J" },
+    { "key": "B", "text": "事情已经结束、无法再改动", "value": "P" }
+  ]
+}
+{
+  "id": 15,
+  "dimension": "EI",
+  "question": "在你的社交圈里，你会：",
+  "options": [
+    { "key": "A", "text": "经常跟进大家最近在发生什么", "value": "E" },
+    { "key": "B", "text": "经常错过、很晚才知道大家的近况", "value": "I" }
+  ]
+}
+{
+  "id": 16,
+  "dimension": "SN",
+  "question": "在做日常事情时，你更可能：",
+  "options": [
+    { "key": "A", "text": "按惯例、照平常的方式去做", "value": "S" },
+    { "key": "B", "text": "按自己的方式、不按常规去做", "value": "N" }
+  ]
+}
+{
+  "id": 17,
+  "dimension": "SN",
+  "question": "你觉得作家更应该：",
+  "options": [
+    { "key": "A", "text": "“想说什么就直接说什么”", "value": "S" },
+    { "key": "B", "text": "更多用比喻、类比来表达", "value": "N" }
+  ]
+}
+{
+  "id": 18,
+  "dimension": "TF",
+  "question": "哪一种对你更有吸引力？",
+  "options": [
+    { "key": "A", "text": "思维上的前后一致、逻辑一致", "value": "T" },
+    { "key": "B", "text": "人际关系的和谐、气氛融洽", "value": "F" }
+  ]
+}
+{
+  "id": 19,
+  "dimension": "TF",
+  "question": "在做决定时，你更舒服的是：",
+  "options": [
+    { "key": "A", "text": "依靠逻辑判断", "value": "T" },
+    { "key": "B", "text": "依靠价值观和感受判断", "value": "F" }
+  ]
+}
+{
+  "id": 20,
+  "dimension": "JP",
+  "question": "你更希望事情是：",
+  "options": [
+    { "key": "A", "text": "已经定下来，有明确结果", "value": "J" },
+    { "key": "B", "text": "暂时不要定死，保持开放", "value": "P" }
+  ]
+}
+{
+  "id": 21,
+  "dimension": "JP",
+  "question": "你会形容自己更像是：",
+  "options": [
+    { "key": "A", "text": "严肃、有决心的人", "value": "J" },
+    { "key": "B", "text": "随和、好相处的人", "value": "P" }
+  ]
+}
+{
+  "id": 22,
+  "dimension": "EI",
+  "question": "打电话时，你通常：",
+  "options": [
+    { "key": "A", "text": "很少担心自己说不清楚", "value": "E" },
+    { "key": "B", "text": "会在心里预演要说什么", "value": "I" }
+  ]
+}
+{
+  "id": 23,
+  "dimension": "SN",
+  "question": "你认为“事实”更像是：",
+  "options": [
+    { "key": "A", "text": "“事实自己会说话”", "value": "S" },
+    { "key": "B", "text": "用来说明、支撑某些原则", "value": "N" }
+  ]
+}
+{
+  "id": 24,
+  "dimension": "SN",
+  "question": "在你看来，“有远见的人”通常是：",
+  "options": [
+    { "key": "A", "text": "有点让人烦的人", "value": "S" },
+    { "key": "B", "text": "挺让人着迷、很有意思的人", "value": "N" }
+  ]
+}
+{
+  "id": 25,
+  "dimension": "TF",
+  "question": "你更常是一个：",
+  "options": [
+    { "key": "A", "text": "冷静理性的人", "value": "T" },
+    { "key": "B", "text": "热情有温度的人", "value": "F" }
+  ]
+}
+{
+  "id": 26,
+  "dimension": "TF",
+  "question": "你觉得哪一种更糟？",
+  "options": [
+    { "key": "A", "text": "不公正、不公平", "value": "T" },
+    { "key": "B", "text": "冷酷无情、不留情面", "value": "F" }
+  ]
+}
+{
+  "id": 27,
+  "dimension": "JP",
+  "question": "你觉得事情通常应该：",
+  "options": [
+    { "key": "A", "text": "通过仔细选择和安排来发生", "value": "J" },
+    { "key": "B", "text": "随缘发生，让它顺其自然", "value": "P" }
+  ]
+}
+{
+  "id": 28,
+  "dimension": "JP",
+  "question": "你会对哪一种感觉更好？",
+  "options": [
+    { "key": "A", "text": "已经买下来了，事情定了", "value": "J" },
+    { "key": "B", "text": "还有购买的选择权，可以再看看", "value": "P" }
+  ]
+}
+{
+  "id": 29,
+  "dimension": "EI",
+  "question": "在一群人中，你通常：",
+  "options": [
+    { "key": "A", "text": "会主动开启对话", "value": "E" },
+    { "key": "B", "text": "等别人来跟你搭话", "value": "I" }
+  ]
+}
+{
+  "id": 30,
+  "dimension": "SN",
+  "question": "你觉得“常识”是：",
+  "options": [
+    { "key": "A", "text": "很少值得被质疑的", "value": "S" },
+    { "key": "B", "text": "经常是可以被质疑的", "value": "N" }
+  ]
+}
+{
+  "id": 31,
+  "dimension": "SN",
+  "question": "你觉得孩子往往：",
+  "options": [
+    { "key": "A", "text": "不够帮忙、不够有用", "value": "S" },
+    { "key": "B", "text": "不够运用想象力", "value": "N" }
+  ]
+}
+{
+  "id": 32,
+  "dimension": "TF",
+  "question": "在做决定时，你更舒服的是依靠：",
+  "options": [
+    { "key": "A", "text": "标准、规则", "value": "T" },
+    { "key": "B", "text": "个人感受、情绪", "value": "F" }
+  ]
+}
+{
+  "id": 33,
+  "dimension": "TF",
+  "question": "你更像是：",
+  "options": [
+    { "key": "A", "text": "比起温柔，更偏向坚定", "value": "T" },
+    { "key": "B", "text": "比起坚定，更偏向温柔", "value": "F" }
+  ]
+}
+{
+  "id": 34,
+  "dimension": "JP",
+  "question": "你认为哪一种能力更值得钦佩？",
+  "options": [
+    { "key": "A", "text": "有条理地组织、安排事情", "value": "J" },
+    { "key": "B", "text": "随机应变、能“将就着办”", "value": "P" }
+  ]
+}
+{
+  "id": 35,
+  "dimension": "SN",
+  "question": "你更看重哪一种？",
+  "options": [
+    { "key": "A", "text": "事物的“永恒性”、不变的东西", "value": "S" },
+    { "key": "B", "text": "开放的心态、愿意接纳新可能", "value": "N" }
+  ]
+}
+{
+  "id": 36,
+  "dimension": "EI",
+  "question": "新的、非常规的社交互动对你来说：",
+  "options": [
+    { "key": "A", "text": "让你感到被激发、更有能量", "value": "E" },
+    { "key": "B", "text": "让你感到消耗精力", "value": "I" }
+  ]
+}
+{
+  "id": 37,
+  "dimension": "SN",
+  "question": "你更常是一个：",
+  "options": [
+    { "key": "A", "text": "实际、务实的人", "value": "S" },
+    { "key": "B", "text": "爱幻想、有点梦幻的人", "value": "N" }
+  ]
+}
+{
+  "id": 38,
+  "dimension": "SN",
+  "question": "你更容易：",
+  "options": [
+    { "key": "A", "text": "看到别人在哪方面有用", "value": "S" },
+    { "key": "B", "text": "看到别人是如何看问题的", "value": "N" }
+  ]
+}
+{
+  "id": 39,
+  "dimension": "TF",
+  "question": "哪一种让你更满足？",
+  "options": [
+    { "key": "A", "text": "把一个议题讨论得很透彻", "value": "T" },
+    { "key": "B", "text": "在一个议题上达成一致", "value": "F" }
+  ]
+}
+{
+  "id": 40,
+  "dimension": "TF",
+  "question": "你觉得自己更被哪一种驱动？",
+  "options": [
+    { "key": "A", "text": "理性的大脑", "value": "T" },
+    { "key": "B", "text": "柔软的内心", "value": "F" }
+  ]
+}
+{
+  "id": 41,
+  "dimension": "JP",
+  "question": "你更喜欢哪种工作方式？",
+  "options": [
+    { "key": "A", "text": "有合同、有明确约定的工作", "value": "J" },
+    { "key": "B", "text": "比较随意、弹性的工作", "value": "P" }
+  ]
+}
+{
+  "id": 42,
+  "dimension": "JP",
+  "question": "你更倾向于寻找：",
+  "options": [
+    { "key": "A", "text": "有条理、有秩序的东西", "value": "J" },
+    { "key": "B", "text": "任何出现的机会、顺其自然", "value": "P" }
+  ]
+}
+{
+  "id": 43,
+  "dimension": "EI",
+  "question": "你更喜欢：",
+  "options": [
+    { "key": "A", "text": "有许多朋友、但接触时间较短", "value": "E" },
+    { "key": "B", "text": "少数朋友、但接触更深入更久", "value": "I" }
+  ]
+}
+{
+  "id": 44,
+  "dimension": "SN",
+  "question": "你更多是依据哪一种来判断？",
+  "options": [
+    { "key": "A", "text": "事实", "value": "S" },
+    { "key": "B", "text": "原则、道理", "value": "N" }
+  ]
+}
+{
+  "id": 45,
+  "dimension": "SN",
+  "question": "你更感兴趣的是：",
+  "options": [
+    { "key": "A", "text": "生产和传递（执行层面）", "value": "S" },
+    { "key": "B", "text": "设计和研究（概念层面）", "value": "N" }
+  ]
+}
+{
+  "id": 46,
+  "dimension": "TF",
+  "question": "哪一句评价更让你开心？",
+  "options": [
+    { "key": "A", "text": "“这是个非常有逻辑的人。”", "value": "T" },
+    { "key": "B", "text": "“这是个非常有感情的人。”", "value": "F" }
+  ]
+}
+{
+  "id": 47,
+  "dimension": "TF",
+  "question": "你更看重自己哪一点？",
+  "options": [
+    { "key": "A", "text": "立场坚定、不轻易动摇", "value": "T" },
+    { "key": "B", "text": "忠诚投入、全心全意", "value": "F" }
+  ]
+}
+{
+  "id": 48,
+  "dimension": "JP",
+  "question": "你更常偏好哪一种说法？",
+  "options": [
+    { "key": "A", "text": "最终定案、不能再改的结论", "value": "J" },
+    { "key": "B", "text": "暂定的、可以再调整的说法", "value": "P" }
+  ]
+}
+{
+  "id": 49,
+  "dimension": "JP",
+  "question": "你在什么时候更感到放松？",
+  "options": [
+    { "key": "A", "text": "做出决定之后", "value": "J" },
+    { "key": "B", "text": "做出决定之前", "value": "P" }
+  ]
+}
+{
+  "id": 50,
+  "dimension": "EI",
+  "question": "你会：",
+  "options": [
+    { "key": "A", "text": "和陌生人也能轻松长时间聊天", "value": "E" },
+    { "key": "B", "text": "对陌生人常常不知道说什么", "value": "I" }
+  ]
+}
+{
+  "id": 51,
+  "dimension": "SN",
+  "question": "你更倾向于信任自己的：",
+  "options": [
+    { "key": "A", "text": "经验", "value": "S" },
+    { "key": "B", "text": "直觉、灵感", "value": "N" }
+  ]
+}
+{
+  "id": 52,
+  "dimension": "SN",
+  "question": "你感觉自己更像：",
+  "options": [
+    { "key": "A", "text": "比起有创意，更偏向务实", "value": "S" },
+    { "key": "B", "text": "比起务实，更偏向有创意", "value": "N" }
+  ]
+}
+{
+  "id": 53,
+  "dimension": "TF",
+  "question": "你更愿意被夸赞为：",
+  "options": [
+    { "key": "A", "text": "思路清晰、很有理性", "value": "T" },
+    { "key": "B", "text": "感情真挚、很有爱心", "value": "F" }
+  ]
+}
+{
+  "id": 54,
+  "dimension": "TF",
+  "question": "你更倾向于做一个：",
+  "options": [
+    { "key": "A", "text": "讲求公正的人", "value": "T" },
+    { "key": "B", "text": "富有同情心的人", "value": "F" }
+  ]
+}
+{
+  "id": 55,
+  "dimension": "JP",
+  "question": "总体来说，你更倾向于：",
+  "options": [
+    { "key": "A", "text": "确保事情都被安排好", "value": "J" },
+    { "key": "B", "text": "顺其自然，让事情发生就好", "value": "P" }
+  ]
+}
+{
+  "id": 56,
+  "dimension": "JP",
+  "question": "在关系中，大部分事情应该：",
+  "options": [
+    { "key": "A", "text": "都可以再协商、重新谈", "value": "J" },
+    { "key": "B", "text": "由当下情况随机决定", "value": "P" }
+  ]
+}
+{
+  "id": 57,
+  "dimension": "EI",
+  "question": "电话响的时候，你通常会：",
+  "options": [
+    { "key": "A", "text": "赶紧去接电话", "value": "E" },
+    { "key": "B", "text": "希望有人帮你接", "value": "I" }
+  ]
+}
+{
+  "id": 58,
+  "dimension": "SN",
+  "question": "你更欣赏自己哪一点？",
+  "options": [
+    { "key": "A", "text": "很强的现实感", "value": "S" },
+    { "key": "B", "text": "很鲜明的想象力", "value": "N" }
+  ]
+}
+{
+  "id": 59,
+  "dimension": "SN",
+  "question": "你更被哪一种吸引？",
+  "options": [
+    { "key": "A", "text": "基本原理、基础事实", "value": "S" },
+    { "key": "B", "text": "细微差别、余韵和“弦外之音”", "value": "N" }
+  ]
+}
+{
+  "id": 60,
+  "dimension": "TF",
+  "question": "你觉得哪一种错误更大？",
+  "options": [
+    { "key": "A", "text": "太过冲动、太有激情", "value": "T" },
+    { "key": "B", "text": "太过客观、太不带感情", "value": "F" }
+  ]
+}
+{
+  "id": 61,
+  "dimension": "TF",
+  "question": "你觉得自己本质上更像：",
+  "options": [
+    { "key": "A", "text": "“头脑很硬”的人", "value": "T" },
+    { "key": "B", "text": "“心很软”的人", "value": "F" }
+  ]
+}
+{
+  "id": 62,
+  "dimension": "JP",
+  "question": "哪种情境更让你喜欢？",
+  "options": [
+    { "key": "A", "text": "有结构、有时间表的安排", "value": "J" },
+    { "key": "B", "text": "没太多结构、时间自由的安排", "value": "P" }
+  ]
+}
+{
+  "id": 63,
+  "dimension": "JP",
+  "question": "你更像一个：",
+  "options": [
+    { "key": "A", "text": "习惯按固定模式来的人", "value": "J" },
+    { "key": "B", "text": "习惯随性、富有变化的人", "value": "P" }
+  ]
+}
+{
+  "id": 64,
+  "dimension": "EI",
+  "question": "你更倾向于：",
+  "options": [
+    { "key": "A", "text": "让人觉得很容易靠近你", "value": "E" },
+    { "key": "B", "text": "有点保留、不轻易被靠近", "value": "I" }
+  ]
+}
+{
+  "id": 65,
+  "dimension": "SN",
+  "question": "在阅读或写作中，你更喜欢：",
+  "options": [
+    { "key": "A", "text": "比较直白、字面意思的表达", "value": "S" },
+    { "key": "B", "text": "比较形象、生动、有比喻的表达", "value": "N" }
+  ]
+}
+{
+  "id": 66,
+  "dimension": "TF",
+  "question": "对你来说，哪一个更难？",
+  "options": [
+    { "key": "A", "text": "设身处地地“代入别人”", "value": "T" },
+    { "key": "B", "text": "把别人当作资源来使用", "value": "F" }
+  ]
+}
+{
+  "id": 67,
+  "dimension": "TF",
+  "question": "你更希望自己拥有：",
+  "options": [
+    { "key": "A", "text": "更清晰的理性与判断力", "value": "T" },
+    { "key": "B", "text": "更强大的同情心与慈悲", "value": "F" }
+  ]
+}
+{
+  "id": 68,
+  "dimension": "TF",
+  "question": "你觉得哪一种缺点更严重？",
+  "options": [
+    { "key": "A", "text": "不加区分、什么都接受", "value": "T" },
+    { "key": "B", "text": "太爱挑毛病、太苛刻", "value": "F" }
+  ]
+}
+{
+  "id": 69,
+  "dimension": "JP",
+  "question": "你更喜欢：",
+  "options": [
+    { "key": "A", "text": "有计划的活动", "value": "J" },
+    { "key": "B", "text": "没有太多计划、即兴的活动", "value": "P" }
+  ]
+}
+{
+  "id": 70,
+  "dimension": "JP",
+  "question": "你通常更：",
+  "options": [
+    { "key": "A", "text": "深思熟虑，再行动", "value": "J" },
+    { "key": "B", "text": "比较冲动、先做了再说", "value": "P" }
+  ]
+}

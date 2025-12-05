@@ -1,0 +1,9 @@
+{
+  "name": "ohInterpret",
+  "version": "1.0.0",
+  "description": "OH卡解读云函数 - 心理学洞察 + 行动力教练风格",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

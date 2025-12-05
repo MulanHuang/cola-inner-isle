@@ -1,0 +1,25 @@
+<!-- 脉轮雷达图组件 -->
+<view class="chakra-radar-container">
+  <!-- Canvas 雷达图 -->
+  <canvas
+    type="2d"
+    id="radarCanvas"
+    class="radar-canvas"
+  ></canvas>
+
+  <!-- 图例（可点击切换选中脉轮） -->
+  <view class="radar-legend">
+    <view 
+      wx:for="{{chakraData}}" 
+      wx:key="type"
+      class="legend-item {{selectedChakra === item.type ? 'active' : ''}}"
+      bindtap="onLegendTap"
+      data-type="{{item.type}}"
+    >
+      <view class="legend-dot" style="background: {{item.color}}"></view>
+      <view class="legend-name">{{item.name}}</view>
+      <view class="legend-value">{{item.value}}%</view>
+    </view>
+  </view>
+</view>
+

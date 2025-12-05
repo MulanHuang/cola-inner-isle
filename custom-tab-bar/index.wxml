@@ -1,0 +1,20 @@
+<!-- Apple iOS 风格底部导航栏 -->
+<view class="tab-bar" wx:if="{{show}}">
+  <view
+    wx:for="{{list}}"
+    wx:key="pagePath"
+    class="tab-item {{selected === index ? 'active' : ''}}"
+    data-path="{{item.pagePath}}"
+    data-index="{{index}}"
+    bindtap="onSwitchTab"
+  >
+    <view class="icon-wrapper">
+      <image
+        class="tab-icon"
+        src="{{selected === index ? item.selectedIconPath : item.iconPath}}"
+        mode="aspectFit"
+      />
+    </view>
+    <text class="tab-label">{{item.label}}</text>
+  </view>
+</view>

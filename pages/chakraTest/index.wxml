@@ -1,0 +1,72 @@
+<!--pages/chakraTest/index.wxml-->
+<view class="container chakra-test-container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-icon">🌈</view>
+    <view class="header-title">脉轮测试</view>
+    <view class="header-subtitle">探索� 的能量中心</view>
+    <view class="header-action" bindtap="viewHistory">
+      <text class="action-icon">📊</text>
+      <text class="action-text">历史记录</text>
+    </view>
+  </view>
+
+  <!-- 进度条 -->
+  <view class="progress-section">
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{progress}}%"></view>
+    </view>
+    <view class="progress-text">{{currentIndex + 1}} / {{totalQuestions}}</view>
+  </view>
+
+  <!-- 题目卡片 -->
+  <view class="question-card card">
+    <view class="question-number">第 {{currentIndex + 1}} 题</view>
+    <view class="question-text">{{currentQuestion.question}}</view>
+    
+    <!-- 选项 -->
+    <view class="options">
+      <view 
+        wx:for="{{optionLabels}}" 
+        wx:key="value"
+        class="option-item {{selectedAnswer === item.value ? 'selected' : ''}}"
+        bindtap="selectOption"
+        data-value="{{item.value}}"
+      >
+        <view class="option-radio">
+          <view wx:if="{{selectedAnswer === item.value}}" class="option-radio-inner"></view>
+        </view>
+        <view class="option-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 按钮组 -->
+  <view class="button-group">
+    <button
+      wx:if="{{currentIndex > 0}}"
+      class="btn-secondary"
+      bindtap="previousQuestion"
+    >
+      ← 上一题
+    </button>
+
+    <button
+      wx:if="{{currentIndex === totalQuestions - 1}}"
+      class="btn-submit {{selectedAnswer ? 'active' : 'disabled'}}"
+      bindtap="submitTest"
+      disabled="{{!selectedAnswer}}"
+    >
+      ✨ 查看结果
+    </button>
+  </view>
+
+  <!-- 提示文字 -->
+  <view class="hint-text">
+    💡 请� �据� 的真实感受作答，没有对错之分
+  </view>
+  <view class="hint-text" style="margin-top: 10rpx;">
+    ✨ 选择答案后将自动进入下一题
+  </view>
+</view>
+

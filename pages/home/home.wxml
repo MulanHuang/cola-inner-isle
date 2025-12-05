@@ -1,0 +1,215 @@
+<!--pages/home/home.wxml-->
+<!-- 自定义导航栏 -->
+<view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
+  <view class="navbar-content">
+    <image class="navbar-logo" src="/images/logo.png" mode="aspectFit"></image>
+    <view class="navbar-title">可乐心岛</view>
+  </view>
+</view>
+
+<view class="home-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
+  <!-- 今日一句 -->
+  <view class="card quote-card">
+    <view class="quote-icon">✨</view>
+    <text class="quote-text" user-select="{{true}}">{{dailyQuote.content}}</text>
+    <text class="quote-author" wx:if="{{dailyQuote.author}}" user-select="{{true}}">— {{dailyQuote.author}}</text>
+    <view class="quote-refresh" bindtap="refreshQuote">
+      <image class="refresh-icon" src="/assets/icons/refresh-outline.svg" mode="aspectFit" />
+      <text class="refresh-text">换一句</text>
+    </view>
+  </view>
+
+  <!-- 每日塔罗牌 -->
+  <view class="card tarot-card" bindtap="goToTarot">
+    <view class="tarot-header">
+      <view class="tarot-title">🔮 每日塔罗</view>
+      <view class="tarot-status">{{tarotStatus}}</view>
+    </view>
+    <view class="tarot-content">
+      <view wx:if="{{!todayTarot}}" class="tarot-undrawn">
+        <image class="tarot-card-back" src="cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarot/Back 1.png" mode="aspectFit"></image>
+        <view class="tarot-hint">点击抽取今日塔罗牌</view>
+      </view>
+      <view wx:else class="tarot-drawn">
+        <image class="tarot-card-front" src="{{todayTarot.image}}" mode="aspectFit"></image>
+        <view class="tarot-name">{{todayTarot.name}}</view>
+        <view class="tarot-actions">
+          <view class="tarot-hint">已抽取，点此重新抽取或查看</view>
+          <button class="tarot-redo-btn" size="mini" catchtap="redoTarot">重新抽取</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 探索工具·每日练习 Mini 打卡日历 -->
+  <view class="habit-card" bindtap="goToHabitCalendar">
+    <!-- 顶部标题行 -->
+    <view class="habit-header">
+      <view class="habit-title-section">
+        <view class="habit-title">探索工具 · 每日练习</view>
+      </view>
+      <view class="habit-arrow">
+        <image class="habit-arrow-icon" src="/assets/icons/chevron-right.svg" mode="aspectFit" />
+      </view>
+    </view>
+
+    <!-- 打卡点阵区域 -->
+    <view class="habit-grid">
+      <!-- 星期表头行 -->
+      <view class="habit-week-header">
+        <view class="habit-row-left-placeholder"></view>
+        <view class="habit-week-labels">
+          <text class="week-label {{todayWeekIndex === 0 ? 'today' : ''}}">M</text>
+          <text class="week-label {{todayWeekIndex === 1 ? 'today' : ''}}">T</text>
+          <text class="week-label {{todayWeekIndex === 2 ? 'today' : ''}}">W</text>
+          <text class="week-label {{todayWeekIndex === 3 ? 'today' : ''}}">T</text>
+          <text class="week-label {{todayWeekIndex === 4 ? 'today' : ''}}">F</text>
+          <text class="week-label {{todayWeekIndex === 5 ? 'today' : ''}}">S</text>
+          <text class="week-label {{todayWeekIndex === 6 ? 'today' : ''}}">S</text>
+        </view>
+      </view>
+
+      <!-- 塔罗行 -->
+      <view class="habit-row">
+        <view class="habit-row-left">
+          <image class="habit-icon" src="/assets/icons/habit-tarot.svg" mode="aspectFit" />
+          <text class="habit-name">塔罗</text>
+        </view>
+        <view class="habit-dots">
+          <view wx:for="{{weekHabitData.tarot}}" wx:key="index"
+                class="habit-dot {{item ? 'completed' : 'incomplete'}} {{todayWeekIndex === index ? 'today-col' : ''}}"
+                data-date="{{weekDates[index]}}"
+                catchtap="handleCalendarDayTap"></view>
+        </view>
+      </view>
+
+      <!-- 分隔线 -->
+      <view class="habit-divider"></view>
+
+      <!-- 冥想行 -->
+      <view class="habit-row">
+        <view class="habit-row-left">
+          <image class="habit-icon" src="/assets/icons/habit-meditation.svg" mode="aspectFit" />
+          <text class="habit-name">冥想</text>
+        </view>
+        <view class="habit-dots">
+          <view wx:for="{{weekHabitData.meditation}}" wx:key="index"
+                class="habit-dot {{item ? 'completed' : 'incomplete'}} {{todayWeekIndex === index ? 'today-col' : ''}}"
+                data-date="{{weekDates[index]}}"
+                catchtap="handleCalendarDayTap"></view>
+        </view>
+      </view>
+
+      <!-- 分隔线 -->
+      <view class="habit-divider"></view>
+
+      <!-- 情绪行 -->
+      <view class="habit-row">
+        <view class="habit-row-left">
+          <image class="habit-icon" src="/assets/icons/habit-emotion.svg" mode="aspectFit" />
+          <text class="habit-name">情绪</text>
+        </view>
+        <view class="habit-dots">
+          <view wx:for="{{weekHabitData.emotion}}" wx:key="index"
+                class="habit-dot {{item ? 'completed' : 'incomplete'}} {{todayWeekIndex === index ? 'today-col' : ''}}"
+                data-date="{{weekDates[index]}}"
+                catchtap="handleCalendarDayTap"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部坚持提示文案 -->
+    <view class="habit-encourage-text">坚持是一件了不起的事 ✨</view>
+  </view>
+
+  <!-- 自我探索入口 -->
+  <view class="card explore-card" bindtap="goToExplore">
+    <view class="explore-header">
+      <view class="explore-title">🌱 自我探索</view>
+      <view class="explore-arrow">→</view>
+    </view>
+    <view class="explore-items">
+      <view class="explore-tag" catchtap="goToEmotion">
+        <image class="explore-tag-icon" src="/assets/icons/heart-outline.svg" mode="aspectFit" />
+        <text>情绪记录</text>
+      </view>
+      <view class="explore-tag">MBTI</view>
+      <view class="explore-tag">星座</view>
+      <view class="explore-tag">内在小孩</view>
+      <view class="explore-tag">脉轮测试</view>
+      <view class="explore-tag" catchtap="goToOhCard">OH卡</view>
+    </view>
+  </view>
+</view>
+
+<!-- 全局悬浮音乐控制按钮 -->
+<audio-float />
+
+<!-- 当日完成情况弹窗 -->
+<view class="day-detail-popup" wx:if="{{showDayDetailPopup}}">
+  <!-- 半透明遮罩层 -->
+  <view class="popup-mask" bindtap="closeDayDetailPopup"></view>
+
+  <!-- 底部弹出卡片 -->
+  <view class="popup-card">
+    <!-- 标题区域 -->
+    <view class="popup-header">
+      <view class="popup-title">{{selectedDateDisplay}} 的打卡情况</view>
+      <view class="popup-close" bindtap="closeDayDetailPopup">✕</view>
+    </view>
+
+    <!-- 正文区域 -->
+    <view class="popup-content">
+      <!-- 无记录状态 -->
+      <view wx:if="{{!selectedDayDetail.hasAnyRecord}}" class="popup-empty">
+        <text class="empty-icon">📝</text>
+        <text class="empty-text">当天无打卡记录</text>
+        <text class="empty-hint">试试开始一项小小的坚持吧~</text>
+      </view>
+
+      <!-- 有记录状态 -->
+      <view wx:else class="popup-habits">
+        <!-- 塔罗 -->
+        <view class="popup-habit-item">
+          <view class="habit-info">
+            <text class="habit-emoji">🔮</text>
+            <text class="habit-label">塔罗</text>
+          </view>
+          <view class="habit-status {{selectedDayDetail.hasTarot ? 'done' : 'undone'}}">
+            <text>{{selectedDayDetail.hasTarot ? '已完成' : '未完成'}}</text>
+            <text wx:if="{{selectedDayDetail.tarotCount > 0}}" class="habit-count">{{selectedDayDetail.tarotCount}}次</text>
+          </view>
+        </view>
+
+        <!-- 冥想 -->
+        <view class="popup-habit-item">
+          <view class="habit-info">
+            <text class="habit-emoji">🧘</text>
+            <text class="habit-label">冥想</text>
+          </view>
+          <view class="habit-status {{selectedDayDetail.hasMeditation ? 'done' : 'undone'}}">
+            <text>{{selectedDayDetail.hasMeditation ? '已完成' : '未完成'}}</text>
+            <text wx:if="{{selectedDayDetail.meditationCount > 0}}" class="habit-count">{{selectedDayDetail.meditationCount}}次</text>
+          </view>
+        </view>
+
+        <!-- 情绪 -->
+        <view class="popup-habit-item">
+          <view class="habit-info">
+            <text class="habit-emoji">💛</text>
+            <text class="habit-label">情绪</text>
+          </view>
+          <view class="habit-status {{selectedDayDetail.hasEmotion ? 'done' : 'undone'}}">
+            <text>{{selectedDayDetail.hasEmotion ? '已完成' : '未完成'}}</text>
+            <text wx:if="{{selectedDayDetail.emotionCount > 0}}" class="habit-count">{{selectedDayDetail.emotionCount}}次</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部按钮 -->
+    <view class="popup-footer">
+      <button class="popup-btn" bindtap="closeDayDetailPopup">我知道了</button>
+    </view>
+  </view>
+</view>

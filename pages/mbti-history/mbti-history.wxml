@@ -1,0 +1,48 @@
+<!-- pages/mbti-history/mbti-history.wxml -->
+<view class="history-container">
+  <view class="section-header">
+    <view class="title">📋 测试历史</view>
+    <view class="subtitle">记录� 的每一次 MBTI 测试结果</view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty">
+    <view class="empty-emoji">📝</view>
+    <view class="empty-text">还没有测试记录，去测试一下吧~</view>
+    <button class="goto-btn" bindtap="goToTest">去测试</button>
+  </view>
+
+  <!-- 历史列表 -->
+  <scroll-view scroll-y class="list" lower-threshold="80" bindscrolltolower="onReachBottom">
+    <block wx:for="{{list}}" wx:key="_id">
+      <view class="card" bindtap="viewDetail" data-item="{{item}}">
+        <view class="card-header">
+          <view class="type-badge">{{item.type}}</view>
+          <view class="type-name">{{item.typeName}}</view>
+          <view class="test-date">{{item.dateStr}}</view>
+        </view>
+        <view class="card-body">
+          <view class="type-desc">{{item.typeDesc}}</view>
+          <!-- 维度简要显示 -->
+          <view class="dimensions-brief">
+            <view wx:for="{{item.dimensions}}" wx:for-item="dim" wx:key="name" class="dim-item">
+              <text class="dim-left {{dim.leftPercent > 50 ? 'active' : ''}}">{{dim.left}}</text>
+              <view class="dim-bar">
+                <view class="dim-fill" style="width: {{dim.leftPercent}}%"></view>
+              </view>
+              <text class="dim-right {{dim.rightPercent > 50 ? 'active' : ''}}">{{dim.right}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view class="loading" wx:if="{{loading}}">
+      <text>� 载中...</text>
+    </view>
+    <view class="loading" wx:if="{{!hasMore && list.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+  </scroll-view>
+</view>
+

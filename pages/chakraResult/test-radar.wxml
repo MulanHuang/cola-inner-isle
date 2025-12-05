@@ -1,0 +1,24 @@
+<!-- 测试雷达图 -->
+<view class="test-container">
+  <view class="test-title">雷达图测试页面</view>
+  
+  <view class="test-info">
+    <text>radarData 长度: {{radarData.length}}</text>
+    <text>selectedChakra: {{selectedChakra}}</text>
+  </view>
+  
+  <!-- 雷达图组件 -->
+  <chakra-radar
+    chakraData="{{radarData}}"
+    selectedChakra="{{selectedChakra}}"
+    bind:chakrachange="onChakraChange"
+  ></chakra-radar>
+  
+  <!-- 显示数据 -->
+  <view class="test-data">
+    <view wx:for="{{radarData}}" wx:key="type" class="data-item">
+      {{item.name}}: {{item.value}}%
+    </view>
+  </view>
+</view>
+

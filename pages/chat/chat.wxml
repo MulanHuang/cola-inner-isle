@@ -1,0 +1,168 @@
+<!-- pages/chat/chat.wxml -->
+
+<!-- ===================== -->
+<!--       自定义导航从本地存储加载 从本地存储加载     -->
+<!-- ===================== -->
+<view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
+  <view class="navbar-content">
+    <!-- 左侧返回按钮 -->
+    <view class="chat-nav-left" bindtap="handleBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <!-- 中间从本地存储加载 从本地存储加载题 -->
+    <view class="navbar-center">
+      <image class="navbar-logo" src="/images/logo.png" mode="aspectFit" />
+      <view class="navbar-title">可乐心岛</view>
+    </view>
+    <!-- 右侧从本地存储加载 位（保持对称） -->
+    <view class="chat-nav-right"></view>
+  </view>
+</view>
+
+<!-- ===================== -->
+<!--      整体容器          -->
+<!-- ===================== -->
+<view
+  class="chat-page-root"
+  style="padding-top: {{navBarHeight}}px;"
+  bindtouchstart="onTouchStart"
+  bindtouchend="onTouchEnd"
+>
+  <!-- ===================== -->
+  <!--      聊天消息列表      -->
+  <!-- ===================== -->
+  <scroll-view
+    class="chat-scroll {{tagPanelExpanded ? 'panel-open' : ''}}"
+    scroll-y="true"
+    scroll-with-animation="true"
+    scroll-into-view="{{scrollToView}}"
+    enhanced="true"
+    show-scrollbar="false"
+    bindscroll="onChatScroll"
+  >
+    <!-- 欢迎界面（从本地存储加载 聊天记录时显示） -->
+    <view wx:if="{{messages.length === 0}}" class="welcome-section">
+      <view class="welcome-center">
+        <view class="welcome-icon">🌸</view>
+        <view class="welcome-text">你好，我是你的心灵陪伴者</view>
+        <view class="welcome-subtitle">
+          在这里，你可以自由表达内心的感受
+        </view>
+      </view>
+    </view>
+
+    <!-- 消息气泡列表 -->
+    <block
+      wx:for="{{messages}}"
+      wx:key="id"
+      wx:for-item="item"
+      wx:for-index="index"
+    >
+      <!-- 日期分隔条：当日期与上一条消息不同时显示 -->
+      <view
+        wx:if="{{index === 0 || item.dateLabel !== messages[index - 1].dateLabel}}"
+        class="msg-date-divider"
+      >
+        <view class="msg-date-divider-line"></view>
+        <text class="msg-date-divider-text">{{item.dateLabel || '今天'}}</text>
+        <view class="msg-date-divider-line"></view>
+      </view>
+
+      <!-- 消息行：从本地存储加载 从本地存储加载据说话方切换添从本地存储加载 额外间距 -->
+      <view
+        id="msg_{{index}}"
+        class="msg-row {{item.role === 'user' ? 'msg-row-self' : 'msg-row-other'}} {{index > 0 && messages[index - 1].role !== item.role ? 'msg-row-switch' : ''}}"
+      >
+        <view class="msg-bubble {{item.role === 'user' ? 'msg-bubble-self' : 'msg-bubble-other'}}">
+          <text class="msg-text" user-select="true">{{item.content}}</text>
+        </view>
+        <view class="msg-time">{{item.time}}</view>
+      </view>
+    </block>
+
+    <!-- 加载中（AI 正在思考） -->
+    <view wx:if="{{loading}}" id="msg_loading" class="msg-row msg-row-other msg-row-switch">
+      <view class="msg-bubble msg-bubble-other msg-bubble-loading">
+        <view class="typing-indicator">
+          <view class="dot"></view>
+          <view class="dot"></view>
+          <view class="dot"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- ✅ 底部锚点：用于滚动对齐，让最后一条消息停在输入框上方 -->
+    <view id="scroll_bottom" class="scroll-bottom-anchor"></view>
+  </scroll-view>
+
+  <!-- 回到底部悬浮按钮 -->
+  <view
+    class="scroll-to-bottom-btn {{showScrollToBottom ? 'visible' : ''}} {{tagPanelExpanded ? 'panel-open' : ''}}"
+    bindtap="scrollToBottom"
+  >
+    <text class="scroll-to-bottom-icon">↓</text>
+  </view>
+
+  <!-- ===================== -->
+  <!--   底部悬浮工具卡片      -->
+  <!-- ===================== -->
+  <view class="chat-composer {{tagPanelExpanded ? 'panel-expanded' : ''}}">
+    <!-- 可折从本地存储加载 从本地存储加载 从本地存储加载签面板（在输入从本地存储加载 从本地存储加载上方） -->
+    <view class="composer-tag-panel {{tagPanelExpanded ? 'panel-visible' : ''}}">
+      <view class="tag-panel-header">
+        <text class="tag-panel-title">此刻你想聊</text>
+        <view class="tag-panel-close" bindtap="onPlusTap">
+          <text class="tag-panel-close-icon">∨</text>
+        </view>
+      </view>
+      <view class="composer-tags-wrap">
+        <view
+          wx:for="{{topics}}"
+          wx:key="id"
+          wx:for-item="item"
+          class="composer-tag {{item.id === currentTopicId ? 'composer-tag--active' : 'composer-tag--default'}}"
+          bindtap="switchTopic"
+          data-id="{{item.id}}"
+        >{{item.name}}</view>
+      </view>
+    </view>
+
+    <!-- 底部输入从本地存储加载 从本地存储加载（微信风从本地存储加载 从本地存储加载极简） -->
+    <view class="composer-input-bar">
+      <!-- 左侧 + 按钮（切换面板展开/收起） -->
+      <view class="composer-plus-btn {{tagPanelExpanded ? 'plus-btn-active' : ''}}" bindtap="onPlusTap">
+        <text class="plus-btn-icon">＋</text>
+      </view>
+
+      <!-- 中间输入框（胶囊形） -->
+      <view class="composer-input-field {{textareaHeight > 60 ? 'composer-input-field-expanded' : ''}}">
+        <textarea
+          class="composer-textarea"
+          placeholder="说点什么吧…"
+          placeholder-class="composer-input-placeholder"
+          value="{{inputText}}"
+          bindinput="onInput"
+          bindconfirm="sendMessage"
+          confirm-type="send"
+          adjust-position="{{true}}"
+          cursor-spacing="120"
+          auto-height="{{true}}"
+          maxlength="2000"
+          show-confirm-bar="{{false}}"
+          disable-default-padding="{{true}}"
+        />
+      </view>
+
+      <!-- 右侧：语音按钮 / 发送按钮 -->
+      <view wx:if="{{!inputText}}" class="composer-icon-btn" bindtap="onVoiceTap">
+        <image class="composer-icon-img" src="/images/icons/mic.svg" mode="aspectFit" />
+      </view>
+      <view wx:else class="composer-send-btn" bindtap="sendMessage">
+        <image class="composer-send-icon" src="/images/icons/send-arrow.svg" mode="aspectFit" />
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 全局悬浮音乐控制按钮 -->
+<audio-float />

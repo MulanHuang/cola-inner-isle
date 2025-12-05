@@ -1,0 +1,175 @@
+/* pages/mbti-test/mbti-test.wxss */
+.test-container {
+  min-height: 100vh;
+  background: #F5F1E8;
+  padding: 40rpx 30rpx;
+}
+
+.debug-banner {
+  background: #fff4e5;
+  color: #8B7355;
+  border: 2rpx dashed #d9b48c;
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 进度条区域 */
+.progress-section {
+  margin-bottom: 40rpx;
+}
+
+.progress-text {
+  font-size: 28rpx;
+  color: #666666;
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12rpx;
+  background: #E5E5E5;
+  border-radius: 6rpx;
+  overflow: hidden;
+  margin-bottom: 12rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #B8956A 0%, #8B7355 100%);
+  border-radius: 6rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-percent {
+  font-size: 24rpx;
+  color: #8B7355;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* 题目卡片 */
+.question-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 40rpx 30rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(139, 115, 85, 0.08);
+  position: relative;
+}
+
+.question-number {
+  position: absolute;
+  top: 20rpx;
+  right: 30rpx;
+  font-size: 24rpx;
+  color: #B8956A;
+  font-weight: 600;
+}
+
+.question-text {
+  font-size: 32rpx;
+  color: #333333;
+  line-height: 1.6;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+}
+
+.dimension-tag {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  background: #F5F1E8;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #8B7355;
+}
+
+/* 选项区域 */
+.options-section {
+  margin-bottom: 40rpx;
+}
+
+.option-button {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(139, 115, 85, 0.06);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.option-button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(184, 149, 106, 0.1) 0%, rgba(139, 115, 85, 0.05) 100%);
+  transition: width 0.3s ease;
+}
+
+.option-button:active {
+  transform: scale(0.98);
+}
+
+.option-button:active::before {
+  width: 100%;
+}
+
+.option-key {
+  width: 60rpx;
+  height: 60rpx;
+  background: linear-gradient(135deg, #B8956A 0%, #8B7355 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #FFFFFF;
+  font-weight: 600;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.option-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333333;
+  line-height: 1.5;
+  z-index: 1;
+}
+
+/* 导航按钮 */
+.nav-buttons {
+  margin-bottom: 30rpx;
+}
+
+.prev-btn {
+  width: 100%;
+  background: #FFFFFF;
+  color: #8B7355;
+  border: 2rpx solid #E5E5E5;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  padding: 24rpx;
+}
+
+.prev-btn:disabled {
+  opacity: 0.4;
+}
+
+/* 提示文字 */
+.hint-text {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999999;
+  line-height: 1.6;
+}

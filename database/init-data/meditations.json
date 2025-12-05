@@ -1,0 +1,90 @@
+[
+  {
+    "title": "海底轮冥想",
+    "description": "连接大地能量，建立安全感和稳定感",
+    "category": "chakra",
+    "chakraType": "root",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-root.jpg",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/海底轮冥想.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 1
+  },
+  {
+    "title": "脐轮冥想",
+    "description": "激活创造力和情感流动",
+    "category": "chakra",
+    "chakraType": "sacral",
+    "cover": "/images/meditation/chakra-sacral.jpg",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/脐轮冥想.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 2
+  },
+  {
+    "title": "太阳轮冥想",
+    "description": "增强自信和个人力量",
+    "category": "chakra",
+    "chakraType": "solar",
+    "cover": "/images/meditation/chakra-solar.jpg",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/太阳轮冥想.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 3
+  },
+  {
+    "title": "心轮冥想",
+    "description": "打开心轮，连接爱与慈悲",
+    "category": "chakra",
+    "chakraType": "heart",
+    "cover": "/images/meditation/chakra-heart.jpg",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/心轮冥想.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 4
+  },
+  {
+    "title": "喉轮冥想",
+    "description": "释放表达，说出真实的自己",
+    "category": "chakra",
+    "chakraType": "throat",
+    "cover": "/images/meditation/chakra-throat.jpg",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/喉轮冥想（加强版）.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 5
+  },
+  {
+    "title": "眉心轮冥想",
+    "description": "开启直觉和内在智慧",
+    "category": "chakra",
+    "chakraType": "third-eye",
+    "cover": "/images/meditation/chakra-third-eye.jpg",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/第三眼冥想（加强版）.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 6
+  },
+  {
+    "title": "顶轮冥想",
+    "description": "连接宇宙能量，提升灵性意识",
+    "category": "chakra",
+    "chakraType": "crown",
+    "cover": "/images/meditation/chakra-crown.jpg",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/顶轮冥想（加强版）.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 7
+  },
+  {
+    "title": "顶轮之光",
+    "description": "连接宇宙能量，提升灵性意识",
+    "category": "chakra",
+    "chakraType": "crown",
+    "cover": "/images/meditation/chakra-crown.jpg",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/顶轮之光.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 8
+  }
+]

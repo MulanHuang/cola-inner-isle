@@ -1,0 +1,222 @@
+<!--pages/dreamGrid/dreamGrid.wxml-->
+<view class="dream-grid-page">
+  <!-- 顶部标题区域 -->
+  <view class="header">
+    <view class="main-title"><text class="title-icon">✨</text> 人生梦想九宫格</view>
+    <view class="sub-title">在每一格中写下目标与行动计划</view>
+    <!-- 完成度进度提示 -->
+    <view class="progress-section">
+      <view class="progress-text">已点亮 {{completedCount}} / 9 格</view>
+      <view class="progress-bar-bg">
+        <view class="progress-bar-fill" style="width: {{completedCount / 9 * 100}}%;"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 编辑模式：单列卡片列表 -->
+  <scroll-view
+    wx:if="{{mode === 'edit'}}"
+    scroll-y="true"
+    scroll-x="false"
+    class="edit-scroll-view"
+    enhanced="{{true}}"
+    show-scrollbar="{{false}}"
+  >
+    <view class="card-list">
+      <view 
+        wx:for="{{areas}}" 
+        wx:key="id" 
+        class="area-card {{item.goal ? 'card-filled' : 'card-empty-state'}}"
+        bindtap="openEditModal"
+        data-index="{{index}}"
+        hover-class="card-hover"
+        style="background-color: {{item.color || gridColors[index]}};"
+      >
+        <view class="card-header">
+          <view class="card-title">{{item.title}}</view>
+          <view class="card-edit-icon">{{item.goal ? '✏️' : '➕'}}</view>
+        </view>
+        <view class="card-body">
+          <block wx:if="{{item.goal}}">
+            <view class="card-goal-section">
+              <text class="goal-text">{{item.goal}}</text>
+            </view>
+            <view wx:if="{{item.actions.length > 0}}" class="card-actions-preview">
+              <view wx:for="{{item.actions}}" wx:for-item="action" wx:for-index="aIdx" wx:key="aIdx" wx:if="{{aIdx < 2}}" class="action-preview-item">
+                <text class="action-bullet">·</text>
+                <text class="action-text">{{action}}</text>
+              </view>
+              <view wx:if="{{item.actions.length > 2}}" class="action-more">
+                <text>还有 {{item.actions.length - 2}} 条计划...</text>
+              </view>
+            </view>
+          </block>
+          <view wx:else class="card-empty-hint">
+            <text class="empty-icon">💭</text>
+            <text class="empty-text">点击添加你的目标和计划</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 总览模式：3×3 九宫格 -->
+  <scroll-view
+    wx:if="{{mode === 'overview'}}"
+    scroll-y="true"
+    class="overview-scroll-view"
+    enhanced="{{true}}"
+    show-scrollbar="{{false}}"
+  >
+    <view class="overview-container">
+      <view class="overview-grid">
+        <view
+          wx:for="{{areas}}"
+          wx:key="id"
+          class="overview-item"
+          style="background-color: {{item.color || gridColors[index]}};"
+          bindtap="onOverviewItemTap"
+          data-index="{{index}}"
+          hover-class="overview-item-hover"
+        >
+          <!-- 状态标签 -->
+          <view wx:if="{{item.goal && item.actions.length > 0}}" class="status-tag status-active">行动中</view>
+          <view wx:elif="{{item.goal}}" class="status-tag status-seed">种子</view>
+          
+          <view class="overview-title">{{item.title}}</view>
+          <view wx:if="{{item.goal}}" class="overview-goal-section">
+            <text class="overview-goal-icon">🎯</text>
+            <text class="overview-goal-text">{{item.goal}}</text>
+          </view>
+          <view wx:else class="overview-empty">点击编辑 ✨</view>
+          <view wx:if="{{item.actions.length > 0}}" class="overview-actions">
+            <view wx:for="{{item.actions}}" wx:for-item="action" wx:for-index="actionIdx" wx:key="actionIdx" wx:if="{{actionIdx < 2}}" class="overview-action-item">
+              <text class="overview-action-icon">✓</text>
+              <text class="overview-action-text">{{action}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view wx:if="{{mode === 'edit'}}" class="btn-group">
+      <button class="btn-primary" bindtap="switchMode" data-mode="overview">
+        <text class="btn-icon">📊</text>
+        <text>生成九宫格总览</text>
+      </button>
+      <button class="btn-secondary" bindtap="onExportPosterTap">
+        <text class="btn-icon">🖼️</text>
+        <text>导出为海报</text>
+      </button>
+    </view>
+    <view wx:if="{{mode === 'overview'}}" class="btn-group">
+      <button class="btn-secondary" bindtap="switchMode" data-mode="edit">
+        <text class="btn-icon">✏️</text>
+        <text>返回编辑模式</text>
+      </button>
+      <button class="btn-primary" bindtap="onExportPosterTap">
+        <text class="btn-icon">🖼️</text>
+        <text>导出为海报</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 首次保存提示 Toast -->
+  <view wx:if="{{showSaveTip}}" class="save-tip-toast {{saveTipFading ? 'fade-out' : ''}}">
+    <text>已自动为你保存到本地，仅你自己可见 ✨</text>
+  </view>
+
+  <!-- 编辑弹窗 Modal -->
+  <view wx:if="{{editingAreaIndex !== null}}" class="modal-mask" catchtap="closeEditModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <view class="modal-title">{{areas[editingAreaIndex].title}}</view>
+        <view class="modal-close" bindtap="closeEditModal">✕</view>
+      </view>
+      
+      <scroll-view scroll-y="true" class="modal-body">
+        <!-- 目标/梦想 -->
+        <view class="form-section goal-section">
+          <view class="form-label">
+            <text class="label-icon">🎯</text>
+            <text class="label-text">目标 / 梦想</text>
+            <text class="label-required">必填</text>
+          </view>
+          <!-- 目标验证错误提示 -->
+          <view wx:if="{{showGoalError}}" class="goal-error-tip">请先写下你的目标～</view>
+          <view class="textarea-wrapper">
+            <textarea
+              class="form-textarea goal-textarea"
+              placeholder="写下这个领域你想实现的目标..."
+              value="{{tempGoal}}"
+              bindinput="onGoalInput"
+              maxlength="200"
+              auto-height="{{true}}"
+            />
+            <view class="char-counter">{{tempGoal.length}} / 200</view>
+          </view>
+        </view>
+
+        <!-- 行动计划 -->
+        <view class="form-section action-section">
+          <view class="form-label">
+            <text class="label-icon">📋</text>
+            <text class="label-text">行动计划</text>
+            <text class="label-optional">可选</text>
+          </view>
+          <view class="action-input-wrapper">
+            <textarea
+              id="actionInput"
+              class="form-textarea action-textarea"
+              placeholder="比如：每天运动 30 分钟..."
+              value="{{tempActionInput}}"
+              bindinput="onTempActionInput"
+              maxlength="100"
+              auto-height="{{true}}"
+              focus="{{actionInputFocus}}"
+            />
+            <view class="add-btn-view" bindtap="addAction" hover-class="add-btn-hover">
+              <text class="add-btn-icon">+</text>
+              <text class="add-btn-text">添加</text>
+            </view>
+          </view>
+          <view wx:if="{{tempActions.length > 0}}" class="action-list">
+            <view 
+              wx:for="{{tempActions}}" 
+              wx:key="index" 
+              class="action-item {{newActionIndex === index ? 'action-item-highlight' : ''}}"
+              style="animation-delay: {{index * 0.05}}s;"
+            >
+              <view class="action-item-content">
+                <text class="action-item-bullet">·</text>
+                <text class="action-item-text">{{item}}</text>
+              </view>
+              <view class="action-item-delete" bindtap="removeAction" data-index="{{index}}">
+                <text>删除</text>
+              </view>
+            </view>
+          </view>
+          <view wx:else class="action-empty-hint">
+            <text>添加具体可执行的行动计划，让目标更容易实现 ✨</text>
+          </view>
+        </view>
+      </scroll-view>
+
+      <!-- 弹窗底部按钮 -->
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="closeEditModal">取消</button>
+        <button class="modal-btn save" bindtap="saveAreaEdit">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 用于生成海报的 Canvas (隐藏在屏幕外) -->
+  <canvas
+    canvas-id="posterCanvas"
+    id="posterCanvas"
+    style="width: 750px; height: 1100px; position: fixed; left: -9999px; top: -9999px;"
+  ></canvas>
+</view>

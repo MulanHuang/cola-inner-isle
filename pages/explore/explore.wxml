@@ -1,0 +1,78 @@
+<!--pages/explore/explore.wxml-->
+<view class="container explore-container">
+  <view class="header">
+    <view class="header-title">🌱 自我探索</view>
+    <view class="header-subtitle">认识更真实的自己</view>
+  </view>
+
+  <!-- 探索项目 -->
+  <view class="explore-list">
+    <!-- 情绪记录 -->
+    <view class="explore-item" bindtap="goToEmotion">
+      <view class="explore-icon explore-icon-img">
+        <image class="explore-icon-svg" src="/assets/icons/heart-outline.svg" mode="aspectFit" />
+      </view>
+      <view class="explore-content">
+        <view class="explore-name">情绪记录</view>
+        <view class="explore-desc">记录每天的情绪与心情变化</view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+
+    <!-- MBTI -->
+    <view class="explore-item" bindtap="goToMBTI">
+      <view class="explore-icon">🧩</view>
+      <view class="explore-content">
+        <view class="explore-name">MBTI 人格类型</view>
+        <view class="explore-desc">了解你的性格特质</view>
+        <view wx:if="{{userProfile.mbti}}" class="explore-value">
+          {{userProfile.mbti}}
+        </view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+
+    <!-- 星座 -->
+    <view class="explore-item" bindtap="goToZodiac">
+      <view class="explore-icon">⭐</view>
+      <view class="explore-content">
+        <view class="explore-name">星座档案</view>
+        <view class="explore-desc">探索你的星座特质</view>
+        <view wx:if="{{userProfile.zodiac}}" class="explore-value">
+          {{userProfile.zodiac}}
+        </view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+
+    <!-- 内在小孩 -->
+    <view class="explore-item" bindtap="goToInnerChild">
+      <view class="explore-icon">👶</view>
+      <view class="explore-content">
+        <view class="explore-name">内在小孩</view>
+        <view class="explore-desc">疗愈童年的自己</view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+
+    <!-- 脉轮测试 -->
+    <view class="explore-item" bindtap="goToChakraTest">
+      <view class="explore-icon">🌈</view>
+      <view class="explore-content">
+        <view class="explore-name">脉轮测试</view>
+        <view class="explore-desc">探索你的能量中心</view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+
+    <!-- 人生梦想九宫格 -->
+    <view class="explore-item" bindtap="goToDreamGrid">
+      <view class="explore-icon">🌟</view>
+      <view class="explore-content">
+        <view class="explore-name">人生梦想九宫格</view>
+        <view class="explore-desc">规划你的人生目标与行动计划</view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+  </view>
+</view>

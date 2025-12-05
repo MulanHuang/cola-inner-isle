@@ -1,0 +1,126 @@
+/* pages/explore/explore.wxss */
+
+/* ===================== */
+/*        基础样式        */
+/* ===================== */
+
+page {
+  background: #f5f1e8;
+}
+
+.explore-container {
+  padding: 0 32rpx 40rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ===================== */
+/*         头部          */
+/* ===================== */
+
+.header {
+  text-align: center;
+  padding: 40rpx 20rpx;
+}
+
+.header-title {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.header-subtitle {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* ===================== */
+/*       探索列表        */
+/* ===================== */
+
+.explore-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+/* 探索项目卡片 */
+.explore-item {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(139, 115, 85, 0.08);
+  transition: all 0.3s ease;
+}
+
+.explore-item:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(139, 115, 85, 0.12);
+}
+
+/* 图标 */
+.explore-icon {
+  font-size: 56rpx;
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff9f0 0%, #f5f1e8 100%);
+  border-radius: 20rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+/* 图片图标容器 */
+.explore-icon-img {
+  background: linear-gradient(135deg, #fff5f7 0%, #ffe8ec 100%);
+}
+
+/* SVG 图标 */
+.explore-icon-svg {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+/* 内容区域 */
+.explore-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.explore-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.explore-desc {
+  font-size: 26rpx;
+  color: #999999;
+  line-height: 1.4;
+}
+
+.explore-value {
+  font-size: 24rpx;
+  color: #8b7355;
+  margin-top: 8rpx;
+  font-weight: 500;
+}
+
+/* 箭头 */
+.explore-arrow {
+  font-size: 36rpx;
+  color: #8b7355;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.explore-item:active .explore-arrow {
+  transform: translateX(4rpx);
+}
