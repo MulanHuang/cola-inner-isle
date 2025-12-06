@@ -1,7 +1,7 @@
 // cloudfunctions/tarotInterpret/index.js
 const cloud = require("wx-server-sdk");
 // ✅ 统一通过公用 OpenAI 客户端，经由阿里云代理调用
-const { callOpenAI, safeAIResponse } = require("../common");
+const { callOpenAI, safeAIResponse } = require("./openai.js");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,

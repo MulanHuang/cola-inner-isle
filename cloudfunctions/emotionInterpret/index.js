@@ -3,7 +3,7 @@
 
 const cloud = require("wx-server-sdk");
 // ✅ 统一通过公用 OpenAI 客户端，经由阿里云代理调用
-const { callOpenAI, safeAIResponse } = require("../common/index.js");
+const { callOpenAI, safeAIResponse } = require("./openai.js");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,
@@ -56,12 +56,12 @@ exports.main = async (event, context) => {
     console.log("📡 开始调用 OpenAI 代理...");
 
     // 调用统一的 OpenAI 客户端
+    // 注意：gpt-5-mini 不支持自定义 temperature，只能使用默认值 1
     const rawReply = await callOpenAI({
       systemPrompt,
       userPrompt,
       options: {
         model: "gpt-5-mini",
-        temperature: 0.8,
         maxTokens: 600,
         timeout: 2500,
       },

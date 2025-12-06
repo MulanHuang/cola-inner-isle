@@ -297,7 +297,7 @@
   font-weight: 500;
 }
 
-/* � �签颜色方案 */
+/* 标签颜色方案 */
 .tag-blue {
   background: linear-gradient(135deg, #e8f4f8 0%, #d4eaf2 100%);
 }
@@ -391,7 +391,7 @@
   opacity: 0;
 }
 
-/* ========== 维度结果� �题 ========== */
+/* ========== 维度结果标题 ========== */
 .dimension-result-header {
   text-align: center;
   margin-bottom: 16rpx;

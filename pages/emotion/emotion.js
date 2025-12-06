@@ -1,107 +1,32 @@
 // pages/emotion/emotion.js
 const db = wx.cloud.database();
-// ✅ AI 温柔回应改为前端直连 Vercel 代理（绕过云函数 3 秒超时限制）
+// ✅ AI 温柔回应改为前端直连 Vercel 代理（流式输出）
+// 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 
-// 🚀 可复用的 AI 请求函数（前端直连 Vercel 代理）
-// 注意：gpt-5-mini 是推理模型，需要更多 token（推理 + 输出）
-function requestAI({
-  messages,
-  model = "gpt-5-mini",
-  temperature = 0.8,
-  max_completion_tokens = 16000,
-}) {
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url: "https://vercel-openai-proxy-lemon.vercel.app/api/openai",
-      method: "POST",
-      header: { "Content-Type": "application/json" },
-      data: { model, temperature, messages, max_completion_tokens },
-      timeout: 60000, // 60 秒超时
-      success(res) {
-        console.log("🔍 AI 响应状态码:", res.statusCode);
-        if (res.statusCode !== 200) {
-          console.error("❌ HTTP 错误:", res.statusCode, res.data);
-          reject(new Error(`HTTP ${res.statusCode}`));
-          return;
-        }
-        const data = res.data;
-        // 格式 A: 代理封装格式
-        if (data?.success && data?.content) {
-          console.log("✅ 解析成功 (格式 A)");
-          resolve(data.content);
-          // 格式 B: OpenAI 原始格式
-        } else if (data?.choices?.[0]?.message?.content) {
-          const content = data.choices[0].message.content;
-          if (!content || content.trim() === "") {
-            const finishReason = data.choices[0].finish_reason;
-            console.error("❌ AI 返回空内容, finish_reason:", finishReason);
-            reject(
-              new Error(
-                finishReason === "length"
-                  ? "AI 推理 token 不足"
-                  : "AI 返回了空内容"
-              )
-            );
-            return;
-          }
-          console.log("✅ 解析成功 (格式 B)");
-          resolve(content);
-          // 格式 C: OpenAI 错误格式
-        } else if (data?.error) {
-          const errorMsg =
-            typeof data.error === "string"
-              ? data.error
-              : data.error.message || data.error.code || "未知 API 错误";
-          console.error("❌ OpenAI API 错误:", errorMsg);
-          reject(new Error(`AI 服务错误: ${errorMsg}`));
-        } else if (data?.choices?.[0]?.message) {
-          const finishReason = data.choices[0].finish_reason;
-          console.error("❌ AI 返回空内容, finish_reason:", finishReason);
-          reject(
-            new Error(
-              finishReason === "length"
-                ? "AI 推理 token 不足"
-                : "AI 返回了空内容"
-            )
-          );
-        } else {
-          console.error(
-            "❌ 无法解析的响应格式:",
-            JSON.stringify(data).substring(0, 500)
-          );
-          reject(new Error("AI 返回格式异常"));
-        }
-      },
-      fail(err) {
-        console.error("❌ 网络请求失败:", err);
-        reject(new Error(err.errMsg || "网络请求失败"));
-      },
-    });
-  });
-}
+const { callAIStream } = require("../../utils/aiStream.js");
 
 Page({
   data: {
     // 温暖一句（本地备用数据）
     localQuotes: [
-      { content: "从本地存储加载 的感受是真实的，值得被看见", author: "" },
+      { content: "你的感受是真实的，值得被看见", author: "" },
       { content: "每一次呼吸，都是与自己和解的机会", author: "" },
       { content: "温柔地对待自己，就像对待一个好朋友", author: "" },
-      { content: "从本地存储加载 已经足够好了，真的", author: "" },
+      { content: "你已经足够好了，真的", author: "" },
       { content: "允许自己慢下来，感受此刻", author: "" },
-      { content: "从本地存储加载 比想象中更勇敢、更坚强", author: "" },
+      { content: "你比想象中更勇敢、更坚强", author: "" },
       { content: "每一天都是重新开始的机会", author: "" },
       { content: "倾听内心的声音，它知道答案", author: "" },
       { content: "给自己一些时间，慢慢来", author: "" },
-      { content: "从本地存储加载 值得被爱，也值得被理解", author: "" },
-      { content: "世界很吵，但从本地存储加载 可以很温柔", author: "" },
+      { content: "你值得被爱，也值得被理解", author: "" },
+      { content: "世界很吵，但你可以很温柔", author: "" },
       { content: "允许自己不完美，是一种温柔的力量", author: "" },
-      { content: "从本地存储加载 的情绪不是麻烦，是信号", author: "" },
-      { content: "别忘了，从本地存储加载 也是需要被温柔对待的人", author: "" },
-      { content: "心软不是弱点，是从本地存储加载 温暖的证据", author: "" },
+      { content: "你的情绪不是麻烦，是信号", author: "" },
+      { content: "别忘了，你也是需要被温柔对待的人", author: "" },
+      { content: "心软不是弱点，是你温暖的证据", author: "" },
     ],
     emotionQuote: {
-      content: "从本地存储加载 的感受是真实的，值得被看见",
+      content: "你的感受是真实的，值得被看见",
       author: "",
     },
     emotions: [
@@ -111,7 +36,7 @@ Page({
       { id: "grateful", name: "感恩", icon: "🙏" },
       { id: "sad", name: "难过", icon: "😢" },
       { id: "anxious", name: "焦虑", icon: "😰" },
-      { id: "angry", name: "愤怒", icon: "从本地存储加载 " },
+      { id: "angry", name: "愤怒", icon: "😠" },
       { id: "tired", name: "疲惫", icon: "😴" },
       { id: "confused", name: "困惑", icon: "😕" },
       { id: "lonely", name: "孤独", icon: "😔" },
@@ -120,17 +45,16 @@ Page({
     ],
     // 情绪反馈文案
     emotionFeedbacks: {
-      happy:
-        "真好，看到从本地存储加载 开心的从本地存储加载 从本地存储加载子 ✨",
-      excited: "感受到从本地存储加载 的兴奋啦！这份能量真棒 🌟",
-      calm: "平静是一种力量，从本地存储加载 做得很好 🌊",
+      happy: "真好，看到你开心的样子 ✨",
+      excited: "感受到你的兴奋啦！这份能量真棒 🌟",
+      calm: "平静是一种力量，你做得很好 🌊",
       grateful: "感恩的心会带来更多美好 🌸",
       sad: "难过没关系，允许自己慢慢来 🫂",
-      anxious: "焦虑时记得深呼吸，从本地存储加载 已经很努力了 🌿",
-      angry: "愤怒也是一种表达，从本地存储加载 的感受我都懂 🔥",
-      tired: "累了就休息一下，从本地存储加载 值得被温柔对待 🌙",
+      anxious: "焦虑时记得深呼吸，你已经很努力了 🌿",
+      angry: "愤怒也是一种表达，你的感受我都懂 🔥",
+      tired: "累了就休息一下，你值得被温柔对待 🌙",
       confused: "困惑是成长的开始，慢慢理清就好 🧭",
-      lonely: "孤独时记得，这里永远有人陪伴从本地存储加载  💫",
+      lonely: "孤独时记得，这里永远有人陪伴你 💫",
       stressed: "压力很大吧，一步一步来，不着急 🌱",
       peaceful: "这份安宁真珍贵，好好享受这一刻 🕊️",
     },
@@ -178,8 +102,8 @@ Page({
       {
         id: "success3",
         icon: "🎯",
-        label: "我完成的小目从本地存储加载 从本地存储加载…",
-        text: "我完成的小目从本地存储加载 从本地存储加载：",
+        label: "我完成的小目标…",
+        text: "我完成的小目标：",
       },
       {
         id: "success4",
@@ -190,9 +114,9 @@ Page({
     ],
     tags: [
       { id: "work", name: "工作", icon: "💼" },
-      { id: "study", name: "学从本地存储加载 ", icon: "📚" },
+      { id: "study", name: "学习", icon: "📚" },
       { id: "relationship", name: "人际关系", icon: "👥" },
-      { id: "family", name: "家庭", icon: "从本地存储加载 " },
+      { id: "family", name: "家庭", icon: "🏠" },
       { id: "love", name: "爱情", icon: "💕" },
       { id: "health", name: "健康", icon: "🏃" },
       { id: "money", name: "财务", icon: "💰" },
@@ -213,14 +137,14 @@ Page({
     aiReply: "",
     aiLoading: false,
     // 感恩输入框状态管理
-    currentFocusedGratitudeIndex: -1, // 当前聚焦的感恩输入框索引（-1表示从本地存储加载 聚焦）
+    currentFocusedGratitudeIndex: -1, // 当前聚焦的感恩输入框索引（-1表示未聚焦）
     gratitudeFocusStates: [false, false, false], // 每个感恩输入框的聚焦状态
-    gratitudeCursorPositions: [0, 0, 0], // 每个感恩输入框的光从本地存储加载 从本地存储加载位置
+    gratitudeCursorPositions: [0, 0, 0], // 每个感恩输入框的光标位置
     gratitudeExpandStates: [false, false, false], // 每条感恩记录的展开状态
     // 成功输入框状态管理
-    currentFocusedSuccessIndex: -1, // 当前聚焦的成功输入框索引（-1表示从本地存储加载 聚焦）
+    currentFocusedSuccessIndex: -1, // 当前聚焦的成功输入框索引（-1表示未聚焦）
     successFocusStates: [false, false, false], // 每个成功输入框的聚焦状态
-    successCursorPositions: [0, 0, 0], // 每个成功输入框的光从本地存储加载 从本地存储加载位置
+    successCursorPositions: [0, 0, 0], // 每个成功输入框的光标位置
     successExpandStates: [false, false, false], // 每条成功记录的展开状态
     // 字数限制
     maxTextLength: 100, // 最大字数
@@ -230,7 +154,7 @@ Page({
     this.loadEmotionQuote();
   },
 
-  // 从本地存储加载 载温暖一句（改进版：支持降级到本地数据）
+  // 加载温暖一句（改进版：支持降级到本地数据）
   async loadEmotionQuote() {
     try {
       // 尝试从云数据库下载
@@ -248,10 +172,7 @@ Page({
         return;
       }
     } catch (err) {
-      console.warn(
-        "从本地存储加载 ️ 云数据库加载失败，使用本地数据",
-        err.errMsg || err
-      );
+      console.warn("⚠️ 云数据库加载失败，使用本地数据", err.errMsg || err);
     }
 
     // 降级方案：使用本地数据
@@ -337,7 +258,7 @@ Page({
     // 检查是否已有相同模板前缀，避免重复插入
     const currentValue = gratitudeItems[targetIndex];
     if (currentValue && currentValue.startsWith(templateText)) {
-      // 已有相同模板前缀，不重复插入，只聚焦并定位光从本地存储加载 从本地存储加载
+      // 已有相同模板前缀，不重复插入，只聚焦并定位光标
       const gratitudeFocusStates = [...this.data.gratitudeFocusStates];
       gratitudeFocusStates[targetIndex] = true;
       const gratitudeCursorPositions = [...this.data.gratitudeCursorPositions];
@@ -353,7 +274,7 @@ Page({
     // 插入模板前缀
     gratitudeItems[targetIndex] = templateText;
 
-    // 更新数据并设置光从本地存储加载 从本地存储加载位置
+    // 更新数据并设置光标位置
     const gratitudeFocusStates = [...this.data.gratitudeFocusStates];
     gratitudeFocusStates[targetIndex] = true;
     const gratitudeCursorPositions = [...this.data.gratitudeCursorPositions];
@@ -435,7 +356,7 @@ Page({
     // 检查是否已有相同模板前缀，避免重复插入
     const currentValue = successItems[targetIndex];
     if (currentValue && currentValue.startsWith(templateText)) {
-      // 已有相同模板前缀，不重复插入，只聚焦并定位光从本地存储加载 从本地存储加载
+      // 已有相同模板前缀，不重复插入，只聚焦并定位光标
       const successFocusStates = [...this.data.successFocusStates];
       successFocusStates[targetIndex] = true;
       const successCursorPositions = [...this.data.successCursorPositions];
@@ -451,7 +372,7 @@ Page({
     // 插入模板前缀
     successItems[targetIndex] = templateText;
 
-    // 更新数据并设置光从本地存储加载 从本地存储加载位置
+    // 更新数据并设置光标位置
     const successFocusStates = [...this.data.successFocusStates];
     successFocusStates[targetIndex] = true;
     const successCursorPositions = [...this.data.successCursorPositions];
@@ -517,11 +438,11 @@ Page({
     });
   },
 
-  // 切换从本地存储加载 从本地存储加载签（增强版：添从本地存储加载 触觉反馈和音效）
+  // 切换标签（增强版：添加触觉反馈和音效）
   toggleTag(e) {
     // 防止事件冒泡
     if (!e || !e.currentTarget || !e.currentTarget.dataset) {
-      console.warn("从本地存储加载 ️ toggleTag: 事件对象异常", e);
+      console.warn("⚠️ toggleTag: 事件对象异常", e);
       return;
     }
 
@@ -529,7 +450,7 @@ Page({
 
     // 验证 tagId 是否有效
     if (!tagId) {
-      console.warn("从本地存储加载 ️ toggleTag: tagId 为空");
+      console.warn("⚠️ toggleTag: tagId 为空");
       return;
     }
 
@@ -540,11 +461,11 @@ Page({
     if (index > -1) {
       // 取消选中
       selectedTags.splice(index, 1);
-      console.log(`✅ 取消选中从本地存储加载 从本地存储加载签: ${tagId}`);
+      console.log(`✅ 取消选中标签: ${tagId}`);
     } else {
       // 选中
       selectedTags.push(tagId);
-      console.log(`✅ 选中从本地存储加载 从本地存储加载签: ${tagId}`);
+      console.log(`✅ 选中标签: ${tagId}`);
 
       // 触觉反馈（轻微震动）
       wx.vibrateShort({
@@ -553,7 +474,7 @@ Page({
           console.log("✅ 触觉反馈成功");
         },
         fail: (err) => {
-          console.log("从本地存储加载 ️ 触觉反馈失败", err);
+          console.log("⚠️ 触觉反馈失败", err);
         },
       });
     }
@@ -566,7 +487,7 @@ Page({
     // 显示轻量提示（可选）
     const tag = this.data.tags.find((t) => t.id === tagId);
     if (tag) {
-      const action = index > -1 ? "已移除" : "已添从本地存储加载 ";
+      const action = index > -1 ? "已移除" : "已添加";
       console.log(`${tag.icon} ${tag.name} ${action}`);
     }
   },
@@ -606,14 +527,14 @@ Page({
         createTime: new Date().toISOString(),
       };
 
-      // 调试日志：确认从本地存储加载 从本地存储加载签数据
+      // 调试日志：确认标签数据
       console.log("📝 准备保存的情绪数据：", {
         情绪: emotionData.emotionName,
         能量指数: emotionData.energyLevel,
         感恩事项: emotionData.gratitudeItems.length,
         成功事项: emotionData.successItems.length,
-        签: emotionData.tags,
-        签数量: emotionData.tags.length,
+        标签: emotionData.tags,
+        标签数量: emotionData.tags.length,
       });
 
       // 尝试保存到云数据库
@@ -627,13 +548,13 @@ Page({
         console.log("✅ 情绪记录已保存到云数据库");
       } catch (cloudErr) {
         console.warn(
-          "从本地存储加载 ️ 云数据库保存失败，使用本地存储",
+          "⚠️ 云数据库保存失败，使用本地存储",
           cloudErr.errMsg || cloudErr
         );
 
         // 降级方案：保存到本地存储
         const localEmotions = wx.getStorageSync("localEmotions") || [];
-        localEmotions.unshift(emotionData); // 添从本地存储加载 到数组开头
+        localEmotions.unshift(emotionData); // 添加到数组开头
 
         // 只保留最近100条记录
         if (localEmotions.length > 100) {
@@ -676,13 +597,10 @@ Page({
     }
   },
 
-  // 获取 AI 温柔回应
-  async getAIReflection() {
+  // 获取 AI 温柔回应（流式输出）
+  getAIReflection() {
     if (!this.data.selectedEmotion && !this.data.description) {
-      wx.showToast({
-        title: "先选择情绪或写一点内容吧 🌸",
-        icon: "none",
-      });
+      wx.showToast({ title: "先选择情绪或写一点内容吧 🌸", icon: "none" });
       return;
     }
 
@@ -698,70 +616,67 @@ Page({
       })
       .filter(Boolean);
 
-    this.setData({
-      aiLoading: true,
-      aiReply: "",
-    });
+    this.setData({ aiLoading: true, aiReply: "" });
 
-    try {
-      // ✅ 前端直连代理调用 OpenAI（绕过云函数 3 秒超时限制）
-      const systemPrompt = `从本地存储加载 是一位温柔、善解人意的情绪陪伴者。
-从本地存储加载 的任务是：
+    const systemPrompt = `你是一位温柔、善解人意的情绪陪伴者。
+你的任务是：
 1. 先共情、理解用户当前的情绪状态
 2. 用温暖、不评判的语言回应
 3. 给出一点温柔的建议或新视角
-4. 不要指责，不要简单地说"从本地存储加载 油"
+4. 不要指责，不要简单地说"加油"
 5. 不要诊断、不要贴标签
 6. 用中文回答，语言自然、有温度
 
-回应风从本地存储加载 从本地存储加载：
-- 像一个真正关心从本地存储加载 的朋友
+回应风格：
+- 像一个真正关心你的朋友
 - 先接住情绪，再给建议
-- 用"我感受到..."、"或许..."这从本地存储加载 从本地存储加载的表达
+- 用"我感受到..."、"或许..."这样的表达
 - 适当使用温暖的emoji，但不要过多`;
 
-      const tagsText =
-        selectedTagNames.length > 0
-          ? selectedTagNames.join("、")
-          : "从本地存储加载 ";
-      const descText =
-        this.data.description?.trim() || "（用户没有填写详细描述）";
+    const tagsText =
+      selectedTagNames.length > 0 ? selectedTagNames.join("、") : "无";
+    const descText =
+      this.data.description?.trim() || "（用户没有填写详细描述）";
 
-      const userPrompt = `当前情绪：${emotionName}
-相关从本地存储加载 从本地存储加载签：${tagsText}
+    const userPrompt = `当前情绪：${emotionName}
+相关标签：${tagsText}
 具体描述：${descText}
 
 请给我一段温柔的回应。`;
 
-      const messages = [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ];
+    const messages = [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ];
 
-      const reply = await requestAI({
-        messages,
-        model: "gpt-5-mini",
-        temperature: 0.8,
-      });
+    console.log("[emotion] 🔥 开始流式请求");
 
-      this.setData({
-        aiReply: reply,
-        aiLoading: false,
-      });
-    } catch (err) {
-      console.error("获取温柔回应失败", err);
-      // 温柔的兜底回复
-      const fallbackReply = `我感受到从本地存储加载 现在的情绪，这种感受是真实的，也是被允许的。
+    // 🔥 使用流式调用
+    this._currentStreamTask = callAIStream({
+      messages,
+      model: "gpt-5-mini",
+      onChunk: (chunk, fullText) => {
+        // 实时更新 AI 回复内容
+        this.setData({ aiReply: fullText });
+      },
+      onComplete: (fullText) => {
+        console.log("[emotion] ✅ 流式输出完成");
+        this.setData({ aiReply: fullText, aiLoading: false });
+        this._currentStreamTask = null;
+      },
+      onError: (err) => {
+        console.error("[emotion] ❌ 获取温柔回应失败:", err.message);
+        // 温柔的兜底回复
+        const fallbackReply = `我感受到你现在的情绪，这种感受是真实的，也是被允许的。
 
 有时候，我们只是需要一个安静的角落，让自己慢慢消化这些感受。
 
-如果从本地存储加载 愿意，可以试着深呼吸从本地存储加载 次，给自己一点温柔的时间。从本地存储加载 已经很努力了 💝`;
+如果你愿意，可以试着深呼吸几次，给自己一点温柔的时间。你已经很努力了 💝`;
 
-      this.setData({
-        aiReply: fallbackReply,
-        aiLoading: false,
-      });
-    }
+        this.setData({ aiReply: fallbackReply, aiLoading: false });
+        this._currentStreamTask = null;
+      },
+    });
   },
 
   // 查看历史

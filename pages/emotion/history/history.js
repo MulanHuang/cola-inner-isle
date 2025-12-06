@@ -6,12 +6,12 @@ Page({
     emotions: [],
     totalCount: 0,
     recentDays: 0,
-    // � �签� 射表（与 emotion.js 保持一致）
+    // 标签映射表（与 emotion.js 保持一致）
     tagMap: {
       work: { name: "工作", icon: "💼" },
-      study: { name: "学� ", icon: "📚" },
+      study: { name: "学习", icon: "📚" },
       relationship: { name: "人际关系", icon: "👥" },
-      family: { name: "家庭", icon: "� " },
+      family: { name: "家庭", icon: "🏠" },
       love: { name: "爱情", icon: "💕" },
       health: { name: "健康", icon: "🏃" },
       money: { name: "财务", icon: "💰" },
@@ -29,7 +29,7 @@ Page({
     this.calculateStats();
   },
 
-  // 转换� �签 ID 为� �签对象（包含名称和图� �）
+  // 转换标签 ID 为标签对象（包含名称和图标）
   convertTagsToDisplay(tagIds) {
     if (!tagIds || !Array.isArray(tagIds) || tagIds.length === 0) {
       return [];
@@ -46,7 +46,7 @@ Page({
             displayText: `${tagInfo.icon} ${tagInfo.name}`,
           };
         }
-        // 如果找不到对应的� �签，返回 ID 本身
+        // 如果找不到对应的标签，返回 ID 本身
         return {
           id: tagId,
           name: tagId,
@@ -57,14 +57,14 @@ Page({
       .filter(Boolean);
   },
 
-  // � 载情绪历史（改进版：支持本地存储降级）
+  // 加载情绪历史（改进版：支持本地存储降级）
   async loadEmotionHistory() {
-    wx.showLoading({ title: "� 载中..." });
+    wx.showLoading({ title: "加载中..." });
 
     try {
       let emotions = [];
 
-      // 尝试从云数据库� 载
+      // 尝试从云数据库加载
       try {
         const res = await db
           .collection("emotions")
@@ -75,29 +75,29 @@ Page({
         emotions = res.data.map((item) => ({
           ...item,
           timeStr: this.formatTime(item.createTime),
-          // 转换� �签 ID 为显示对象
+          // 转换标签 ID 为显示对象
           tagsDisplay: this.convertTagsToDisplay(item.tags),
         }));
 
-        console.log("✅ 从云数据库� 载历史记录成功", emotions.length, "条");
-        console.log("✅ � �签数据已转换", emotions[0]?.tagsDisplay);
+        console.log("✅ 从云数据库加载历史记录成功", emotions.length, "条");
+        console.log("✅ 标签数据已转换", emotions[0]?.tagsDisplay);
       } catch (cloudErr) {
         console.warn(
-          "� ️ 云数据库� 载失败，使用本地存储",
+          "⚠️ 云数据库加载失败，使用本地存储",
           cloudErr.errMsg || cloudErr
         );
 
-        // 降级方案：从本地存储� 载
+        // 降级方案：从本地存储加载
         const localEmotions = wx.getStorageSync("localEmotions") || [];
         emotions = localEmotions.map((item) => ({
           ...item,
           timeStr: this.formatTime(item.createTime),
-          // 转换� �签 ID 为显示对象
+          // 转换标签 ID 为显示对象
           tagsDisplay: this.convertTagsToDisplay(item.tags),
         }));
 
-        console.log("✅ 从本地存储� 载历史记录", emotions.length, "条");
-        console.log("✅ � �签数据已转换", emotions[0]?.tagsDisplay);
+        console.log("✅ 从本地存储加载历史记录", emotions.length, "条");
+        console.log("✅ 标签数据已转换", emotions[0]?.tagsDisplay);
       }
 
       this.setData({
@@ -107,10 +107,10 @@ Page({
 
       wx.hideLoading();
     } catch (err) {
-      console.error("❌ � 载情绪历史失败", err);
+      console.error("❌ 加载情绪历史失败", err);
       wx.hideLoading();
       wx.showToast({
-        title: "� 载失败 🌸",
+        title: "加载失败 🌸",
         icon: "none",
       });
     }
@@ -121,7 +121,7 @@ Page({
     try {
       let emotionData = [];
 
-      // 尝试从云数据库� 载
+      // 尝试从云数据库加载
       try {
         const res = await db
           .collection("emotions")
@@ -129,7 +129,7 @@ Page({
           .get();
         emotionData = res.data;
       } catch (cloudErr) {
-        // 降级方案：从本地存储� 载
+        // 降级方案：从本地存储加载
         emotionData = wx.getStorageSync("localEmotions") || [];
       }
 
@@ -173,7 +173,7 @@ Page({
     }
   },
 
-  // � �式化时间
+  // 格式化时间
   formatTime(date) {
     const d = new Date(date);
     const now = new Date();

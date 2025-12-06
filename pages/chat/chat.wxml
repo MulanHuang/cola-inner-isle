@@ -48,6 +48,21 @@
         <view class="welcome-subtitle">
           在这里，你可以自由表达内心的感受
         </view>
+        <!-- 🔥 快捷回复入口 -->
+        <view class="quick-prompts">
+          <view class="quick-prompt-item" bindtap="quickSend" data-text="今天心情有点低落">
+            💭 今天心情有点低落
+          </view>
+          <view class="quick-prompt-item" bindtap="quickSend" data-text="做了一个奇怪的梦">
+            🌙 做了一个奇怪的梦
+          </view>
+          <view class="quick-prompt-item" bindtap="quickSend" data-text="工作压力有点大">
+            💼 工作压力有点大
+          </view>
+          <view class="quick-prompt-item" bindtap="quickSend" data-text="想聊聊最近的烦恼">
+            🍃 想聊聊最近的烦恼
+          </view>
+        </view>
       </view>
     </view>
 
@@ -71,10 +86,24 @@
       <!-- 消息行：从本地存储加载 从本地存储加载据说话方切换添从本地存储加载 额外间距 -->
       <view
         id="msg_{{index}}"
-        class="msg-row {{item.role === 'user' ? 'msg-row-self' : 'msg-row-other'}} {{index > 0 && messages[index - 1].role !== item.role ? 'msg-row-switch' : ''}}"
+        class="msg-row {{item.role === 'user' ? 'msg-row-self' : 'msg-row-other'}} {{index > 0 && messages[index - 1].role !== item.role ? 'msg-row-switch' : ''}} {{item.isNew ? 'msg-row-new' : ''}}"
+        bindlongpress="onMsgLongPress"
+        data-id="{{item.id}}"
+        data-role="{{item.role}}"
       >
-        <view class="msg-bubble {{item.role === 'user' ? 'msg-bubble-self' : 'msg-bubble-other'}}">
-          <text class="msg-text" user-select="true">{{item.content}}</text>
+        <view class="msg-bubble {{item.role === 'user' ? 'msg-bubble-self' : 'msg-bubble-other'}} {{item.isThinking ? 'msg-bubble-thinking' : ''}}">
+          <!-- 🔥 如果正在思考，显示 typing indicator；否则显示文本 -->
+          <block wx:if="{{item.isThinking}}">
+            <view class="typing-indicator">
+              <view class="dot"></view>
+              <view class="dot"></view>
+              <view class="dot"></view>
+            </view>
+          </block>
+          <block wx:else>
+            <!-- 🔥 流式输出时显示打字光标 -->
+            <text class="msg-text {{item.isStreaming ? 'msg-text-streaming' : ''}}" user-select="true">{{item.content}}</text>
+          </block>
         </view>
         <view class="msg-time">{{item.time}}</view>
       </view>

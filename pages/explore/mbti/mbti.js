@@ -31,7 +31,7 @@ Page({
       INFJ: { name: "提倡者", desc: "安静而神秘的理想主义者" },
       INFP: { name: "调停者", desc: "诗意、善良的利他主义者" },
       ENFJ: { name: "主人公", desc: "富有魅力的领导者" },
-      ENFP: { name: "竞选者", desc: "热情、有创� 力的社交家" },
+      ENFP: { name: "竞选者", desc: "热情、有创造力的社交家" },
       ISTJ: { name: "物流师", desc: "实际而注重事实的个人" },
       ISFJ: { name: "守卫者", desc: "非常专注而温暖的守护者" },
       ESTJ: { name: "总经理", desc: "出色的管理者" },
@@ -47,7 +47,7 @@ Page({
     this.loadCurrentMBTI();
   },
 
-  // � 载当前MBTI
+  // 加载当前MBTI
   async loadCurrentMBTI() {
     try {
       const res = await db
@@ -65,7 +65,7 @@ Page({
         });
       }
     } catch (err) {
-      console.error("� 载MBTI失败", err);
+      console.error("加载MBTI失败", err);
     }
   },
 

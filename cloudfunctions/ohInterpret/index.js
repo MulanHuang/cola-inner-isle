@@ -9,7 +9,7 @@ const {
   callOpenAI,
   safeAIResponse,
   getFallbackMessage,
-} = require("../common/index.js");
+} = require("./index.js");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,

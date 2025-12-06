@@ -2,88 +2,13 @@
 // ============================================================
 // 塔罗牌抽取页面 - 专业级交互与动画系统
 // 流程阶段: idle → shuffling → spreading → selecting → selected → result
+// 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 // ============================================================
 
 const db = wx.cloud.database();
-// ✅ 塔罗解读改为前端直连 Vercel 代理（绕过云函数 3 秒超时限制）
+// ✅ 塔罗解读改为前端直连 Vercel 代理（流式输出）
 
-// 🚀 可复用的 AI 请求函数（前端直连 Vercel 代理）
-// 注意：gpt-5-mini 是推理模型，需要更多 token（推理 + 输出）
-function requestAI({
-  messages,
-  model = "gpt-5-mini",
-  temperature = 1,
-  max_completion_tokens = 16000,
-}) {
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url: "https://vercel-openai-proxy-lemon.vercel.app/api/openai",
-      method: "POST",
-      header: { "Content-Type": "application/json" },
-      data: { model, temperature, messages, max_completion_tokens },
-      timeout: 60000,
-      success(res) {
-        console.log("🔍 AI 响应状态码:", res.statusCode);
-        if (res.statusCode !== 200) {
-          console.error("❌ HTTP 错误:", res.statusCode, res.data);
-          reject(new Error(`HTTP ${res.statusCode}`));
-          return;
-        }
-        const data = res.data;
-        // 格式 A: 代理封装格式
-        if (data?.success && data?.content) {
-          console.log("✅ 解析成功 (格式 A)");
-          resolve(data.content);
-          // 格式 B: OpenAI 原始格式
-        } else if (data?.choices?.[0]?.message?.content) {
-          const content = data.choices[0].message.content;
-          if (!content || content.trim() === "") {
-            const finishReason = data.choices[0].finish_reason;
-            console.error("❌ AI 返回空内容, finish_reason:", finishReason);
-            reject(
-              new Error(
-                finishReason === "length"
-                  ? "AI 推理 token 不足"
-                  : "AI 返回了空内容"
-              )
-            );
-            return;
-          }
-          console.log("✅ 解析成功 (格式 B)");
-          resolve(content);
-          // 格式 C: OpenAI 错误格式
-        } else if (data?.error) {
-          const errorMsg =
-            typeof data.error === "string"
-              ? data.error
-              : data.error.message || data.error.code || "未知 API 错误";
-          console.error("❌ OpenAI API 错误:", errorMsg);
-          reject(new Error(`AI 服务错误: ${errorMsg}`));
-        } else if (data?.choices?.[0]?.message) {
-          const finishReason = data.choices[0].finish_reason;
-          console.error("❌ AI 返回空内容, finish_reason:", finishReason);
-          reject(
-            new Error(
-              finishReason === "length"
-                ? "AI 推理 token 不足"
-                : "AI 返回了空内容"
-            )
-          );
-        } else {
-          console.error(
-            "❌ 无法解析的响应格式:",
-            JSON.stringify(data).substring(0, 500)
-          );
-          reject(new Error("AI 返回格式异常"));
-        }
-      },
-      fail(err) {
-        console.error("❌ 网络请求失败:", err);
-        reject(new Error(err.errMsg || "网络请求失败"));
-      },
-    });
-  });
-}
+const { callAIStream } = require("../../utils/aiStream.js");
 
 // ============================================================
 // 动画配置常量 - 易于调整的参数
@@ -108,7 +33,7 @@ const ANIMATION_CONFIG = {
   },
   // 选中牌飞出
   flyOut: {
-    scale: 1.4, // 放大倍数
+    scale: 1.8, // 放大倍数
     duration: 500, // 飞出动画时长 (ms)
   },
   // 其他牌淡出
@@ -924,13 +849,10 @@ Page({
     });
   },
 
-  // 获取AI解读
-  async getInterpretation() {
+  // 获取AI解读（流式输出）
+  getInterpretation() {
     if (!this.data.question) {
-      wx.showToast({
-        title: "请输入你的问题",
-        icon: "none",
-      });
+      wx.showToast({ title: "请输入你的问题", icon: "none" });
       return;
     }
 
@@ -939,60 +861,51 @@ Page({
       !this.data.drawnCard &&
       (!this.data.drawnCards || this.data.drawnCards.length === 0)
     ) {
-      wx.showToast({
-        title: "请先完成抽牌",
-        icon: "none",
-      });
+      wx.showToast({ title: "请先完成抽牌", icon: "none" });
       return;
     }
 
-    this.setData({ loading: true });
+    this.setData({ loading: true, interpretation: "" });
 
-    try {
-      // 构建提示词，支持多卡解读
-      let prompt;
-      const { drawnCards, drawnCard, selectedSpread, question } = this.data;
+    // 构建提示词，支持多卡解读
+    let prompt;
+    const { drawnCards, drawnCard, selectedSpread, question } = this.data;
 
-      if (drawnCards && drawnCards.length > 1) {
-        // 多卡牌阵解读
-        const cardsInfo = drawnCards
-          .map(
-            (card) =>
-              `【${card.position}】${card.name}\n  关键词：${
-                card.keywords
-              }\n  含义：${card.meaning || "待解读"}`
-          )
-          .join("\n\n");
+    if (drawnCards && drawnCards.length > 1) {
+      // 多卡牌阵解读
+      const cardsInfo = drawnCards
+        .map(
+          (card) =>
+            `【${card.position}】${card.name}\n  关键词：${
+              card.keywords
+            }\n  含义：${card.meaning || "待解读"}`
+        )
+        .join("\n\n");
 
-        prompt = `你是一位温柔的心灵塔罗陪伴者。用户使用「${selectedSpread.name}」牌阵抽取了 ${drawnCards.length} 张牌。请根据以下塔罗牌信息和牌阵位置，用温柔、不过度预测未来的方式，给出一段详细的心理启发式解读，并用中文回答。
-		
-	牌阵：${selectedSpread.name}
-	牌阵说明：${selectedSpread.desc}
-		
-	抽取的牌：
-	${cardsInfo}
-		
-	用户问题：${question}
-		
-	请综合分析每张牌在其位置上的含义，以及牌与牌之间的关系，给出整体性的解读建议。`;
-      } else {
-        // 单卡解读（兼容旧逻辑）
-        const singleCard =
-          drawnCards && drawnCards.length === 1 ? drawnCards[0] : drawnCard;
-        if (!singleCard) {
-          throw new Error("NO_CARD_FOR_INTERPRETATION");
-        }
-        prompt = `你是一位温柔的心灵塔罗陪伴者。请根据以下塔罗牌信息，用温柔、不过度预测未来的方式，给出一段详细的心理启发式解读，并用中文回答。
-		
+      prompt = `你是一位温柔的心灵塔罗陪伴者。用户使用「${selectedSpread.name}」牌阵抽取了 ${drawnCards.length} 张牌。请根据以下塔罗牌信息和牌阵位置，用温柔、不过度预测未来的方式，给出一段详细的心理启发式解读，并用中文回答。
+牌阵：${selectedSpread.name}
+牌阵说明：${selectedSpread.desc}
+抽取的牌：
+${cardsInfo}
+用户问题：${question}
+请综合分析每张牌在其位置上的含义，以及牌与牌之间的关系，给出整体性的解读建议。`;
+    } else {
+      // 单卡解读（兼容旧逻辑）
+      const singleCard =
+        drawnCards && drawnCards.length === 1 ? drawnCards[0] : drawnCard;
+      if (!singleCard) {
+        wx.showToast({ title: "请先完成抽牌", icon: "none" });
+        this.setData({ loading: false });
+        return;
+      }
+      prompt = `你是一位温柔的心灵塔罗陪伴者。请根据以下塔罗牌信息，用温柔、不过度预测未来的方式，给出一段详细的心理启发式解读，并用中文回答。
 卡牌：${singleCard.name}
 关键词：${singleCard.keywords}
 含义：${singleCard.meaning}
-		
 用户问题：${question}`;
-      }
+    }
 
-      // ✅ 前端直连代理调用 OpenAI（绕过云函数 3 秒超时限制）
-      const systemPrompt = `你是一位温柔的塔罗解读师。你的解读风格是：
+    const systemPrompt = `你是一位温柔的塔罗解读师。你的解读风格是：
 1. 温柔、鼓励、充满希望
 2. 不做绝对预测，而是提供启发和建议
 3. 关注用户的内在成长和自我觉察
@@ -1000,71 +913,63 @@ Page({
 5. 解读长度控制在 150-200 字
 6. 禁止涉及金钱预测、医疗诊断、具体时间点的预言`;
 
-      const messages = [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt },
-      ];
+    const messages = [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: prompt },
+    ];
 
-      const interpretationText = await requestAI({
-        messages,
-        model: "gpt-5-mini",
-        temperature: 1,
-      });
+    console.log("[tarot] 🔥 开始流式请求");
 
-      this.setData({
-        interpretation: interpretationText,
-        loading: false,
-      });
+    // 🔥 使用流式调用
+    this._currentStreamTask = callAIStream({
+      messages,
+      model: "gpt-5-mini",
+      temperature: 1,
+      onChunk: (chunk, fullText) => {
+        // 实时更新解读内容
+        this.setData({ interpretation: fullText });
+      },
+      onComplete: async (fullText) => {
+        console.log("[tarot] ✅ 流式输出完成");
+        this.setData({ interpretation: fullText, loading: false });
 
-      // 更新抽牌记录 - 使用记录ID来精确更新
-      if (this.data.currentDrawId) {
-        const collection = this.data.tarotCollection;
-        try {
-          await db
-            .collection(collection)
-            .doc(this.data.currentDrawId)
-            .update({
-              data: {
-                question: this.data.question,
-                interpretation: interpretationText,
-              },
-            });
-        } catch (updateErr) {
-          console.error("更新解读失败", updateErr);
-          if (
-            updateErr &&
-            (updateErr.errCode === -502003 || updateErr.errCode === -502005)
-          ) {
-            console.warn("数据库权限未配置，解读已生成但无法保存到数据库");
+        // 更新抽牌记录到数据库
+        if (this.data.currentDrawId) {
+          const collection = this.data.tarotCollection;
+          try {
+            await db
+              .collection(collection)
+              .doc(this.data.currentDrawId)
+              .update({
+                data: {
+                  question: this.data.question,
+                  interpretation: fullText,
+                },
+              });
+          } catch (updateErr) {
+            console.error("更新解读失败", updateErr);
           }
         }
-      }
-    } catch (err) {
-      console.error("获取解读失败", err);
-      this.setData({ loading: false });
+        this._currentStreamTask = null;
+      },
+      onError: (err) => {
+        console.error("[tarot] ❌ 获取解读失败:", err.message);
+        // 使用兜底文案
+        const cardName =
+          drawnCards?.[0]?.name || this.data.drawnCard?.name || "这张牌";
+        const cardKeywords =
+          drawnCards?.[0]?.keywords ||
+          this.data.drawnCard?.keywords ||
+          "你最近关注的主题";
 
-      if (err && err.message === "NO_CARD_FOR_INTERPRETATION") {
-        wx.showToast({ title: "请先完成抽牌", icon: "none" });
-        return;
-      }
-
-      // 使用兜底文案
-      const cardName =
-        drawnCards?.[0]?.name || this.data.drawnCard?.name || "这张牌";
-      const cardKeywords =
-        drawnCards?.[0]?.keywords ||
-        this.data.drawnCard?.keywords ||
-        "你最近关注的主题";
-
-      const fallback = `${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未来的预言。它邀请你回到当下，留意自己最近在 ${cardKeywords} 相关领域的感受和选择。
+        const fallback = `${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未来的预言。它邀请你回到当下，留意自己最近在 ${cardKeywords} 相关领域的感受和选择。
 
 也许你可以给自己一点时间，写下此刻最在意的三件事，或者用冥想的方式，和这张牌待在一起几分钟。慢慢来，你有足够的时间去理解这些讯息。`;
 
-      this.setData({
-        interpretation: fallback,
-        loading: false,
-      });
-    }
+        this.setData({ interpretation: fallback, loading: false });
+        this._currentStreamTask = null;
+      },
+    });
   },
 
   // 输入行动计划

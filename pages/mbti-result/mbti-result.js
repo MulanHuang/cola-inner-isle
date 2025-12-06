@@ -1,87 +1,10 @@
 // pages/mbti-result/mbti-result.js
 const { getMbtiTypeInfo } = require("../../utils/mbti.js");
-// ✅ AI 解读改为前端直连 Vercel 代理（绕过云函数 3 秒超时限制）
+// ✅ AI 解读改为前端直连 Vercel 代理（流式输出）
+// 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 
 const db = wx.cloud.database();
-
-// 🚀 可复用的 AI 请求函数（前端直连 Vercel 代理）
-// 注意：gpt-5-mini 是推理模型，需要更多 token（推理 + 输出）
-function requestAI({
-  messages,
-  model = "gpt-5-mini",
-  temperature = 0.7,
-  max_completion_tokens = 16000,
-}) {
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url: "https://vercel-openai-proxy-lemon.vercel.app/api/openai",
-      method: "POST",
-      header: { "Content-Type": "application/json" },
-      data: { model, temperature, messages, max_completion_tokens },
-      timeout: 60000,
-      success(res) {
-        console.log("🔍 AI 响应状态码:", res.statusCode);
-        if (res.statusCode !== 200) {
-          console.error("❌ HTTP 错误:", res.statusCode, res.data);
-          reject(new Error(`HTTP ${res.statusCode}`));
-          return;
-        }
-        const data = res.data;
-        // 格式 A: 代理封装格式
-        if (data?.success && data?.content) {
-          console.log("✅ 解析成功 (格式 A)");
-          resolve(data.content);
-          // 格式 B: OpenAI 原始格式
-        } else if (data?.choices?.[0]?.message?.content) {
-          const content = data.choices[0].message.content;
-          if (!content || content.trim() === "") {
-            const finishReason = data.choices[0].finish_reason;
-            console.error("❌ AI 返回空内容, finish_reason:", finishReason);
-            reject(
-              new Error(
-                finishReason === "length"
-                  ? "AI 推理 token 不足"
-                  : "AI 返回了空内容"
-              )
-            );
-            return;
-          }
-          console.log("✅ 解析成功 (格式 B)");
-          resolve(content);
-          // 格式 C: OpenAI 错误格式
-        } else if (data?.error) {
-          const errorMsg =
-            typeof data.error === "string"
-              ? data.error
-              : data.error.message || data.error.code || "未知 API 错误";
-          console.error("❌ OpenAI API 错误:", errorMsg);
-          reject(new Error(`AI 服务错误: ${errorMsg}`));
-        } else if (data?.choices?.[0]?.message) {
-          // choices 存在但 content 为空
-          const finishReason = data.choices[0].finish_reason;
-          console.error("❌ AI 返回空内容, finish_reason:", finishReason);
-          reject(
-            new Error(
-              finishReason === "length"
-                ? "AI 推理 token 不足"
-                : "AI 返回了空内容"
-            )
-          );
-        } else {
-          console.error(
-            "❌ 无法解析的响应格式:",
-            JSON.stringify(data).substring(0, 500)
-          );
-          reject(new Error("AI 返回格式异常"));
-        }
-      },
-      fail(err) {
-        console.error("❌ 网络请求失败:", err);
-        reject(new Error(err.errMsg || "网络请求失败"));
-      },
-    });
-  });
-}
+const { callAIStream } = require("../../utils/aiStream.js");
 
 Page({
   data: {
@@ -257,14 +180,13 @@ Page({
   },
 
   /**
-   * ✅ 前端直连代理调用 OpenAI 进行 AI 解读（绕过云函数 3 秒超时限制）
+   * ✅ 前端直连代理调用 OpenAI 进行 AI 解读（流式输出）
    */
-  async callBackendAPI(type, scores) {
-    console.log("📤 调用 AI 代理:", { type, scores });
+  callBackendAPI(type, scores) {
+    console.log("[MBTI] 🔥 开始流式请求:", { type, scores });
 
-    try {
-      // 系统提示词
-      const systemPrompt = `你是一位温柔、真实、有边界感的心灵陪伴者。
+    // 系统提示词
+    const systemPrompt = `你是一位温柔、真实、有边界感的心灵陪伴者。
 你的任务是根据用户的 MBTI 测试结果，为他们提供深度的性格解读。
 
 请做到以下几点：
@@ -281,59 +203,58 @@ Page({
 - 工作与学习风格（1 段，100-150 字）
 - 温柔的成长建议（3-5 条，每条 30-50 字）`;
 
-      // 构建用户提示词
-      const dimensions = [
-        {
-          name: "能量来源",
-          left: "E",
-          right: "I",
-          leftScore: scores.E,
-          rightScore: scores.I,
-        },
-        {
-          name: "信息获取",
-          left: "S",
-          right: "N",
-          leftScore: scores.S,
-          rightScore: scores.N,
-        },
-        {
-          name: "决策方式",
-          left: "T",
-          right: "F",
-          leftScore: scores.T,
-          rightScore: scores.F,
-        },
-        {
-          name: "生活态度",
-          left: "J",
-          right: "P",
-          leftScore: scores.J,
-          rightScore: scores.P,
-        },
-      ];
+    // 构建用户提示词
+    const dimensions = [
+      {
+        name: "能量来源",
+        left: "E",
+        right: "I",
+        leftScore: scores.E,
+        rightScore: scores.I,
+      },
+      {
+        name: "信息获取",
+        left: "S",
+        right: "N",
+        leftScore: scores.S,
+        rightScore: scores.N,
+      },
+      {
+        name: "决策方式",
+        left: "T",
+        right: "F",
+        leftScore: scores.T,
+        rightScore: scores.F,
+      },
+      {
+        name: "生活态度",
+        left: "J",
+        right: "P",
+        leftScore: scores.J,
+        rightScore: scores.P,
+      },
+    ];
 
-      const dimensionAnalysis = dimensions
-        .map((dim) => {
-          const total = dim.leftScore + dim.rightScore;
-          const dominant =
-            dim.leftScore > dim.rightScore ? dim.left : dim.right;
-          const dominantScore = Math.max(dim.leftScore, dim.rightScore);
-          const percent = Math.round((dominantScore / total) * 100);
-          const diff = Math.abs(dim.leftScore - dim.rightScore);
-          let tendency =
-            diff <= 2
-              ? "非常平衡"
-              : diff <= 5
-              ? "略有倾向"
-              : diff <= 10
-              ? "明显倾向"
-              : "强烈倾向";
-          return `${dim.name}：${dim.left} ${dim.leftScore} : ${dim.rightScore} ${dim.right}（${tendency}于 ${dominant}，占比 ${percent}%）`;
-        })
-        .join("\n");
+    const dimensionAnalysis = dimensions
+      .map((dim) => {
+        const total = dim.leftScore + dim.rightScore;
+        const dominant = dim.leftScore > dim.rightScore ? dim.left : dim.right;
+        const dominantScore = Math.max(dim.leftScore, dim.rightScore);
+        const percent = Math.round((dominantScore / total) * 100);
+        const diff = Math.abs(dim.leftScore - dim.rightScore);
+        let tendency =
+          diff <= 2
+            ? "非常平衡"
+            : diff <= 5
+            ? "略有倾向"
+            : diff <= 10
+            ? "明显倾向"
+            : "强烈倾向";
+        return `${dim.name}：${dim.left} ${dim.leftScore} : ${dim.rightScore} ${dim.right}（${tendency}于 ${dominant}，占比 ${percent}%）`;
+      })
+      .join("\n");
 
-      const userPrompt = `请根据以下 MBTI 测试结果，为用户生成一份温柔、细腻、贴心的深度性格解读：
+    const userPrompt = `请根据以下 MBTI 测试结果，为用户生成一份温柔、细腻、贴心的深度性格解读：
 
 【基本信息】
 MBTI 类型：${type}
@@ -361,42 +282,43 @@ P（感知）：${scores.P}
 
 请确保语言温柔、真实、有共情，像一个懂他的朋友在说话。`;
 
-      const messages = [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ];
+    const messages = [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ];
 
-      const analysis = await requestAI({
-        messages,
-        model: "gpt-5-mini",
-        temperature: 0.7,
-      });
-
-      console.log("📥 AI 返回成功");
-      wx.hideLoading();
-
-      wx.showToast({
-        title: "解读生成成功",
-        icon: "success",
-        duration: 1500,
-      });
-
-      this.setData({
-        analysis: analysis,
-        showAnalysis: true,
-      });
-    } catch (err) {
-      wx.hideLoading();
-      console.error("❌ AI 调用失败:", err);
-
-      wx.showToast({
-        title: "正在使用默认解读",
-        icon: "none",
-        duration: 2000,
-      });
-
-      this.showDefaultAnalysis();
-    }
+    // 🔥 使用流式调用
+    this._currentStreamTask = callAIStream({
+      messages,
+      model: "gpt-5-mini",
+      temperature: 1,
+      onChunk: (chunk, fullText) => {
+        // 实时更新解读内容，让用户看到流式输出
+        this.setData({ analysis: fullText, showAnalysis: true });
+      },
+      onComplete: (fullText) => {
+        console.log("[MBTI] ✅ 流式输出完成");
+        wx.hideLoading();
+        wx.showToast({
+          title: "解读生成成功",
+          icon: "success",
+          duration: 1500,
+        });
+        this.setData({ analysis: fullText, showAnalysis: true });
+        this._currentStreamTask = null;
+      },
+      onError: (err) => {
+        console.error("[MBTI] ❌ AI 调用失败:", err.message);
+        wx.hideLoading();
+        wx.showToast({
+          title: "正在使用默认解读",
+          icon: "none",
+          duration: 2000,
+        });
+        this.showDefaultAnalysis();
+        this._currentStreamTask = null;
+      },
+    });
   },
 
   /**

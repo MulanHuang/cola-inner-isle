@@ -15,7 +15,7 @@ Page({
     answers: [], // 用户答案 [{questionId, value}, ...]
     totalCount: 0, // 总题数
     progress: 0, // 进度百分比
-    debugInfo: "", // 调试信息，方便用户查看题库从本地存储加载 载情况
+    debugInfo: "", // 调试信息，方便用户查看题库加载情况
   },
 
   onLoad() {
@@ -23,7 +23,7 @@ Page({
   },
 
   onShow() {
-    // 热重载或返回页面时，如果未从本地存储加载 载题目则重新初始化
+    // 热重载或返回页面时，如果未加载题目则重新初始化
     if (!this.data.questions || this.data.questions.length === 0) {
       this.initTest();
     }
@@ -39,7 +39,7 @@ Page({
     try {
       questions = getMbtiQuestions();
     } catch (err) {
-      console.error("从本地存储加载 载题库失败", err);
+      console.error("加载题库失败", err);
       source = "utils-error";
     }
 
@@ -55,8 +55,7 @@ Page({
     if (!Array.isArray(questions) || questions.length === 0) {
       wx.showModal({
         title: "题库加载失败",
-        content:
-          "暂时从本地存储加载 法获取测试题，请点击“编译”或重启小程序后重试。",
+        content: "暂时无法获取测试题，请点击“编译”或重启小程序后重试。",
         showCancel: false,
       });
       this.setData({ debugInfo: "题库为空，请重新编译" });
@@ -133,7 +132,7 @@ Page({
     // 防御：检查当前题目是否有效
     if (!currentQuestion || !currentQuestion.id) {
       console.error(
-        "当前题目数据从本地存储加载 效:",
+        "当前题目数据无效:",
         currentIndex,
         currentQuestion
       );
@@ -167,7 +166,7 @@ Page({
     if (!currentQuestion || !currentQuestion.id) {
       console.error("当前题目数据异常:", currentQuestion);
       wx.showToast({
-        title: "题目数据异常，请重新从本地存储加载 载",
+        title: "题目数据异常，请重新加载",
         icon: "none",
       });
       return;
@@ -189,7 +188,7 @@ Page({
       // 更新答案
       newAnswers[existingIndex] = newAnswer;
     } else {
-      // 添从本地存储加载 新答案
+      // 添加新答案
       newAnswers.push(newAnswer);
     }
 
@@ -226,7 +225,7 @@ Page({
 
     // 防御：检查下一题是否有效
     if (!nextQuestion || !nextQuestion.id) {
-      console.error("下一题数据从本地存储加载 效:", newIndex, nextQuestion);
+      console.error("下一题数据无效:", newIndex, nextQuestion);
       wx.showToast({
         title: "题目数据异常",
         icon: "none",
@@ -258,7 +257,7 @@ Page({
 
       // 防御：检查上一题是否有效
       if (!prevQuestion || !prevQuestion.id) {
-        console.error("上一题数据从本地存储加载 效:", newIndex, prevQuestion);
+        console.error("上一题数据无效:", newIndex, prevQuestion);
         wx.showToast({
           title: "题目数据异常",
           icon: "none",

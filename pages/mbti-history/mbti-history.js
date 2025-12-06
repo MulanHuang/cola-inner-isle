@@ -46,7 +46,7 @@ Page({
     try {
       let records = [];
 
-      // 优先从云数据库� 载
+      // 优先从云数据库加载
       try {
         const res = await db
           .collection("mbti_history")
@@ -61,11 +61,11 @@ Page({
           dateStr: this.formatDate(item.testDate || item.timestamp),
         }));
 
-        console.log("[mbti-history] 云端� 载记录:", records.length);
+        console.log("[mbti-history] 云端加载记录:", records.length);
       } catch (cloudErr) {
-        console.warn("[mbti-history] 云端� 载失败，使用本地存储", cloudErr);
+        console.warn("[mbti-history] 云端加载失败，使用本地存储", cloudErr);
         
-        // 从本地存储� 载
+        // 从本地存储加载
         const localHistory = wx.getStorageSync("mbti_history_local") || [];
         const start = page * pageSize;
         const end = start + pageSize;
@@ -84,15 +84,15 @@ Page({
         hasMore: records.length === pageSize,
       });
     } catch (err) {
-      console.error("[mbti-history] � 载历史失败", err);
-      wx.showToast({ title: "� 载失败", icon: "none" });
+      console.error("[mbti-history] 加载历史失败", err);
+      wx.showToast({ title: "加载失败", icon: "none" });
     } finally {
       this.setData({ loading: false });
     }
   },
 
   /**
-   * � �式化日期
+   * 格式化日期
    */
   formatDate(date) {
     if (!date) return "";

@@ -3,7 +3,7 @@ const cloud = require("wx-server-sdk");
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 
 const { callOpenAI } = require("./openai.js");
-const { safeAIResponse } = require("../common/index.js");
+// const { safeAIResponse } = require("../common/index.js");
 
 /**
  * 心灵陪伴聊天接口

@@ -1,6 +1,6 @@
 // cloudfunctions/analyzeChakraResult/index.js
 const cloud = require("wx-server-sdk");
-const { callOpenAI, safeAIResponse } = require("../common/index.js");
+const { callOpenAI, safeAIResponse } = require("./index.js");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,

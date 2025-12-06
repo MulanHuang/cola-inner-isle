@@ -4,7 +4,10 @@ const {
   getChakraInterpretation,
 } = require("../chakraTest/data/chakraInfo.js");
 
-// 🚀 脉轮分析改为前端直连 Vercel 代理（绕过云函数 3 秒超时限制）
+// 🚀 脉轮分析改为前端直连 Vercel 代理（流式输出）
+// 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
+
+const { callAIStream } = require("../../utils/aiStream.js");
 
 // 脉轮英文映射
 const CHAKRA_NAMES = {
@@ -16,103 +19,6 @@ const CHAKRA_NAMES = {
   thirdEye: "眉心轮",
   crown: "顶轮",
 };
-
-// 🚀 可复用的 AI 请求函数（前端直连 Vercel 代理）
-// 注意：gpt-5-mini 是推理模型，需要更多 token（推理 + 输出）
-function requestAI({
-  messages,
-  model = "gpt-5-mini",
-  temperature = 1,
-  max_completion_tokens = 16000,
-}) {
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url: "https://vercel-openai-proxy-lemon.vercel.app/api/openai",
-      method: "POST",
-      header: { "Content-Type": "application/json" },
-      data: { model, temperature, messages, max_completion_tokens },
-      timeout: 60000,
-      success(res) {
-        console.log("🔍 AI 响应状态码:", res.statusCode);
-        if (res.statusCode !== 200) {
-          console.error("❌ HTTP 错误:", res.statusCode, res.data);
-          reject(new Error(`HTTP ${res.statusCode}`));
-          return;
-        }
-        const data = res.data;
-        // 格式 A: 代理封装格式
-        if (data?.success && data?.content) {
-          console.log("✅ 解析成功 (格式 A)");
-          resolve(data.content);
-          // 格式 B: OpenAI 原始格式
-        } else if (data?.choices?.[0]?.message?.content) {
-          const content = data.choices[0].message.content;
-          // 检查是否为空内容（推理模型 token 不足时会返回空）
-          if (!content || content.trim() === "") {
-            const finishReason = data.choices[0].finish_reason;
-            const reasoningTokens =
-              data.usage?.completion_tokens_details?.reasoning_tokens || 0;
-            console.error(
-              "❌ AI 返回空内容, finish_reason:",
-              finishReason,
-              ", reasoning_tokens:",
-              reasoningTokens
-            );
-            if (finishReason === "length") {
-              reject(
-                new Error("AI 推理 token 不足，请增加 max_completion_tokens")
-              );
-            } else {
-              reject(new Error("AI 返回了空内容"));
-            }
-            return;
-          }
-          console.log("✅ 解析成功 (格式 B)");
-          resolve(content);
-          // 格式 C: OpenAI 错误格式
-        } else if (data?.error) {
-          const errorMsg =
-            typeof data.error === "string"
-              ? data.error
-              : data.error.message || data.error.code || "未知 API 错误";
-          console.error("❌ OpenAI API 错误:", errorMsg);
-          console.error("❌ 完整错误:", JSON.stringify(data.error));
-          reject(new Error(`AI 服务错误: ${errorMsg}`));
-        } else {
-          // 检查是否有 choices 但 content 为空
-          if (data?.choices?.[0]?.message) {
-            const finishReason = data.choices[0].finish_reason;
-            const reasoningTokens =
-              data.usage?.completion_tokens_details?.reasoning_tokens || 0;
-            console.error(
-              "❌ AI 返回空内容, finish_reason:",
-              finishReason,
-              ", reasoning_tokens:",
-              reasoningTokens
-            );
-            if (finishReason === "length") {
-              reject(
-                new Error("AI 推理 token 不足，请增加 max_completion_tokens")
-              );
-            } else {
-              reject(new Error("AI 返回了空内容"));
-            }
-            return;
-          }
-          console.error(
-            "❌ 无法解析的响应格式:",
-            JSON.stringify(data).substring(0, 500)
-          );
-          reject(new Error("AI 返回格式异常，请检查控制台日志"));
-        }
-      },
-      fail(err) {
-        console.error("❌ 网络请求失败:", err);
-        reject(new Error(err.errMsg || "网络请求失败"));
-      },
-    });
-  });
-}
 
 Page({
   data: {
@@ -398,51 +304,52 @@ Page({
   },
 
   /**
-   * 🚀 前端直连代理调用 OpenAI（单个脉轮详细分析，绕过云函数 3 秒超时限制）
+   * 🚀 前端直连代理调用 OpenAI（单个脉轮详细分析，流式输出）
    */
-  async analyzeChakraResults(results) {
+  analyzeChakraResults(results) {
     this.setData({
       isAnalyzing: true,
       analysisError: false,
       showAiSection: true,
+      streamingText1: "",
     });
 
-    try {
-      const chakraScores = {
-        root: results.root?.percentage || 0,
-        sacral: results.sacral?.percentage || 0,
-        solarPlexus: results.solar?.percentage || 0,
-        heart: results.heart?.percentage || 0,
-        throat: results.throat?.percentage || 0,
-        thirdEye: results.third_eye?.percentage || 0,
-        crown: results.crown?.percentage || 0,
-      };
+    const chakraScores = {
+      root: results.root?.percentage || 0,
+      sacral: results.sacral?.percentage || 0,
+      solarPlexus: results.solar?.percentage || 0,
+      heart: results.heart?.percentage || 0,
+      throat: results.throat?.percentage || 0,
+      thirdEye: results.third_eye?.percentage || 0,
+      crown: results.crown?.percentage || 0,
+    };
 
-      const scores = Object.values(chakraScores);
-      const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
-      let level =
-        avgScore >= 80
-          ? "高度平衡"
-          : avgScore >= 60
-          ? "良好平衡"
-          : avgScore < 50
-          ? "需要关注"
-          : "中等平衡";
+    const scores = Object.values(chakraScores);
+    const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+    let level =
+      avgScore >= 80
+        ? "高度平衡"
+        : avgScore >= 60
+        ? "良好平衡"
+        : avgScore < 50
+        ? "需要关注"
+        : "中等平衡";
 
-      const chakraEntries = Object.entries(chakraScores).map(
-        ([key, score]) => ({ key, score })
-      );
-      const sortedChakras = chakraEntries.sort((a, b) => b.score - a.score);
-      const strongChakras = sortedChakras
-        .slice(0, 2)
-        .filter((c) => c.score >= 60)
-        .map((c) => CHAKRA_NAMES[c.key] || c.key);
-      const weakChakras = sortedChakras
-        .slice(-2)
-        .filter((c) => c.score < 60)
-        .map((c) => CHAKRA_NAMES[c.key] || c.key);
+    const chakraEntries = Object.entries(chakraScores).map(([key, score]) => ({
+      key,
+      score,
+    }));
+    const sortedChakras = chakraEntries.sort((a, b) => b.score - a.score);
+    const strongChakras = sortedChakras
+      .slice(0, 2)
+      .filter((c) => c.score >= 60)
+      .map((c) => CHAKRA_NAMES[c.key] || c.key);
+    const weakChakras = sortedChakras
+      .slice(-2)
+      .filter((c) => c.score < 60)
+      .map((c) => CHAKRA_NAMES[c.key] || c.key);
 
-      const systemPrompt = `你是一位温柔、专业的心灵疗愈师，专注于脉轮能量分析。
+    const systemPrompt = `你是一位温柔、专业的心灵疗愈师，专注于脉轮能量分析。
 你的角色定位：
 1. 温柔、包容地引导用户探索自己的能量状态
 2. 使用日常易懂的语言，避免过于玄学或复杂的表达
@@ -454,7 +361,7 @@ Page({
 2. 所有文本必须使用中文
 3. 内容温柔、积极、充满希望`;
 
-      const userPrompt = `根据以下脉轮测试结果，请给出一份温柔、详细的分析报告：
+    const userPrompt = `根据以下脉轮测试结果，请给出一份温柔、详细的分析报告：
 
 脉轮分数（满分100）：
 - 海底轮：${chakraScores.root}
@@ -477,79 +384,99 @@ ${weakChakras.length > 0 ? `可以关注：${weakChakras.join("、")}` : ""}
   "simple_practices": ["练习1", "练习2", "练习3"]
 }`;
 
-      const messages = [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ];
+    const messages = [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ];
 
-      const response = await requestAI({
-        messages,
-        model: "gpt-5-mini",
-        temperature: 1,
-      });
+    console.log("[chakra] 🔥 开始流式请求（单个脉轮分析）");
 
-      // 解析 JSON
-      let analysisResult;
-      let cleanedResponse = response.trim();
-      if (cleanedResponse.startsWith("```json")) {
-        cleanedResponse = cleanedResponse
-          .replace(/```json\n?/g, "")
-          .replace(/```\n?$/g, "");
-      } else if (cleanedResponse.startsWith("```")) {
-        cleanedResponse = cleanedResponse.replace(/```\n?/g, "");
-      }
-      analysisResult = JSON.parse(cleanedResponse);
-
-      console.log("🚀 AI 分析成功");
-      this.setData({
-        aiAnalysis: analysisResult,
-        isAnalyzing: false,
-        analysisError: false,
-      });
-    } catch (err) {
-      console.error("❌ AI 分析失败：", err);
-      this.setData({
-        isAnalyzing: false,
-        analysisError: true,
-      });
-    }
+    // 🔥 使用流式调用
+    this._streamTask1 = callAIStream({
+      messages,
+      model: "gpt-5-mini",
+      temperature: 1,
+      onChunk: (chunk, fullText) => {
+        this.setData({ streamingText1: fullText });
+      },
+      onComplete: (fullText) => {
+        console.log("[chakra] ✅ 单个脉轮分析流式输出完成");
+        try {
+          // 解析 JSON
+          let cleanedResponse = fullText.trim();
+          if (cleanedResponse.startsWith("```json")) {
+            cleanedResponse = cleanedResponse
+              .replace(/```json\n?/g, "")
+              .replace(/```\n?$/g, "");
+          } else if (cleanedResponse.startsWith("```")) {
+            cleanedResponse = cleanedResponse.replace(/```\n?/g, "");
+          }
+          const analysisResult = JSON.parse(cleanedResponse);
+          this.setData({
+            aiAnalysis: analysisResult,
+            isAnalyzing: false,
+            analysisError: false,
+            streamingText1: "",
+          });
+        } catch (parseErr) {
+          console.error("[chakra] ❌ JSON 解析失败:", parseErr);
+          this.setData({
+            isAnalyzing: false,
+            analysisError: true,
+            streamingText1: "",
+          });
+        }
+        this._streamTask1 = null;
+      },
+      onError: (err) => {
+        console.error("[chakra] ❌ AI 分析失败:", err.message);
+        this.setData({
+          isAnalyzing: false,
+          analysisError: true,
+          streamingText1: "",
+        });
+        this._streamTask1 = null;
+      },
+    });
   },
 
   /**
-   * 🚀 前端直连代理调用 OpenAI（综合分析，绕过云函数 3 秒超时限制）
+   * 🚀 前端直连代理调用 OpenAI（综合分析，流式输出）
    */
-  async analyzeChakraOverall(results) {
+  analyzeChakraOverall(results) {
     this.setData({
       isOverallAnalyzing: true,
       overallAnalysisError: false,
       showOverallSection: true,
+      streamingText2: "",
     });
 
-    try {
-      const chakraScores = {
-        root: results.root?.percentage || 0,
-        sacral: results.sacral?.percentage || 0,
-        solarPlexus: results.solar?.percentage || 0,
-        heart: results.heart?.percentage || 0,
-        throat: results.throat?.percentage || 0,
-        thirdEye: results.third_eye?.percentage || 0,
-        crown: results.crown?.percentage || 0,
-      };
+    const chakraScores = {
+      root: results.root?.percentage || 0,
+      sacral: results.sacral?.percentage || 0,
+      solarPlexus: results.solar?.percentage || 0,
+      heart: results.heart?.percentage || 0,
+      throat: results.throat?.percentage || 0,
+      thirdEye: results.third_eye?.percentage || 0,
+      crown: results.crown?.percentage || 0,
+    };
 
-      const scores = Object.values(chakraScores);
-      const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
-      const maxScore = Math.max(...scores);
-      const minScore = Math.min(...scores);
-      const variance = maxScore - minScore;
+    const scores = Object.values(chakraScores);
+    const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const maxScore = Math.max(...scores);
+    const minScore = Math.min(...scores);
+    const variance = maxScore - minScore;
 
-      const chakraEntries = Object.entries(chakraScores).map(
-        ([key, score]) => ({ key, name: CHAKRA_NAMES[key] || key, score })
-      );
-      const sortedChakras = chakraEntries.sort((a, b) => b.score - a.score);
-      const highestChakra = sortedChakras[0];
-      const lowestChakra = sortedChakras[sortedChakras.length - 1];
+    const chakraEntries = Object.entries(chakraScores).map(([key, score]) => ({
+      key,
+      name: CHAKRA_NAMES[key] || key,
+      score,
+    }));
+    const sortedChakras = chakraEntries.sort((a, b) => b.score - a.score);
+    const highestChakra = sortedChakras[0];
+    const lowestChakra = sortedChakras[sortedChakras.length - 1];
 
-      const systemPrompt = `你是"小可"，一位温柔、专业的心灵疗愈师，专注于脉轮能量综合分析。
+    const systemPrompt = `你是"小可"，一位温柔、专业的心灵疗愈师，专注于脉轮能量综合分析。
 你的角色定位：
 1. 温柔、包容地引导用户探索自己的整体能量状态
 2. 使用日常易懂的语言，避免过于玄学或复杂的表达
@@ -561,7 +488,7 @@ ${weakChakras.length > 0 ? `可以关注：${weakChakras.join("、")}` : ""}
 2. 所有文本必须使用中文
 3. 内容温柔、积极、充满希望`;
 
-      const userPrompt = `根据这位来访者的七大脉轮测试结果，请给出一份整体综合分析的建议报告：
+    const userPrompt = `根据这位来访者的七大脉轮测试结果，请给出一份整体综合分析的建议报告：
 
 【七大脉轮分数】
 - 海底轮（根基与安全感）：${chakraScores.root}分
@@ -588,42 +515,60 @@ ${weakChakras.length > 0 ? `可以关注：${weakChakras.join("、")}` : ""}
   "encouragement": "温馨的鼓励（1-2句话）"
 }`;
 
-      const messages = [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ];
+    const messages = [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ];
 
-      const response = await requestAI({
-        messages,
-        model: "gpt-5-mini",
-        temperature: 1,
-      });
+    console.log("[chakra] 🔥 开始流式请求（综合分析）");
 
-      // 解析 JSON
-      let analysisResult;
-      let cleanedResponse = response.trim();
-      if (cleanedResponse.startsWith("```json")) {
-        cleanedResponse = cleanedResponse
-          .replace(/```json\n?/g, "")
-          .replace(/```\n?$/g, "");
-      } else if (cleanedResponse.startsWith("```")) {
-        cleanedResponse = cleanedResponse.replace(/```\n?/g, "");
-      }
-      analysisResult = JSON.parse(cleanedResponse);
-
-      console.log("🚀 AI 综合分析成功");
-      this.setData({
-        overallAnalysis: analysisResult,
-        isOverallAnalyzing: false,
-        overallAnalysisError: false,
-      });
-    } catch (err) {
-      console.error("❌ AI 综合分析失败：", err);
-      this.setData({
-        isOverallAnalyzing: false,
-        overallAnalysisError: true,
-      });
-    }
+    // 🔥 使用流式调用
+    this._streamTask2 = callAIStream({
+      messages,
+      model: "gpt-5-mini",
+      temperature: 1,
+      onChunk: (chunk, fullText) => {
+        this.setData({ streamingText2: fullText });
+      },
+      onComplete: (fullText) => {
+        console.log("[chakra] ✅ 综合分析流式输出完成");
+        try {
+          // 解析 JSON
+          let cleanedResponse = fullText.trim();
+          if (cleanedResponse.startsWith("```json")) {
+            cleanedResponse = cleanedResponse
+              .replace(/```json\n?/g, "")
+              .replace(/```\n?$/g, "");
+          } else if (cleanedResponse.startsWith("```")) {
+            cleanedResponse = cleanedResponse.replace(/```\n?/g, "");
+          }
+          const analysisResult = JSON.parse(cleanedResponse);
+          this.setData({
+            overallAnalysis: analysisResult,
+            isOverallAnalyzing: false,
+            overallAnalysisError: false,
+            streamingText2: "",
+          });
+        } catch (parseErr) {
+          console.error("[chakra] ❌ JSON 解析失败:", parseErr);
+          this.setData({
+            isOverallAnalyzing: false,
+            overallAnalysisError: true,
+            streamingText2: "",
+          });
+        }
+        this._streamTask2 = null;
+      },
+      onError: (err) => {
+        console.error("[chakra] ❌ AI 综合分析失败:", err.message);
+        this.setData({
+          isOverallAnalyzing: false,
+          overallAnalysisError: true,
+          streamingText2: "",
+        });
+        this._streamTask2 = null;
+      },
+    });
   },
 
   // 重试综合分析

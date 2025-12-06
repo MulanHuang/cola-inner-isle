@@ -1,60 +1,14 @@
 // pages/chat/chat.js
-// 聊天页，心语 AI 直连 Vercel 代理 https://vercel-openai-proxy-lemon.vercel.app/api/openai
+// 聊天页，心语 AI 直连 Vercel 代理 https://api.cola.center/api/openai
+// 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 const recorderManager = wx.getRecorderManager();
 // ⭐ 云数据库实例（用于写入 chatHistory）
 const db = wx.cloud.database();
 
 // ============================================================
-// 🚀 可复用的 AI 请求函数（前端直连代理）
+// 🚀 引入通用流式 AI 调用模块
 // ============================================================
-function requestAI({ messages, model = "gpt-5-mini" }) {
-  return new Promise((resolve, reject) => {
-    console.log("[requestAI] 开始请求，消息数:", messages.length);
-
-    wx.request({
-      url: "https://vercel-openai-proxy-lemon.vercel.app/api/openai",
-      method: "POST",
-      header: {
-        "Content-Type": "application/json",
-      },
-      data: {
-        model,
-        messages, // 只传模型和消息！！
-      },
-      timeout: 60000,
-      success(res) {
-        console.log("[requestAI] 响应状态:", res.statusCode);
-        console.log(
-          "[requestAI] 响应数据:",
-          JSON.stringify(res.data).substring(0, 500)
-        );
-
-        if (res.statusCode !== 200) {
-          reject(new Error(`HTTP ${res.statusCode}: 请求失败`));
-          return;
-        }
-
-        const data = res.data;
-
-        if (data?.choices?.[0]?.message?.content) {
-          resolve(data.choices[0].message.content.trim());
-          return;
-        }
-
-        const errorMsg =
-          data?.error?.message ||
-          data?.error ||
-          data?.message ||
-          "AI 返回格式异常";
-
-        reject(new Error(errorMsg));
-      },
-      fail(err) {
-        reject(new Error(err.errMsg || "网络请求失败"));
-      },
-    });
-  });
-}
+const { callAIStream } = require("../../utils/aiStream.js");
 
 // 可乐心岛 AI 核心人设（所有话题前置）
 const corePersona =
@@ -214,10 +168,11 @@ Page({
       targetId = "scroll_bottom";
     }
 
-    this.setData({ scrollToView: "", showScrollToBottom: false }, () => {
-      setTimeout(() => {
-        this.setData({ scrollToView: targetId });
-      }, 20);
+    // 🔥 优化：使用 nextTick 替代 setTimeout，减少延迟
+    this.setData({ scrollToView: "" }, () => {
+      wx.nextTick(() => {
+        this.setData({ scrollToView: targetId, showScrollToBottom: false });
+      });
     });
   },
 
@@ -225,9 +180,10 @@ Page({
   setMessagesAndScroll(messages) {
     const messagesWithDateLabel = this.addDateLabelsToMessages(messages);
     this.setData({ messages: messagesWithDateLabel }, () => {
-      setTimeout(() => {
+      // 🔥 优化：使用 nextTick 替代 setTimeout，减少延迟
+      wx.nextTick(() => {
         this.scrollToBottom();
-      }, 50);
+      });
     });
   },
 
@@ -434,24 +390,21 @@ Page({
 
   /* ================ 发送消息 ================ */
 
-  async sendMessage() {
+  sendMessage() {
     const content = this.data.inputText.trim();
     if (!content) {
-      wx.showToast({
-        title: "请输入内容",
-        icon: "none",
-      });
+      wx.showToast({ title: "请输入内容", icon: "none" });
       return;
     }
 
     // ⭐ 防止重复点击发送
     if (this.data.loading) {
-      wx.showToast({
-        title: "正在回复中，请稍候…",
-        icon: "none",
-      });
+      wx.showToast({ title: "正在回复中，请稍候…", icon: "none" });
       return;
     }
+
+    // 🔥 触感反馈：发送消息时轻微震动
+    wx.vibrateShort({ type: "light" });
 
     const { currentTopicId, messages: currentMessages } = this.data;
 
@@ -462,94 +415,129 @@ Page({
       content: content,
       time: this.formatTime(new Date()),
       topicId: currentTopicId,
+      isNew: true, // 🔥 标记为新消息，用于触发动画
     };
 
     const newMessages = [...currentMessages, userMessage];
 
-    this.setMessagesAndScroll(newMessages);
-    this.setData({
-      inputText: "",
-      loading: true,
-    });
+    // 2️⃣ 预先添加一个 AI 消息占位（用于流式更新）
+    const aiMessageId = Date.now() + 1;
+    const aiMessage = {
+      id: aiMessageId,
+      role: "assistant",
+      content: "", // 🔥 初始为空，流式填充
+      time: this.formatTime(new Date()),
+      topicId: currentTopicId,
+      isStreaming: true, // 标记正在流式输出
+      isThinking: true, // 🔥 标记正在思考状态
+      isNew: true, // 🔥 标记为新消息，用于触发动画
+    };
 
+    const messagesWithAI = [...newMessages, aiMessage];
+
+    this.setMessagesAndScroll(messagesWithAI);
+    this.setData({ inputText: "", loading: true });
     this.saveMessagesToStorage(currentTopicId, newMessages);
 
-    // 2️⃣ 构建历史消息数组（取最近 3 条，精简以提升响应速度）
-    const historyMessages = currentMessages.slice(-3).map((m) => ({
-      role: m.role === "assistant" ? "assistant" : "user",
-      content: String(m.content || "").slice(0, 200), // 精简长度
-    }));
+    // 3️⃣ 🔥 智能历史消息加载：取最近 6 条，过滤过长消息
+    const historyMessages = currentMessages
+      .slice(-6)
+      .filter((m) => m.content && m.content.length < 500)
+      .map((m) => ({
+        role: m.role === "assistant" ? "assistant" : "user",
+        content: String(m.content || "").slice(0, 300),
+      }));
 
-    // 3️⃣ 精简版系统提示词（200字符以内，提升响应速度）
+    // 4️⃣ 🔥 使用话题专属的系统提示词
+    const basePrompt = topicPrompts[currentTopicId] || topicPrompts.general;
     const systemPrompt =
-      "你是温柔、有洞察力的心灵陪伴者。用简短、自然、口语化的方式回应用户，像朋友聊天一样。回复控制在80字以内，温暖真诚，不说教。";
+      basePrompt +
+      "\n\n【回复要求】用简短、自然、口语化的方式回应用户，像朋友聊天一样。回复控制在100字以内，温暖真诚，不说教。";
 
-    // 4️⃣ 构建完整的 messages 数组
     const messagesForAI = [
       { role: "system", content: systemPrompt },
       ...historyMessages,
       { role: "user", content: String(content).slice(0, 200) },
     ];
 
-    try {
-      // 5️⃣ 直连阿里云代理（不再使用云函数）
-      console.log("[chat] 直连 API 代理，参数:", {
-        messageLength: content.length,
-        historyCount: historyMessages.length,
-        totalMessages: messagesForAI.length,
-      });
+    console.log("[chat] 🔥 开始流式请求");
 
-      const reply = await requestAI({
-        messages: messagesForAI,
-        model: "gpt-5-mini",
-      });
+    // 🔥 用于节流滚动的变量
+    let lastScrollTime = 0;
+    const SCROLL_THROTTLE = 300; // 每 300ms 最多滚动一次
 
-      console.log("[chat] AI 回复长度:", reply?.length || 0);
+    // 5️⃣ 使用流式调用
+    this._currentStreamTask = callAIStream({
+      messages: messagesForAI,
+      model: "gpt-5-mini",
+      onChunk: (_, fullText) => {
+        // 🔥 实时更新 AI 消息内容（移除 isThinking 标记，保留 isStreaming 用于光标显示）
+        const messages = this.data.messages.map((msg) =>
+          msg.id === aiMessageId
+            ? {
+                ...msg,
+                content: fullText,
+                isThinking: false,
+                isStreaming: true,
+              }
+            : msg
+        );
 
-      if (reply) {
-        const aiMessage = {
-          id: Date.now() + 1,
-          role: "assistant",
-          content: reply,
-          time: this.formatTime(new Date()),
-          topicId: currentTopicId,
-        };
+        // 🔥 直接 setData 更新 UI，不每次都滚动
+        this.setData({ messages });
 
-        const updatedMessages = [...newMessages, aiMessage];
+        // 🔥 节流滚动：每 300ms 最多滚动一次
+        const now = Date.now();
+        if (now - lastScrollTime > SCROLL_THROTTLE) {
+          lastScrollTime = now;
+          this.scrollToBottom();
+        }
+      },
+      onComplete: (fullText) => {
+        console.log("[chat] ✅ 流式输出完成，总长度:", fullText.length);
 
-        this.setMessagesAndScroll(updatedMessages);
+        // 🔥 移除 isStreaming 和 isThinking 标记
+        const finalMessages = this.data.messages.map((msg) =>
+          msg.id === aiMessageId
+            ? {
+                ...msg,
+                content: fullText,
+                isStreaming: false,
+                isThinking: false,
+              }
+            : msg
+        );
+
+        this.setMessagesAndScroll(finalMessages);
         this.setData({ loading: false });
 
         // 本地存储
-        this.saveMessagesToStorage(currentTopicId, updatedMessages);
-        // ⭐ 云端写入 chatHistory（用于练习打卡）
-        this.saveChatHistoryToCloud(userMessage, aiMessage);
-      } else {
-        console.error("[chat] AI 返回空内容");
+        this.saveMessagesToStorage(currentTopicId, finalMessages);
+
+        // 云端写入 chatHistory（用于练习打卡）
+        const completedAiMessage = { ...aiMessage, content: fullText };
+        this.saveChatHistoryToCloud(userMessage, completedAiMessage);
+
+        this._currentStreamTask = null;
+      },
+      onError: (err) => {
+        console.error("[chat] ❌ 流式请求失败:", err.message);
         this.setData({ loading: false });
-        wx.showToast({
-          title: "AI 没有返回内容",
-          icon: "none",
-        });
-      }
-    } catch (err) {
-      console.error("[chat] AI 回复失败:", err.message || err);
-      this.setData({ loading: false });
 
-      const errMsg = err.message || "";
+        // 移除空的 AI 消息
+        const messagesWithoutEmpty = this.data.messages.filter(
+          (msg) => msg.id !== aiMessageId
+        );
+        this.setMessagesAndScroll(messagesWithoutEmpty);
 
-      if (errMsg.indexOf("网络") > -1 || errMsg.indexOf("request") > -1) {
         wx.showToast({
-          title: "网络连接失败，请检查网络设置",
+          title: err.message || "网络请求失败",
           icon: "none",
         });
-      } else {
-        wx.showToast({
-          title: errMsg || "抱歉，服务器开小差了，请稍后再试～",
-          icon: "none",
-        });
-      }
-    }
+
+        this._currentStreamTask = null;
+      },
+    });
   },
 
   /* ================ 话题切换/重发/清空 ================ */
@@ -687,5 +675,121 @@ Page({
       ...msg,
       dateLabel: formatDateLabel(msg.id),
     }));
+  },
+
+  /* ================ 🔥 快捷回复 ================ */
+
+  // 快捷发送预设问题
+  quickSend(e) {
+    const text = e.currentTarget.dataset.text;
+    if (!text) return;
+
+    // 触感反馈
+    wx.vibrateShort({ type: "light" });
+
+    this.setData({ inputText: text }, () => {
+      this.sendMessage();
+    });
+  },
+
+  /* ================ 🔥 消息长按菜单 ================ */
+
+  // 消息长按处理
+  onMsgLongPress(e) {
+    const msgId = e.currentTarget.dataset.id;
+    const msgRole = e.currentTarget.dataset.role;
+    const msg = this.data.messages.find((m) => m.id === msgId);
+
+    if (!msg || !msg.content) return;
+
+    // 触感反馈
+    wx.vibrateShort({ type: "medium" });
+
+    // 根据消息类型显示不同选项
+    const itemList =
+      msgRole === "assistant"
+        ? ["复制文本", "重新生成", "删除消息"]
+        : ["复制文本", "删除消息"];
+
+    wx.showActionSheet({
+      itemList,
+      success: (res) => {
+        if (msgRole === "assistant") {
+          if (res.tapIndex === 0) this.copyMessage(msg);
+          if (res.tapIndex === 1) this.regenerateMessage(msgId);
+          if (res.tapIndex === 2) this.deleteMessage(msgId);
+        } else {
+          if (res.tapIndex === 0) this.copyMessage(msg);
+          if (res.tapIndex === 1) this.deleteMessage(msgId);
+        }
+      },
+    });
+  },
+
+  // 复制消息内容
+  copyMessage(msg) {
+    wx.setClipboardData({
+      data: msg.content,
+      success: () => {
+        wx.showToast({ title: "已复制", icon: "success" });
+      },
+    });
+  },
+
+  // 删除消息
+  deleteMessage(msgId) {
+    wx.showModal({
+      title: "删除消息",
+      content: "确定要删除这条消息吗？",
+      confirmText: "删除",
+      confirmColor: "#ff4d4f",
+      success: (res) => {
+        if (res.confirm) {
+          const newMessages = this.data.messages.filter((m) => m.id !== msgId);
+          this.setData({ messages: newMessages });
+          // 保存到本地存储
+          this.saveMessagesToStorage(this.data.currentTopicId, newMessages);
+          wx.showToast({ title: "已删除", icon: "success" });
+        }
+      },
+    });
+  },
+
+  // 重新生成 AI 回复
+  regenerateMessage(msgId) {
+    // 找到这条 AI 消息对应的用户消息
+    const messages = this.data.messages;
+    const aiMsgIndex = messages.findIndex((m) => m.id === msgId);
+
+    if (aiMsgIndex <= 0) {
+      wx.showToast({ title: "无法重新生成", icon: "none" });
+      return;
+    }
+
+    // 找到之前最近的用户消息
+    let userMsg = null;
+    for (let i = aiMsgIndex - 1; i >= 0; i--) {
+      if (messages[i].role === "user") {
+        userMsg = messages[i];
+        break;
+      }
+    }
+
+    if (!userMsg) {
+      wx.showToast({ title: "未找到对应的问题", icon: "none" });
+      return;
+    }
+
+    // 删除这条 AI 消息，然后重新发送用户消息
+    const newMessages = messages.filter((m) => m.id !== msgId);
+    this.setData({ messages: newMessages, inputText: userMsg.content }, () => {
+      // 删除用户消息以便重新发送
+      const messagesWithoutUser = newMessages.filter(
+        (m) => m.id !== userMsg.id
+      );
+      this.setData({ messages: messagesWithoutUser }, () => {
+        this.sendMessage();
+      });
+    });
   },
 });

@@ -2,89 +2,13 @@
 // ============================================================
 // OH卡自我探索页面 - 逻辑与状态管理（终极冥想疗愈版）
 // 模式: imageOnly（自由图卡）| imageAndWord（图卡+字卡）
+// 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 // ============================================================
 
 const db = wx.cloud.database();
 
-// ✅ OH卡解读改为前端直连 Vercel 代理（绕过云函数 3 秒超时限制）
-
-// 🚀 可复用的 AI 请求函数（前端直连 Vercel 代理）
-// 注意：gpt-5-mini 是推理模型，需要更多 token（推理 + 输出）
-function requestAI({
-  messages,
-  model = "gpt-5-mini",
-  temperature = 0.75,
-  max_completion_tokens = 16000,
-}) {
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url: "https://vercel-openai-proxy-lemon.vercel.app/api/openai",
-      method: "POST",
-      header: { "Content-Type": "application/json" },
-      data: { model, temperature, messages, max_completion_tokens },
-      timeout: 60000,
-      success(res) {
-        console.log("🔍 AI 响应状态码:", res.statusCode);
-        if (res.statusCode !== 200) {
-          console.error("❌ HTTP 错误:", res.statusCode, res.data);
-          reject(new Error(`HTTP ${res.statusCode}`));
-          return;
-        }
-        const data = res.data;
-        // 格式 A: 代理封装格式
-        if (data?.success && data?.content) {
-          console.log("✅ 解析成功 (格式 A)");
-          resolve(data.content);
-          // 格式 B: OpenAI 原始格式
-        } else if (data?.choices?.[0]?.message?.content) {
-          const content = data.choices[0].message.content;
-          if (!content || content.trim() === "") {
-            const finishReason = data.choices[0].finish_reason;
-            console.error("❌ AI 返回空内容, finish_reason:", finishReason);
-            reject(
-              new Error(
-                finishReason === "length"
-                  ? "AI 推理 token 不足"
-                  : "AI 返回了空内容"
-              )
-            );
-            return;
-          }
-          console.log("✅ 解析成功 (格式 B)");
-          resolve(content);
-          // 格式 C: OpenAI 错误格式
-        } else if (data?.error) {
-          const errorMsg =
-            typeof data.error === "string"
-              ? data.error
-              : data.error.message || data.error.code || "未知 API 错误";
-          console.error("❌ OpenAI API 错误:", errorMsg);
-          reject(new Error(`AI 服务错误: ${errorMsg}`));
-        } else if (data?.choices?.[0]?.message) {
-          const finishReason = data.choices[0].finish_reason;
-          console.error("❌ AI 返回空内容, finish_reason:", finishReason);
-          reject(
-            new Error(
-              finishReason === "length"
-                ? "AI 推理 token 不足"
-                : "AI 返回了空内容"
-            )
-          );
-        } else {
-          console.error(
-            "❌ 无法解析的响应格式:",
-            JSON.stringify(data).substring(0, 500)
-          );
-          reject(new Error("AI 返回格式异常"));
-        }
-      },
-      fail(err) {
-        console.error("❌ 网络请求失败:", err);
-        reject(new Error(err.errMsg || "网络请求失败"));
-      },
-    });
-  });
-}
+// ✅ OH卡解读改为前端直连 Vercel 代理（流式输出）
+const { callAIStream } = require("../../utils/aiStream.js");
 
 // 解析 AI 返回的六段式内容
 function parseAIResponse(content) {
@@ -347,17 +271,15 @@ Page({
   },
 
   /**
-   * ✅ 前端直连代理调用 OpenAI 进行解读（绕过云函数 3 秒超时限制）
+   * ✅ 前端直连代理调用 OpenAI 进行解读（流式输出）
    */
-  async _callOhInterpret() {
-    this.setData({ loading: true });
+  _callOhInterpret() {
+    this.setData({ loading: true, aiResult: null, streamingText: "" });
 
-    try {
-      const { mode, userInput, selectedImageCard, selectedWordCard } =
-        this.data;
+    const { mode, userInput, selectedImageCard, selectedWordCard } = this.data;
 
-      // 系统提示词
-      const systemPrompt = `你是「可乐心岛 OH 卡导师」，一位温柔、洞察力强、尊重界限、专业又有行动力思维的心灵陪伴者。
+    // 系统提示词
+    const systemPrompt = `你是「可乐心岛 OH 卡导师」，一位温柔、洞察力强、尊重界限、专业又有行动力思维的心灵陪伴者。
 
 你的核心特质：
 1. 温柔且有洞察力 - 能够从图像和词语中捕捉到深层的心理象征
@@ -377,24 +299,24 @@ Page({
 - 下定论或贴标签
 - 使用恐吓性或负面评判的表达`;
 
-      // 构建用户提示词
-      let cardInfo = `【图卡信息】
+    // 构建用户提示词
+    let cardInfo = `【图卡信息】
 - 图卡名称：${selectedImageCard.name}
 - 图卡描述：这是一张 OH 图卡，请从颜色、构图、形象中联想其象征意义。`;
 
-      if (mode === "imageAndWord" && selectedWordCard) {
-        cardInfo += `
+    if (mode === "imageAndWord" && selectedWordCard) {
+      cardInfo += `
 
 【字卡信息】
 - 字卡词语：${selectedWordCard.name}
 - 当图卡与字卡组合时，请探索它们之间可能产生的化学反应和新的意义。`;
-      }
+    }
 
-      const userContext = userInput
-        ? `【用户当前的心情/问题】\n${userInput}`
-        : `【用户当前的心情/问题】\n用户没有写下具体内容，请基于卡牌本身给出温柔的启发。`;
+    const userContext = userInput
+      ? `【用户当前的心情/问题】\n${userInput}`
+      : `【用户当前的心情/问题】\n用户没有写下具体内容，请基于卡牌本身给出温柔的启发。`;
 
-      const userPrompt = `${cardInfo}
+    const userPrompt = `${cardInfo}
 
 ${userContext}
 
@@ -414,44 +336,56 @@ ${userContext}
 
 请直接输出内容，不要输出标题编号。每个部分用空行分隔。`;
 
-      const messages = [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ];
+    const messages = [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ];
 
-      const response = await requestAI({
-        messages,
-        model: "gpt-5-mini",
-      });
+    console.log("[OH] 🔥 开始流式请求");
 
-      console.log("[OH] AI 返回成功");
-
-      // 解析返回内容
-      const parsedResult = parseAIResponse(response);
-
-      this.setData({
-        aiResult: parsedResult,
-        loading: false,
-      });
-    } catch (err) {
-      console.error("OH卡解读失败", err);
-
-      // 使用兜底内容
-      const fallbackResult = {
-        insight: `看到「${
-          this.data.selectedImageCard?.name || "这张卡"
-        }」出现在你面前，我感受到此刻的你可能正在经历一些内心的波动。这很正常，每一种情绪都值得被看见。`,
-        subconscious: `也许在更深的层面，你正在寻找一种确认——确认自己的感受是被允许的，确认前方的路虽然模糊但终会清晰。`,
-        actions: `1. 给自己5分钟，只是静静地呼吸，不需要做任何事\n2. 在纸上写下此刻脑海中第一个浮现的词\n3. 今天对自己说一句温柔的话`,
-        reflectionQuestions: `• 此刻我最想被理解的是什么？\n• 如果恐惧会说话，它想告诉我什么？\n• 什么是我现在就可以给自己的？`,
-        closing: `无论你现在感受到什么，都请记得：你不需要完美，你只需要真实。我在这里，陪着你。💛`,
-      };
-
-      this.setData({
-        aiResult: fallbackResult,
-        loading: false,
-      });
-    }
+    // 🔥 使用流式调用
+    this._currentStreamTask = callAIStream({
+      messages,
+      model: "gpt-5-mini",
+      onChunk: (chunk, fullText) => {
+        // 🔥 实时解析并更新 aiResult，让用户边接收边看到内容
+        const parsedResult = parseAIResponse(fullText);
+        this.setData({
+          aiResult: parsedResult,
+          streamingText: fullText,
+        });
+      },
+      onComplete: (fullText) => {
+        console.log("[OH] ✅ 流式输出完成");
+        // 最终解析返回内容
+        const parsedResult = parseAIResponse(fullText);
+        this.setData({
+          aiResult: parsedResult,
+          loading: false,
+          streamingText: "",
+        });
+        this._currentStreamTask = null;
+      },
+      onError: (err) => {
+        console.error("[OH] ❌ OH卡解读失败:", err.message);
+        // 使用兜底内容
+        const fallbackResult = {
+          insight: `看到「${
+            this.data.selectedImageCard?.name || "这张卡"
+          }」出现在你面前，我感受到此刻的你可能正在经历一些内心的波动。这很正常，每一种情绪都值得被看见。`,
+          subconscious: `也许在更深的层面，你正在寻找一种确认——确认自己的感受是被允许的，确认前方的路虽然模糊但终会清晰。`,
+          actions: `1. 给自己5分钟，只是静静地呼吸，不需要做任何事\n2. 在纸上写下此刻脑海中第一个浮现的词\n3. 今天对自己说一句温柔的话`,
+          reflectionQuestions: `• 此刻我最想被理解的是什么？\n• 如果恐惧会说话，它想告诉我什么？\n• 什么是我现在就可以给自己的？`,
+          closing: `无论你现在感受到什么，都请记得：你不需要完美，你只需要真实。我在这里，陪着你。💛`,
+        };
+        this.setData({
+          aiResult: fallbackResult,
+          loading: false,
+          streamingText: "",
+        });
+        this._currentStreamTask = null;
+      },
+    });
   },
 
   // ============================================================
