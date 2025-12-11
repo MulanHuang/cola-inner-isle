@@ -1,0 +1,15 @@
+<view class="custom-navbar brand-navbar" style="padding-top: {{statusBarHeight}}px;">
+  <view class="navbar-content">
+    <!-- 返回按钮 -->
+    <view wx:if="{{showBack}}" class="navbar-back" bindtap="onBack">
+      <view class="back-icon"></view>
+    </view>
+    <view class="navbar-left">
+      <image class="navbar-logo" src="{{logo}}" mode="aspectFit"></image>
+      <view class="navbar-title">{{title}}</view>
+    </view>
+    <view class="navbar-right">
+      <slot name="right"></slot>
+    </view>
+  </view>
+</view>

@@ -46,10 +46,15 @@
         <view class="ctrl-btn ctrl-btn-side" bindtap="seekBackward">
           <image class="ctrl-icon" src="/images/icons/skip-back.svg" mode="aspectFit"></image>
         </view>
-        <!-- 播放 / 暂停（主按钮） -->
-        <view class="ctrl-btn ctrl-btn-main" bindtap="togglePlay">
+        <!-- 播放 / 暂停（主按钮）-->
+        <view class="ctrl-btn ctrl-btn-main {{audioBuffering ? 'buffering' : ''}}" bindtap="togglePlay">
           <view class="main-btn-glow"></view>
-          <image class="ctrl-icon ctrl-icon-main" src="{{playing ? '/images/icons/pause.svg' : '/images/icons/play.svg'}}" mode="aspectFit"></image>
+          <!-- 🚀 缓冲加载动画 -->
+          <view wx:if="{{audioBuffering}}" class="buffering-spinner">
+            <view class="spinner-ring"></view>
+          </view>
+          <!-- 播放/暂停图标 -->
+          <image wx:else class="ctrl-icon ctrl-icon-main {{playing ? '' : 'play-icon'}}" src="{{playing ? '/images/icons/pause.svg' : '/images/icons/play.svg'}}" mode="aspectFit"></image>
         </view>
         <!-- 下一段 / 前进 -->
         <view class="ctrl-btn ctrl-btn-side" bindtap="seekForward">

@@ -168,7 +168,7 @@
 <!-- 自定义导航栏 -->
 <view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
   <view class="navbar-content">
-    <image class="navbar-logo" src="/images/logo.png" mode="aspectFit"></image>
+    <image class="navbar-logo" src="/images/logo.svg" mode="aspectFit"></image>
     <view class="navbar-title">可乐心岛</view>
   </view>
 </view>

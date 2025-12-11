@@ -1,0 +1,266 @@
+[
+  {
+    "title": "情绪释放冥想",
+    "description": "温柔地释放积压的情绪，让心灵得到舒缓",
+    "category": "emotion",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/let go of negative emotion.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/Let Go of Negative Emotions, Guilt, Regret, Fear, Inner Conflict, Meditation Music, Healing Music.mp3",
+    "duration": "02:01:22",
+    "plays": 0,
+    "order": 1
+  },
+
+  {
+    "title": "接纳情绪练习",
+    "description": "学会接纳和拥抱自己的所有情绪",
+    "category": "emotion",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/recognize emotion.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/Ho'oponopono .mp3",
+    "duration": "12:00",
+    "plays": 0,
+    "order": 2
+  },
+
+  {
+    "title": "海底轮冥想",
+    "description": "连接大地能量，建立安全感和稳定感",
+    "category": "chakra",
+    "chakraType": "root",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-root.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/海底轮冥想.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 1
+  },
+
+  {
+    "title": "脐轮冥想",
+    "description": "激活创造力和情感流动",
+    "category": "chakra",
+    "chakraType": "sacral",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-sacral.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/脐轮冥想.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 2
+  },
+
+  {
+    "title": "太阳轮冥想",
+    "description": "增强自信和个人力量",
+    "category": "chakra",
+    "chakraType": "solar",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-solar-plexus.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/太阳轮冥想.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 3
+  },
+
+  {
+    "title": "心轮冥想",
+    "description": "打开心轮，连接爱与慈悲",
+    "category": "chakra",
+    "chakraType": "heart",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-heart.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/心轮冥想.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 4
+  },
+
+  {
+    "title": "喉轮冥想",
+    "description": "释放表达，说出真实的自己",
+    "category": "chakra",
+    "chakraType": "throat",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-throat 2.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/喉轮冥想（加强版）.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 5
+  },
+
+  {
+    "title": "眉心轮冥想",
+    "description": "开启直觉和内在智慧",
+    "category": "chakra",
+    "chakraType": "third-eye",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-third-eye.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/第三眼冥想（加强版）.mp3",
+    "duration": "15:17",
+    "plays": 0,
+    "order": 6
+  },
+
+  {
+    "title": "深度睡眠引导",
+    "description": "放松身心，进入深度睡眠",
+    "category": "sleep",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/sleeping.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/30 Minute Deep Sleep Music, Meditation.mp3",
+    "duration": "20:00",
+    "plays": 0,
+    "order": 1
+  },
+
+  {
+    "title": "深度睡眠引导",
+    "description": "放松身心，进入深度睡眠",
+    "category": "sleep",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/sleep nap.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/30 Min Deep Sleep-nap.mp3",
+    "duration": "20:00",
+    "plays": 0,
+    "order": 2
+  },
+    {
+    "title": "3小时深度睡眠修复",
+    "description": "在睡眠中修复能量，全面重启",
+    "category": "sleep",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/3小时深度睡眠修复.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/3小时深度睡眠修复冥想音乐.mp3",
+    "duration": "3:00:00",
+    "plays": 0,
+    "order": 3
+  },
+
+  {
+    "title": "身体扫描放松",
+    "description": "系统性地放松全身，释放紧张",
+    "category": "relax",
+    "cover": "/images/meditation/relax-1.jpg",
+    "audioUrl": "cloud://your-env.xxx/meditation/relax-1.mp3",
+    "duration": "15:00",
+    "plays": 0,
+    "order": 1
+  },
+ {
+    "title": "颂钵静心放松疗愈",
+    "description": "颂钵引导身心放松与冥想",
+    "category": "relax",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/身体放松颂钵.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/颂钵疗愈放松.mp3",
+    "duration": "30:00",
+    "plays": 0,
+    "order": 2
+  },
+  {
+    "title": "内在小孩疗愈",
+    "description": "与内在小孩对话，给予爱与接纳",
+    "category": "innerchild",
+    "cover": "/images/meditation/innerchild-1.jpg",
+    "audioUrl": "cloud://your-env.xxx/meditation/innerchild-1.mp3",
+    "duration": "18:00",
+    "plays": 0,
+    "order": 1
+  },
+
+  {
+    "title": "内在小孩疗愈",
+    "description": "与内在小孩对话，给予爱与接纳",
+    "category": "innerchild",
+    "cover": "/images/meditation/innerchild-1.jpg",
+    "audioUrl": "cloud://your-env.xxx/meditation/innerchild-1.mp3",
+    "duration": "18:00",
+    "plays": 0,
+    "order": 2
+  },
+
+  {
+    "title": "自我觉察练习",
+    "description": "观察当下的身心状态，培养觉察力",
+    "category": "awareness",
+    "cover": "/images/meditation/awareness-1.jpg",
+    "audioUrl": "cloud://your-env.xxx/meditation/awareness-1.mp3",
+    "duration": "10:00",
+    "plays": 0,
+    "order": 1
+  },
+  {
+    "title": "852Hz 连接高我频冥想",
+    "description": "提升心灵状态，连接更高智慧",
+    "category": "awareness",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/连接高我.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/连接高我冥想音乐.mp3",
+    "duration": "3:33:32",
+    "plays": 0,
+    "order": 2
+  },
+
+  {
+    "title": "自我肯定语",
+    "description": "用正向语言滋养内心，建立自信",
+    "category": "affirmation",
+    "cover": "/images/meditation/affirmation-1.jpg",
+    "audioUrl": "cloud://your-env.xxx/meditation/affirmation-1.mp3",
+    "duration": "8:00",
+    "plays": 0,
+    "order": 1
+  },
+
+  {
+    "title": "639Hz 爱情与和谐关系显化",
+    "description": "提升爱频率，吸引美好关系",
+    "category": "manifestation",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/爱情显化.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/639 Hz 爱情与和谐关系显化冥想.mp3",
+    "duration": "1:00:00",
+    "plays": 0,
+    "order": 1
+  },
+    {
+    "title": "财富显化冥想",
+    "description": "显化丰盛能量，吸引不断的财富流",
+    "category": "manifestation",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/财富显化冥想.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/财富显化冥想.mp3",
+    "duration": "1:00:32",
+    "plays": 0,
+    "order": 2
+  },
+
+  {
+    "title": "顶轮之光",
+    "description": "连接宇宙能量，提升灵性意识",
+    "category": "chakra",
+    "chakraType": "crown",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/顶轮冥想（加强版）.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/顶轮之光.mp3",
+    "duration": "5:14",
+    "plays": 0,
+    "order": 7
+  },
+
+  {
+    "title": "情绪释放冥想",
+    "description": "温柔地释放心中的情绪，让心灵得到舒缓",
+    "category": "emotion",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-crown.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/顶轮冥想（加强版）.mp3",
+    "duration": "10:00",
+    "plays": 0,
+    "order": 1
+  },
+
+  {
+    "title": "顶轮冥想",
+    "description": "连接宇宙能量，提升灵性意识",
+    "category": "chakra",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/chakra-crown.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/顶轮冥想（加强版）.mp3",
+    "duration": "15:16",
+    "plays": 0,
+    "order": 7
+  }
+   {
+    "title": "852Hz 连接灵性指引冥想",
+    "description": "连接灵性指引，唤醒高我直觉",
+    "category": "chakra",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/指导神.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/852Hz 连接指导神.mp3",
+    "duration": "3:33:32",
+    "plays": 0,
+    "order": 8
+  }
+]

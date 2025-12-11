@@ -22,23 +22,25 @@ const CHAKRA_NAMES = {
 
 Page({
   data: {
+    navBarHeight: 0, // 导航栏高度
     results: {},
     chakraList: [],
     radarData: [], // 雷达图数据
     selectedChakra: "", // 当前选中的脉轮类型
     selectedChakraInfo: {}, // 当前选中脉轮的详细信息
 
-    // AI 分析相关（单个脉轮详细分析，使用代理函数 analyzeChakraResult）
+    // AI 深度分析相关（整合后的完整分析）
     aiAnalysis: null, // AI 生成的分析结果
     isAnalyzing: false, // 是否正在分析中
     analysisError: false, // 分析是否失败
     showAiSection: false, // 是否显示 AI 分析区域
+  },
 
-    // AI 综合分析相关（综合分析，已改为高稳定性代理接口 /chakra/analyze）
-    overallAnalysis: null, // AI 综合分析结果
-    isOverallAnalyzing: false, // 是否正在进行综合分析
-    overallAnalysisError: false, // 综合分析是否失败
-    showOverallSection: false, // 是否显示综合分析区域
+  // 导航栏准备完成
+  onNavReady(e) {
+    this.setData({
+      navBarHeight: e.detail.navBarHeight || 0,
+    });
   },
 
   onLoad(options) {
@@ -154,11 +156,8 @@ Page({
     // 更新选中脉轮的详细信息
     this.updateSelectedChakraInfo(lowestChakra.type);
 
-    // 调用 AI 分析接口（单个脉轮详细分析，代理函数）
-    this.analyzeChakraResults(results);
-
-    // 调用 AI 综合分析接口（综合分析，高稳定性代理接口）
-    this.analyzeChakraOverall(results);
+    // 显示AI分析入口（用户点击按钮后才开始分析）
+    this.setData({ showAiSection: true });
   },
 
   // 加载最新的测试结果
@@ -304,151 +303,15 @@ Page({
   },
 
   /**
-   * 🚀 前端直连代理调用 OpenAI（单个脉轮详细分析，流式输出）
+   * 🚀 AI 深度分析（整合后的完整脉轮分析，流式输出）
+   * 整合了原来两个分析的优点：整体状态 + 能量分布 + 个性化建议 + 练习
    */
   analyzeChakraResults(results) {
     this.setData({
       isAnalyzing: true,
       analysisError: false,
       showAiSection: true,
-      streamingText1: "",
-    });
-
-    const chakraScores = {
-      root: results.root?.percentage || 0,
-      sacral: results.sacral?.percentage || 0,
-      solarPlexus: results.solar?.percentage || 0,
-      heart: results.heart?.percentage || 0,
-      throat: results.throat?.percentage || 0,
-      thirdEye: results.third_eye?.percentage || 0,
-      crown: results.crown?.percentage || 0,
-    };
-
-    const scores = Object.values(chakraScores);
-    const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
-    let level =
-      avgScore >= 80
-        ? "高度平衡"
-        : avgScore >= 60
-        ? "良好平衡"
-        : avgScore < 50
-        ? "需要关注"
-        : "中等平衡";
-
-    const chakraEntries = Object.entries(chakraScores).map(([key, score]) => ({
-      key,
-      score,
-    }));
-    const sortedChakras = chakraEntries.sort((a, b) => b.score - a.score);
-    const strongChakras = sortedChakras
-      .slice(0, 2)
-      .filter((c) => c.score >= 60)
-      .map((c) => CHAKRA_NAMES[c.key] || c.key);
-    const weakChakras = sortedChakras
-      .slice(-2)
-      .filter((c) => c.score < 60)
-      .map((c) => CHAKRA_NAMES[c.key] || c.key);
-
-    const systemPrompt = `你是一位温柔、专业的心灵疗愈师，专注于脉轮能量分析。
-你的角色定位：
-1. 温柔、包容地引导用户探索自己的能量状态
-2. 使用日常易懂的语言，避免过于玄学或复杂的表达
-3. 严格禁止使用任何医学诊断或诊断词汇
-4. 多用"也许"、"可能"、"有时候"等非绝对用语
-5. 关注用户的感受和体验，不做评判或批评
-输出要求：
-1. 必须返回合格的 JSON 格式，不要带任何额外的文本或 Markdown 标记
-2. 所有文本必须使用中文
-3. 内容温柔、积极、充满希望`;
-
-    const userPrompt = `根据以下脉轮测试结果，请给出一份温柔、详细的分析报告：
-
-脉轮分数（满分100）：
-- 海底轮：${chakraScores.root}
-- 腹轮：${chakraScores.sacral}
-- 太阳轮：${chakraScores.solarPlexus}
-- 心轮：${chakraScores.heart}
-- 喉轮：${chakraScores.throat}
-- 眉心轮：${chakraScores.thirdEye}
-- 顶轮：${chakraScores.crown}
-
-整体状态：${level}
-${strongChakras.length > 0 ? `较强的：${strongChakras.join("、")}` : ""}
-${weakChakras.length > 0 ? `可以关注：${weakChakras.join("、")}` : ""}
-
-请详细返回以下 JSON 格式，不需要任何额外的文本：
-{
-  "overall_summary": "整体总结，80-120字",
-  "strengths": ["优势1", "优势2", "优势3"],
-  "growth_focus": ["关注点1", "关注点2"],
-  "simple_practices": ["练习1", "练习2", "练习3"]
-}`;
-
-    const messages = [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userPrompt },
-    ];
-
-    console.log("[chakra] 🔥 开始流式请求（单个脉轮分析）");
-
-    // 🔥 使用流式调用
-    this._streamTask1 = callAIStream({
-      messages,
-      model: "gpt-5-mini",
-      temperature: 1,
-      onChunk: (chunk, fullText) => {
-        this.setData({ streamingText1: fullText });
-      },
-      onComplete: (fullText) => {
-        console.log("[chakra] ✅ 单个脉轮分析流式输出完成");
-        try {
-          // 解析 JSON
-          let cleanedResponse = fullText.trim();
-          if (cleanedResponse.startsWith("```json")) {
-            cleanedResponse = cleanedResponse
-              .replace(/```json\n?/g, "")
-              .replace(/```\n?$/g, "");
-          } else if (cleanedResponse.startsWith("```")) {
-            cleanedResponse = cleanedResponse.replace(/```\n?/g, "");
-          }
-          const analysisResult = JSON.parse(cleanedResponse);
-          this.setData({
-            aiAnalysis: analysisResult,
-            isAnalyzing: false,
-            analysisError: false,
-            streamingText1: "",
-          });
-        } catch (parseErr) {
-          console.error("[chakra] ❌ JSON 解析失败:", parseErr);
-          this.setData({
-            isAnalyzing: false,
-            analysisError: true,
-            streamingText1: "",
-          });
-        }
-        this._streamTask1 = null;
-      },
-      onError: (err) => {
-        console.error("[chakra] ❌ AI 分析失败:", err.message);
-        this.setData({
-          isAnalyzing: false,
-          analysisError: true,
-          streamingText1: "",
-        });
-        this._streamTask1 = null;
-      },
-    });
-  },
-
-  /**
-   * 🚀 前端直连代理调用 OpenAI（综合分析，流式输出）
-   */
-  analyzeChakraOverall(results) {
-    this.setData({
-      isOverallAnalyzing: true,
-      overallAnalysisError: false,
-      showOverallSection: true,
-      streamingText2: "",
+      streamingText: "",
     });
 
     const chakraScores = {
@@ -475,22 +338,30 @@ ${weakChakras.length > 0 ? `可以关注：${weakChakras.join("、")}` : ""}
     const sortedChakras = chakraEntries.sort((a, b) => b.score - a.score);
     const highestChakra = sortedChakras[0];
     const lowestChakra = sortedChakras[sortedChakras.length - 1];
+    const strongChakras = sortedChakras
+      .slice(0, 2)
+      .filter((c) => c.score >= 60)
+      .map((c) => c.name);
+    const weakChakras = sortedChakras
+      .slice(-2)
+      .filter((c) => c.score < 60)
+      .map((c) => c.name);
 
-    const systemPrompt = `你是"小可"，一位温柔、专业的心灵疗愈师，专注于脉轮能量综合分析。
+    const systemPrompt = `你是"小可"，一位温柔、专业的心灵疗愈师，专注于脉轮能量分析。
 你的角色定位：
 1. 温柔、包容地引导用户探索自己的整体能量状态
 2. 使用日常易懂的语言，避免过于玄学或复杂的表达
 3. 严格禁止使用任何医学诊断或诊断词汇
 4. 多用"也许"、"可能"、"有时候"等非绝对用语
-5. 关注能量流动的平衡性，避免强调单一脉轮的"好坏"
+5. 关注能量流动的平衡性和用户的感受，不做评判
 输出要求：
 1. 必须返回合格的 JSON 格式，不要带任何额外的文本或 Markdown 标记
 2. 所有文本必须使用中文
 3. 内容温柔、积极、充满希望`;
 
-    const userPrompt = `根据这位来访者的七大脉轮测试结果，请给出一份整体综合分析的建议报告：
+    const userPrompt = `根据这位来访者的七大脉轮测试结果，请给出一份温柔、详细的深度分析报告：
 
-【七大脉轮分数】
+【七大脉轮分数（满分100）】
 - 海底轮（根基与安全感）：${chakraScores.root}分
 - 腹轮（情感与创造力）：${chakraScores.sacral}分
 - 太阳轮（自信与意志力）：${chakraScores.solarPlexus}分
@@ -504,15 +375,21 @@ ${weakChakras.length > 0 ? `可以关注：${weakChakras.join("、")}` : ""}
 - 最高分：${maxScore}分（${highestChakra.name}）
 - 最低分：${minScore}分（${lowestChakra.name}）
 - 分数浮动范围：${variance}分
+${
+  strongChakras.length > 0
+    ? `- 能量较强的脉轮：${strongChakras.join("、")}`
+    : ""
+}
+${weakChakras.length > 0 ? `- 可以关注的脉轮：${weakChakras.join("、")}` : ""}
 
-请详细返回以下 JSON 格式的建议报告：
+请详细返回以下 JSON 格式的深度分析报告：
 {
-  "overall_state": "整体能量状态描述（2-3句话）",
-  "energy_distribution": "能量分布特点描述（2-3句话）",
-  "chakra_connections": "脉轮关联分析（2-3句话）",
-  "personalized_advice": ["个性化建议1", "个性化建议2", "个性化建议3"],
-  "focus_areas": ["发展重点1", "发展重点2"],
-  "encouragement": "温馨的鼓励（1-2句话）"
+  "overall_summary": "整体能量状态总结（100-150字，描述用户当前的整体能量状态和特点）",
+  "energy_insight": "能量分布洞察（80-100字，分析脉轮间的联系和能量流动特点）",
+  "strengths": ["你的能量优势1", "你的能量优势2", "你的能量优势3"],
+  "growth_focus": ["适合关注的方向1", "适合关注的方向2"],
+  "simple_practices": ["日常小练习1（具体可操作）", "日常小练习2（具体可操作）", "日常小练习3（具体可操作）"],
+  "encouragement": "温馨的鼓励语（1-2句暖心的话）"
 }`;
 
     const messages = [
@@ -520,18 +397,18 @@ ${weakChakras.length > 0 ? `可以关注：${weakChakras.join("、")}` : ""}
       { role: "user", content: userPrompt },
     ];
 
-    console.log("[chakra] 🔥 开始流式请求（综合分析）");
+    console.log("[chakra] 🔥 开始流式请求（AI深度分析）");
 
     // 🔥 使用流式调用
-    this._streamTask2 = callAIStream({
+    this._streamTask = callAIStream({
       messages,
       model: "gpt-5-mini",
       temperature: 1,
       onChunk: (chunk, fullText) => {
-        this.setData({ streamingText2: fullText });
+        this.setData({ streamingText: fullText });
       },
       onComplete: (fullText) => {
-        console.log("[chakra] ✅ 综合分析流式输出完成");
+        console.log("[chakra] ✅ AI深度分析流式输出完成");
         try {
           // 解析 JSON
           let cleanedResponse = fullText.trim();
@@ -544,37 +421,44 @@ ${weakChakras.length > 0 ? `可以关注：${weakChakras.join("、")}` : ""}
           }
           const analysisResult = JSON.parse(cleanedResponse);
           this.setData({
-            overallAnalysis: analysisResult,
-            isOverallAnalyzing: false,
-            overallAnalysisError: false,
-            streamingText2: "",
+            aiAnalysis: analysisResult,
+            isAnalyzing: false,
+            analysisError: false,
+            streamingText: "",
           });
         } catch (parseErr) {
           console.error("[chakra] ❌ JSON 解析失败:", parseErr);
           this.setData({
-            isOverallAnalyzing: false,
-            overallAnalysisError: true,
-            streamingText2: "",
+            isAnalyzing: false,
+            analysisError: true,
+            streamingText: "",
           });
         }
-        this._streamTask2 = null;
+        this._streamTask = null;
       },
       onError: (err) => {
-        console.error("[chakra] ❌ AI 综合分析失败:", err.message);
+        console.error("[chakra] ❌ AI 深度分析失败:", err.message);
         this.setData({
-          isOverallAnalyzing: false,
-          overallAnalysisError: true,
-          streamingText2: "",
+          isAnalyzing: false,
+          analysisError: true,
+          streamingText: "",
         });
-        this._streamTask2 = null;
+        this._streamTask = null;
       },
     });
   },
 
-  // 重试综合分析
-  retryOverallAnalysis() {
+  // 开始 AI 分析（用户点击按钮触发）
+  startAiAnalysis() {
     if (this.data.results) {
-      this.analyzeChakraOverall(this.data.results);
+      this.analyzeChakraResults(this.data.results);
+    }
+  },
+
+  // 重试 AI 分析
+  retryAnalysis() {
+    if (this.data.results) {
+      this.analyzeChakraResults(this.data.results);
     }
   },
 

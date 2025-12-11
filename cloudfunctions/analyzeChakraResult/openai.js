@@ -28,7 +28,7 @@ async function callOpenAI({
   }
 
   // ======== OpenAI 接口必需参数 ========
-  // gpt-5-mini 是推理模型，需要更多 token（推理 + 输出）
+  //gpt-5.1 是推理模型，需要更多 token（推理 + 输出）
   // 默认给 16000 tokens，确保有足够空间输出
   const config = {
     model: options.model || "gpt-5-mini",

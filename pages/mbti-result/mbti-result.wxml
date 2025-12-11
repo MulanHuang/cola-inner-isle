@@ -1,5 +1,7 @@
 <!--pages/mbti-result/mbti-result.wxml-->
-<view class="container result-container">
+<brand-navbar title="可乐心岛" showBack="{{true}}" bind:ready="onNavReady" />
+
+<view class="container result-container" style="padding-top: {{navBarHeight}}px;">
   <!-- 页面标题 -->
   <view class="page-header fade-in">
     <view class="header-badge">✨ 测试完成</view>
@@ -85,7 +87,7 @@
     </view>
   </view>
 
-  <!-- AI 解读按钮 - 突出设计 -->
+  <!-- 深度解读按钮 - 突出设计 -->
   <view class="ai-section slide-up delay-3" wx:if="{{!showAnalysis}}">
     <view class="ai-card">
       <view class="ai-decoration">
@@ -94,7 +96,7 @@
         <view class="ai-circle circle-3"></view>
       </view>
       <view class="ai-content">
-        <view class="ai-icon">🤖</view>
+        <view class="ai-icon">🏝️</view>
         <view class="ai-title">小岛深度解读</view>
         <view class="ai-desc">基于你的测试结果，获取专属性格分析报告</view>
       </view>
@@ -106,10 +108,10 @@
     </view>
   </view>
 
-  <!-- AI 解读内容 -->
+  <!-- 深度解读内容 -->
   <view class="analysis-content slide-up" wx:if="{{showAnalysis}}">
     <view class="analysis-header">
-      <view class="analysis-icon">🤖</view>
+      <view class="analysis-icon">🏝️</view>
       <view class="analysis-title">小岛深度解读</view>
       <view class="analysis-badge">专属报告</view>
     </view>

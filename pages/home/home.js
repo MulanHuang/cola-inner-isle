@@ -66,6 +66,14 @@ Page({
     selectedDateDisplay: "", // 当前选中日期的显示格式 (MM月DD日)
     selectedDayDetail: null, // 当前日期的明细对象
     showDayDetailPopup: false, // 是否展示当日完成情况弹窗
+    // 个人档案引导弹窗
+    showProfilePrompt: false, // 是否展示个人档案引导弹窗
+  },
+
+  triggerTapFeedback(type = "light") {
+    if (wx.vibrateShort) {
+      wx.vibrateShort({ type });
+    }
   },
 
   onLoad() {
@@ -73,6 +81,17 @@ Page({
     this.loadDailyQuote();
     this.checkTodayTarot();
     this.loadWeekHabitData();
+    this.checkProfileCompletion();
+  },
+
+  onNavReady(e) {
+    const { navBarHeight, statusBarHeight } = e.detail || {};
+    if (navBarHeight) {
+      this.setData({
+        navBarHeight,
+        statusBarHeight: statusBarHeight || this.data.statusBarHeight,
+      });
+    }
   },
 
   // 设置导航栏高度
@@ -170,6 +189,7 @@ Page({
 
   // 刷新每日一句
   refreshQuote() {
+    this.triggerTapFeedback();
     this.loadDailyQuote();
   },
 
@@ -212,6 +232,7 @@ Page({
 
   // 跳转到塔罗页面
   goToTarot() {
+    this.triggerTapFeedback();
     wx.navigateTo({
       url: "/pages/tarot/tarot",
     });
@@ -219,6 +240,7 @@ Page({
 
   // 重新抽取塔罗（直接进入重置模式）
   redoTarot() {
+    this.triggerTapFeedback("medium");
     wx.navigateTo({
       url: "/pages/tarot/tarot?reset=1",
     });
@@ -226,6 +248,7 @@ Page({
 
   // 跳转到情绪记录
   goToEmotion() {
+    this.triggerTapFeedback();
     wx.navigateTo({
       url: "/pages/emotion/emotion",
     });
@@ -233,6 +256,7 @@ Page({
 
   // 跳转到AI对话
   goToChat() {
+    this.triggerTapFeedback();
     wx.switchTab({
       url: "/pages/chat/chat",
     });
@@ -240,6 +264,7 @@ Page({
 
   // 跳转到冥想
   goToMeditation() {
+    this.triggerTapFeedback();
     wx.switchTab({
       url: "/pages/meditation/meditation",
     });
@@ -247,6 +272,7 @@ Page({
 
   // 跳转到自我探索
   goToExplore() {
+    this.triggerTapFeedback();
     wx.navigateTo({
       url: "/pages/explore/explore",
     });
@@ -254,13 +280,55 @@ Page({
 
   // 跳转到OH卡
   goToOhCard() {
+    this.triggerTapFeedback();
     wx.navigateTo({
       url: "/pages/oh/oh",
     });
   },
 
+  // 跳转到MBTI
+  goToMBTI() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/explore/mbti/mbti",
+    });
+  },
+
+  // 跳转到星座
+  goToZodiac() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/explore/zodiac/zodiac",
+    });
+  },
+
+  // 跳转到内在小孩
+  goToInnerChild() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/explore/innerchild/innerchild",
+    });
+  },
+
+  // 跳转到脉轮测试
+  goToChakraTest() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/chakraTest/index",
+    });
+  },
+
+  // 跳转到人生梦想九宫格
+  goToDreamGrid() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/dreamGrid/dreamGrid",
+    });
+  },
+
   // 跳转到完整打卡日历页面
   goToHabitCalendar() {
+    this.triggerTapFeedback();
     wx.navigateTo({
       url: "/pages/habitCalendar/habitCalendar",
     });
@@ -320,6 +388,76 @@ Page({
   closeDayDetailPopup() {
     this.setData({
       showDayDetailPopup: false,
+    });
+  },
+
+  /**
+   * 检查是否需要显示个人档案引导弹窗
+   * 智能渐进式提示策略：
+   * 1. 档案已完善 → 不提示
+   * 2. 已跳过2次以上 → 不再主动弹窗
+   * 3. 7天内跳过过 → 不提示
+   */
+  checkProfileCompletion() {
+    // 1. 检查档案是否已完善
+    const profile = wx.getStorageSync("userProfile");
+    if (profile && profile.gender && profile.birthDate && profile.birthTime) {
+      // 档案已完善，不提示
+      return;
+    }
+
+    // 2. 检查提示记录
+    const promptRecord = wx.getStorageSync("profilePromptRecord") || {};
+    const { dismissCount = 0, lastDismissTime = 0 } = promptRecord;
+
+    // 3. 如果已经跳过2次以上，不再主动弹窗
+    if (dismissCount >= 2) {
+      console.log("[home] 用户已跳过档案提示2次，不再主动弹窗");
+      return;
+    }
+
+    // 4. 如果7天内跳过过，不提示
+    if (lastDismissTime > 0) {
+      const daysSinceLastDismiss =
+        (Date.now() - lastDismissTime) / (1000 * 60 * 60 * 24);
+      if (daysSinceLastDismiss < 7) {
+        console.log(
+          "[home] 距离上次跳过不足7天，不提示",
+          Math.floor(daysSinceLastDismiss),
+          "天前跳过"
+        );
+        return;
+      }
+    }
+
+    // 延迟显示弹窗，让页面先加载完成
+    setTimeout(() => {
+      this.setData({ showProfilePrompt: true });
+    }, 800);
+  },
+
+  // 关闭个人档案引导弹窗（稍后再说）
+  closeProfilePrompt() {
+    this.setData({ showProfilePrompt: false });
+
+    // 记录跳过次数和时间
+    const promptRecord = wx.getStorageSync("profilePromptRecord") || {};
+    const newRecord = {
+      dismissCount: (promptRecord.dismissCount || 0) + 1,
+      lastDismissTime: Date.now(),
+    };
+    wx.setStorageSync("profilePromptRecord", newRecord);
+    console.log(
+      "[home] 用户跳过档案提示，累计跳过次数:",
+      newRecord.dismissCount
+    );
+  },
+
+  // 跳转到个人档案页面
+  goToProfileInfo() {
+    this.setData({ showProfilePrompt: false });
+    wx.navigateTo({
+      url: "/pages/profile/profile-info/profile-info",
     });
   },
 });

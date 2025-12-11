@@ -52,6 +52,9 @@ Component({
 
       // 执行跳转
       wx.switchTab({ url: path });
+
+      // 轻触震动反馈（仅在成功切换时触发）
+      wx.vibrateShort({ type: "light" });
     },
   },
 });

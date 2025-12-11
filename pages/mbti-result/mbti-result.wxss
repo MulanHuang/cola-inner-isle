@@ -71,7 +71,7 @@
 /* ========== 基础容器 ========== */
 .result-container {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8f4ec 0%, #f5f1e8 30%, #ede8de 100%);
+  background: radial-gradient(120% 120% at 20% 20%, #f9f3ea 0%, #f5eddf 35%, #efe3d2 70%, #f9f3ea 100%);
   padding: 30rpx;
   padding-bottom: 60rpx;
 }
@@ -115,7 +115,7 @@
 
 .header-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #6ba9ba 0%, #5b9aab 100%);
+  background: linear-gradient(135deg, #c9a977 0%, #b58c64 100%);
   color: #ffffff;
   font-size: 24rpx;
   padding: 8rpx 24rpx;
@@ -126,14 +126,14 @@
 .header-title {
   font-size: 40rpx;
   font-weight: 700;
-  color: #3d6b7a;
+  color: #6b5236;
   letter-spacing: 4rpx;
 }
 
 .header-line {
   width: 60rpx;
   height: 4rpx;
-  background: linear-gradient(90deg, #6ba9ba, #4a8a9a);
+  background: linear-gradient(90deg, #c9a977, #b58c64);
   border-radius: 2rpx;
   margin: 16rpx auto 0;
 }
@@ -141,20 +141,14 @@
 /* ========== 结果主卡片 ========== */
 .result-card {
   position: relative;
-  background: linear-gradient(
-    145deg,
-    #5b8a9a 0%,
-    #4a7a8a 30%,
-    #3d6b7a 70%,
-    #2f5866 100%
-  );
+  background: linear-gradient(145deg, #c9a977 0%, #b58c64 35%, #9c7a58 65%, #8b7355 100%);
   border-radius: 32rpx;
   padding: 50rpx 40rpx;
   text-align: center;
   color: #ffffff;
   margin-bottom: 24rpx;
-  box-shadow: 0 20rpx 50rpx rgba(74, 122, 138, 0.35),
-    0 8rpx 20rpx rgba(74, 122, 138, 0.2),
+  box-shadow: 0 20rpx 50rpx rgba(139, 115, 85, 0.32),
+    0 8rpx 20rpx rgba(139, 115, 85, 0.2),
     inset 0 2rpx 0 rgba(255, 255, 255, 0.2);
   overflow: hidden;
 }
@@ -251,8 +245,8 @@
   border-radius: 24rpx;
   padding: 30rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 8rpx 30rpx rgba(139, 115, 85, 0.1),
-    0 2rpx 8rpx rgba(139, 115, 85, 0.05);
+  box-shadow: 0 8rpx 30rpx rgba(139, 115, 85, 0.12),
+    0 2rpx 8rpx rgba(139, 115, 85, 0.06);
 }
 
 .summary-header {
@@ -269,7 +263,7 @@
 .summary-title {
   font-size: 30rpx;
   font-weight: 600;
-  color: #3d6b7a;
+  color: #6b5236;
 }
 
 .summary-tags {
@@ -283,7 +277,7 @@
   align-items: center;
   padding: 14rpx 22rpx;
   border-radius: 30rpx;
-  border: 1rpx solid rgba(0, 0, 0, 0.08);
+  border: 1rpx solid rgba(139, 115, 85, 0.12);
 }
 
 .tag-letter {
@@ -299,43 +293,43 @@
 
 /* 标签颜色方案 */
 .tag-blue {
-  background: linear-gradient(135deg, #e8f4f8 0%, #d4eaf2 100%);
+  background: linear-gradient(135deg, #e8f6fa 0%, #d5eef5 100%);
 }
 .tag-blue .tag-letter {
-  color: #4298b4;
+  color: #3b9db2;
 }
 .tag-blue .tag-desc {
-  color: #3a8aa5;
+  color: #368ca0;
 }
 
 .tag-yellow {
-  background: linear-gradient(135deg, #fdf6e3 0%, #f9efd0 100%);
+  background: linear-gradient(135deg, #fdf2de 0%, #f8e7c6 100%);
 }
 .tag-yellow .tag-letter {
-  color: #e4ae3a;
+  color: #d59b35;
 }
 .tag-yellow .tag-desc {
-  color: #c99a30;
+  color: #bf872d;
 }
 
 .tag-green {
-  background: linear-gradient(135deg, #e6f5ef 0%, #d2ede2 100%);
+  background: linear-gradient(135deg, #e5f7ef 0%, #d0f0e3 100%);
 }
 .tag-green .tag-letter {
-  color: #33a474;
+  color: #27a06f;
 }
 .tag-green .tag-desc {
-  color: #2d9268;
+  color: #23855f;
 }
 
 .tag-purple {
-  background: linear-gradient(135deg, #f3eef6 0%, #e8dff0 100%);
+  background: linear-gradient(135deg, #f5eefd 0%, #ede1f8 100%);
 }
 .tag-purple .tag-letter {
-  color: #88619a;
+  color: #9a6ac5;
 }
 .tag-purple .tag-desc {
-  color: #7a578a;
+  color: #8655b0;
 }
 
 /* ========== 维度分析区域 ========== */
@@ -344,8 +338,8 @@
   border-radius: 28rpx;
   padding: 36rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 12rpx 40rpx rgba(139, 115, 85, 0.1),
-    0 4rpx 12rpx rgba(139, 115, 85, 0.05);
+  box-shadow: 0 12rpx 40rpx rgba(139, 115, 85, 0.12),
+    0 4rpx 12rpx rgba(139, 115, 85, 0.06);
 }
 
 .section-header {
@@ -366,13 +360,13 @@
 .section-title {
   font-size: 34rpx;
   font-weight: 700;
-  color: #3d6b7a;
+  color: #6b5236;
   margin-bottom: 6rpx;
 }
 
 .section-subtitle {
   font-size: 24rpx;
-  color: #6a8a95;
+  color: #8b7355;
 }
 
 .dimensions-list {
@@ -389,6 +383,8 @@
   margin-bottom: 4rpx;
   animation: slideUp 0.5s ease-out forwards;
   opacity: 0;
+  border: 1rpx solid #f0e6d8;
+  box-shadow: 0 8rpx 24rpx rgba(139, 115, 85, 0.08);
 }
 
 /* ========== 维度结果标题 ========== */
@@ -441,6 +437,7 @@
   border-radius: 8rpx;
   overflow: visible;
   position: relative;
+  background: #f1e7d8;
 }
 
 .capsule-fill-left {
@@ -464,85 +461,85 @@
   height: 24rpx;
   background: #ffffff;
   border-radius: 50%;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2rpx 8rpx rgba(139, 115, 85, 0.22);
   z-index: 10;
 }
 
 /* ========== 维度颜色方案 ========== */
-/* 蓝色 - E/I 外向/内向 */
+/* 蓝绿 - E/I 外向/内向 */
 .dimension-blue .result-percent,
 .dimension-blue .result-label {
-  color: #4298b4;
+  color: #3b9db2;
 }
 
 .dimension-blue .capsule-fill-left {
-  background: linear-gradient(90deg, #4298b4 0%, #5ba4be 100%);
+  background: linear-gradient(90deg, #3b9db2 0%, #4fb7cd 100%);
 }
 
 .dimension-blue .capsule-fill-right {
-  background: linear-gradient(90deg, #8fcadb 0%, #b8dee9 100%);
+  background: linear-gradient(90deg, #9ad9e7 0%, #c2ecf4 100%);
 }
 
 .dimension-blue .dimension-hint {
-  border-left-color: #4298b4;
-  background: rgba(66, 152, 180, 0.08);
+  border-left-color: #3b9db2;
+  background: rgba(59, 157, 178, 0.12);
 }
 
-/* 黄色 - S/N 实感/直觉 */
+/* 琥珀黄 - S/N 实感/直觉 */
 .dimension-yellow .result-percent,
 .dimension-yellow .result-label {
-  color: #e4ae3a;
+  color: #d59b35;
 }
 
 .dimension-yellow .capsule-fill-left {
-  background: linear-gradient(90deg, #e4ae3a 0%, #ebc05c 100%);
+  background: linear-gradient(90deg, #d59b35 0%, #e5b557 100%);
 }
 
 .dimension-yellow .capsule-fill-right {
-  background: linear-gradient(90deg, #f2d68a 0%, #f8e7b8 100%);
+  background: linear-gradient(90deg, #f2d9a2 0%, #f7e8c4 100%);
 }
 
 .dimension-yellow .dimension-hint {
-  border-left-color: #e4ae3a;
-  background: rgba(228, 174, 58, 0.08);
+  border-left-color: #d59b35;
+  background: rgba(213, 155, 53, 0.12);
 }
 
-/* 绿色 - T/F 思考/情感 */
+/* 翡翠绿 - T/F 思考/情感 */
 .dimension-green .result-percent,
 .dimension-green .result-label {
-  color: #33a474;
+  color: #27a06f;
 }
 
 .dimension-green .capsule-fill-left {
-  background: linear-gradient(90deg, #33a474 0%, #4db58a 100%);
+  background: linear-gradient(90deg, #27a06f 0%, #3cbc86 100%);
 }
 
 .dimension-green .capsule-fill-right {
-  background: linear-gradient(90deg, #7fcba8 0%, #b2e0ca 100%);
+  background: linear-gradient(90deg, #8ddbb6 0%, #b9ecd4 100%);
 }
 
 .dimension-green .dimension-hint {
-  border-left-color: #33a474;
-  background: rgba(51, 164, 116, 0.08);
+  border-left-color: #27a06f;
+  background: rgba(39, 160, 111, 0.12);
 }
 
-/* 紫色 - J/P 判断/感知 */
+/* 薰衣紫 - J/P 判断/感知 */
 .dimension-purple .result-percent,
 .dimension-purple .result-label {
-  color: #88619a;
+  color: #9a6ac5;
 }
 
 .dimension-purple .capsule-fill-left {
-  background: linear-gradient(90deg, #88619a 0%, #9b72ab 100%);
+  background: linear-gradient(90deg, #9a6ac5 0%, #b083d8 100%);
 }
 
 .dimension-purple .capsule-fill-right {
-  background: linear-gradient(90deg, #b99ac5 0%, #d5c2de 100%);
+  background: linear-gradient(90deg, #cdb1ea 0%, #e0d2f4 100%);
 }
 
 .dimension-purple .dimension-hint {
-  border-left-color: #88619a;
-  background: rgba(136, 97, 154, 0.08);
+  border-left-color: #9a6ac5;
+  background: rgba(154, 106, 197, 0.12);
 }
 
 /* ========== 维度说明 ========== */
@@ -566,14 +563,14 @@
 
 .ai-card {
   position: relative;
-  background: linear-gradient(145deg, #ffffff 0%, #f8fafb 100%);
+  background: linear-gradient(145deg, #ffffff 0%, #faf4ea 100%);
   border-radius: 28rpx;
   padding: 40rpx 30rpx;
   text-align: center;
-  box-shadow: 0 12rpx 40rpx rgba(91, 138, 154, 0.12),
-    0 4rpx 12rpx rgba(91, 138, 154, 0.06);
+  box-shadow: 0 12rpx 40rpx rgba(139, 115, 85, 0.12),
+    0 4rpx 12rpx rgba(139, 115, 85, 0.06);
   overflow: hidden;
-  border: 1rpx solid rgba(91, 138, 154, 0.1);
+  border: 1rpx solid rgba(139, 115, 85, 0.12);
 }
 
 .ai-decoration {
@@ -590,8 +587,8 @@
   border-radius: 50%;
   background: linear-gradient(
     135deg,
-    rgba(91, 138, 154, 0.1),
-    rgba(107, 169, 186, 0.05)
+    rgba(184, 149, 106, 0.12),
+    rgba(156, 122, 90, 0.08)
   );
 }
 
@@ -633,13 +630,13 @@
 .ai-title {
   font-size: 36rpx;
   font-weight: 700;
-  color: #3d6b7a;
+  color: #6b5236;
   margin-bottom: 12rpx;
 }
 
 .ai-desc {
   font-size: 26rpx;
-  color: #6a8a95;
+  color: #8b7355;
   line-height: 1.6;
 }
 
@@ -653,16 +650,16 @@
   padding: 32rpx 40rpx;
   background: linear-gradient(
     135deg,
-    #6ba9ba 0%,
-    #5b9aab 30%,
-    #4a8a9a 60%,
-    #3d7a8a 100%
+    #c9a977 0%,
+    #b58c64 35%,
+    #9c7a58 65%,
+    #8b7355 100%
   );
   border-radius: 20rpx;
   border: none;
   overflow: hidden;
-  box-shadow: 0 12rpx 30rpx rgba(91, 138, 154, 0.4),
-    0 4rpx 12rpx rgba(91, 138, 154, 0.3),
+  box-shadow: 0 12rpx 30rpx rgba(139, 115, 85, 0.28),
+    0 4rpx 12rpx rgba(139, 115, 85, 0.2),
     inset 0 2rpx 0 rgba(255, 255, 255, 0.25);
 }
 
@@ -700,18 +697,18 @@
 
 .glow-btn:active {
   transform: scale(0.98);
-  box-shadow: 0 6rpx 20rpx rgba(91, 154, 171, 0.35),
-    0 2rpx 8rpx rgba(91, 154, 171, 0.25);
+  box-shadow: 0 6rpx 20rpx rgba(139, 115, 85, 0.26),
+    0 2rpx 8rpx rgba(139, 115, 85, 0.18);
 }
 
 /* ========== AI 解读内容 ========== */
 .analysis-content {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #faf4ea 100%);
   border-radius: 28rpx;
   padding: 0;
   margin-bottom: 24rpx;
-  box-shadow: 0 12rpx 40rpx rgba(91, 138, 154, 0.1),
-    0 4rpx 12rpx rgba(91, 138, 154, 0.05);
+  box-shadow: 0 12rpx 40rpx rgba(139, 115, 85, 0.12),
+    0 4rpx 12rpx rgba(139, 115, 85, 0.06);
   overflow: hidden;
 }
 
@@ -719,8 +716,8 @@
   display: flex;
   align-items: center;
   padding: 30rpx;
-  background: linear-gradient(135deg, #f0f6f8 0%, #e8f0f2 100%);
-  border-bottom: 1rpx solid rgba(91, 154, 171, 0.15);
+  background: linear-gradient(135deg, #f7f0e5 0%, #f2e7d8 100%);
+  border-bottom: 1rpx solid rgba(139, 115, 85, 0.14);
 }
 
 .analysis-icon {
@@ -732,13 +729,13 @@
   flex: 1;
   font-size: 32rpx;
   font-weight: 700;
-  color: #3d6b7a;
+  color: #6b5236;
 }
 
 .analysis-badge {
   font-size: 22rpx;
-  color: #4a8a9a;
-  background: rgba(74, 138, 154, 0.15);
+  color: #8b7355;
+  background: rgba(139, 115, 85, 0.15);
   padding: 6rpx 16rpx;
   border-radius: 20rpx;
 }
@@ -749,7 +746,7 @@
 
 .analysis-text {
   font-size: 28rpx;
-  color: #3a5a65;
+  color: #5a4632;
   line-height: 2;
   white-space: pre-wrap;
 }
@@ -785,27 +782,27 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #5b9aab 0%, #4a8a9a 50%, #3d7a8a 100%);
+  background: linear-gradient(135deg, #c9a977 0%, #b58c64 50%, #8b7355 100%);
   color: #ffffff;
-  box-shadow: 0 8rpx 24rpx rgba(74, 138, 154, 0.3),
+  box-shadow: 0 8rpx 24rpx rgba(139, 115, 85, 0.26),
     inset 0 2rpx 0 rgba(255, 255, 255, 0.15);
 }
 
 .btn-primary:active {
   transform: scale(0.98);
-  box-shadow: 0 4rpx 12rpx rgba(74, 138, 154, 0.25);
+  box-shadow: 0 4rpx 12rpx rgba(139, 115, 85, 0.22);
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%);
-  color: #4a8a9a;
-  border: 2rpx solid rgba(91, 154, 171, 0.3);
-  box-shadow: 0 4rpx 16rpx rgba(91, 154, 171, 0.1);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f1e6 100%);
+  color: #6b5236;
+  border: 2rpx solid rgba(139, 115, 85, 0.26);
+  box-shadow: 0 4rpx 16rpx rgba(139, 115, 85, 0.12);
 }
 
 .btn-secondary:active {
   transform: scale(0.98);
-  background: linear-gradient(135deg, #f0f6f8 0%, #e8f0f2 100%);
+  background: linear-gradient(135deg, #f4ebdf 0%, #e9ddcd 100%);
 }
 
 /* ========== 底部留白 ========== */

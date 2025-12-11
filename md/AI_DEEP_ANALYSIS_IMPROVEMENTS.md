@@ -37,7 +37,7 @@ MBTI 类型: INFJ
 ✅ 环境变量已配置，API Key 前缀: sk-proj-ab...
 ✅ 生成用户提示词成功
 📡 开始调用 OpenAI API...
-模型: gpt-5-mini
+模型:gpt-5.1
 温度: 0.7
 最大 tokens: 1500
 ```
@@ -63,7 +63,7 @@ MBTI 类型: INFJ
 === OpenAI Client 开始执行 ===
 ✅ API Key 已获取，前缀: sk-proj-ab...
 📋 配置信息:
-  - 模型: gpt-5-mini
+  - 模型:gpt-5.1
   - 温度: 0.7
   - 最大 tokens: 1500
   - 超时时间: 30000 ms

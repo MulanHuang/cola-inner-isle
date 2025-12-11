@@ -1,11 +1,6 @@
 <!--pages/home/home.wxml-->
 <!-- 自定义导航栏 -->
-<view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
-  <view class="navbar-content">
-    <image class="navbar-logo" src="/images/logo.png" mode="aspectFit"></image>
-    <view class="navbar-title">可乐心岛</view>
-  </view>
-</view>
+<brand-navbar bind:ready="onNavReady" />
 
 <view class="home-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
   <!-- 今日一句 -->
@@ -13,21 +8,27 @@
     <view class="quote-icon">✨</view>
     <text class="quote-text" user-select="{{true}}">{{dailyQuote.content}}</text>
     <text class="quote-author" wx:if="{{dailyQuote.author}}" user-select="{{true}}">— {{dailyQuote.author}}</text>
-    <view class="quote-refresh" bindtap="refreshQuote">
+    <view class="quote-refresh pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="refreshQuote">
       <image class="refresh-icon" src="/assets/icons/refresh-outline.svg" mode="aspectFit" />
       <text class="refresh-text">换一句</text>
     </view>
   </view>
 
   <!-- 每日塔罗牌 -->
-  <view class="card tarot-card" bindtap="goToTarot">
+  <view class="card tarot-card pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToTarot">
     <view class="tarot-header">
-      <view class="tarot-title">🔮 每日塔罗</view>
-      <view class="tarot-status">{{tarotStatus}}</view>
+      <view class="tarot-title-chip">
+        <text class="tarot-title-icon">🔮</text>
+        <text class="tarot-title-text">每日塔罗</text>
+      </view>
+      <view class="tarot-status">
+        <view class="tarot-status-dot {{tarotStatus === '已抽取' ? 'is-done' : ''}}"></view>
+        <text class="tarot-status-text">{{tarotStatus}}</text>
+      </view>
     </view>
     <view class="tarot-content">
       <view wx:if="{{!todayTarot}}" class="tarot-undrawn">
-        <image class="tarot-card-back" src="cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarot/Back 1.png" mode="aspectFit"></image>
+        <image class="tarot-card-back" src="cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsBack/Back 1.webp" mode="aspectFit"></image>
         <view class="tarot-hint">点击抽取今日塔罗牌</view>
       </view>
       <view wx:else class="tarot-drawn">
@@ -35,20 +36,20 @@
         <view class="tarot-name">{{todayTarot.name}}</view>
         <view class="tarot-actions">
           <view class="tarot-hint">已抽取，点此重新抽取或查看</view>
-          <button class="tarot-redo-btn" size="mini" catchtap="redoTarot">重新抽取</button>
+          <button class="tarot-redo-btn" size="mini" catchtap="redoTarot" hover-class="tarot-redo-hover" hover-stay-time="60">重新抽取</button>
         </view>
       </view>
     </view>
   </view>
 
   <!-- 探索工具·每日练习 Mini 打卡日历 -->
-  <view class="habit-card" bindtap="goToHabitCalendar">
+  <view class="habit-card pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToHabitCalendar">
     <!-- 顶部标题行 -->
     <view class="habit-header">
       <view class="habit-title-section">
         <view class="habit-title">探索工具 · 每日练习</view>
       </view>
-      <view class="habit-arrow">
+      <view class="habit-arrow" hover-class="habit-arrow-hover">
         <image class="habit-arrow-icon" src="/assets/icons/chevron-right.svg" mode="aspectFit" />
       </view>
     </view>
@@ -123,21 +124,22 @@
   </view>
 
   <!-- 自我探索入口 -->
-  <view class="card explore-card" bindtap="goToExplore">
+  <view class="card explore-card">
     <view class="explore-header">
       <view class="explore-title">🌱 自我探索</view>
-      <view class="explore-arrow">→</view>
+      <view class="explore-arrow pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToExplore">→</view>
     </view>
     <view class="explore-items">
-      <view class="explore-tag" catchtap="goToEmotion">
+      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToOhCard">OH卡</view>
+      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToEmotion">
         <image class="explore-tag-icon" src="/assets/icons/heart-outline.svg" mode="aspectFit" />
         <text>情绪记录</text>
       </view>
-      <view class="explore-tag">MBTI</view>
-      <view class="explore-tag">星座</view>
-      <view class="explore-tag">内在小孩</view>
-      <view class="explore-tag">脉轮测试</view>
-      <view class="explore-tag" catchtap="goToOhCard">OH卡</view>
+      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToDreamGrid">梦想九宫格</view>
+      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToChakraTest">脉轮测试</view>
+      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToMBTI">MBTI</view>
+      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToZodiac">星座</view>
+      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToInnerChild">内在小孩</view>
     </view>
   </view>
 </view>
@@ -210,6 +212,48 @@
     <!-- 底部按钮 -->
     <view class="popup-footer">
       <button class="popup-btn" bindtap="closeDayDetailPopup">我知道了</button>
+    </view>
+  </view>
+</view>
+
+<!-- 个人档案引导弹窗 -->
+<view class="profile-prompt-popup" wx:if="{{showProfilePrompt}}">
+  <!-- 半透明遮罩层 -->
+  <view class="popup-mask" bindtap="closeProfilePrompt"></view>
+
+  <!-- 弹窗卡片 -->
+  <view class="profile-prompt-card">
+    <!-- 顶部装饰图标 -->
+    <view class="profile-prompt-icon">🌟</view>
+
+    <!-- 标题 -->
+    <view class="profile-prompt-title">完善你的专属档案</view>
+
+    <!-- 描述文字 -->
+    <view class="profile-prompt-desc">
+      填写个人信息，获得更准确的星座、塔罗解读哦～
+    </view>
+
+    <!-- 好处列表 -->
+    <view class="profile-prompt-benefits">
+      <view class="benefit-item">
+        <text class="benefit-icon">🔮</text>
+        <text class="benefit-text">塔罗解读更精准</text>
+      </view>
+      <view class="benefit-item">
+        <text class="benefit-icon">⭐</text>
+        <text class="benefit-text">星座特质更贴合</text>
+      </view>
+      <view class="benefit-item">
+        <text class="benefit-icon">💫</text>
+        <text class="benefit-text">心语更懂你</text>
+      </view>
+    </view>
+
+    <!-- 按钮组 -->
+    <view class="profile-prompt-buttons">
+      <button class="profile-prompt-btn primary" bindtap="goToProfileInfo">立即完善</button>
+      <button class="profile-prompt-btn secondary" bindtap="closeProfilePrompt">稍后再说</button>
     </view>
   </view>
 </view>

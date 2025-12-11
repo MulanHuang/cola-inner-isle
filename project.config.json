@@ -1,5 +1,5 @@
 {
-  "description": "可乐心岛 微信小程序项目配置文件",
+  "description": "可乐心岛：用于情绪记录、自我反思与轻工具体验的小程序",
   "packOptions": {
     "ignore": [],
     "include": []

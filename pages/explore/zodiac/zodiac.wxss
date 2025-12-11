@@ -3,6 +3,49 @@
   padding-bottom: 40rpx;
 }
 
+/* 档案完善提示条 */
+.profile-tip-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20rpx;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(90deg, #fff8e6 0%, #fff3d6 100%);
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(255, 193, 7, 0.3);
+  box-shadow: 0 4rpx 12rpx rgba(255, 193, 7, 0.15);
+}
+
+.profile-tip-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12rpx;
+}
+
+.profile-tip-icon {
+  font-size: 28rpx;
+}
+
+.profile-tip-text {
+  font-size: 26rpx;
+  color: #7a6a00;
+  flex: 1;
+}
+
+.profile-tip-arrow {
+  font-size: 26rpx;
+  color: #c8a27e;
+  font-weight: 500;
+}
+
+.profile-tip-close {
+  font-size: 28rpx;
+  color: #999999;
+  padding: 8rpx;
+  margin-left: 12rpx;
+}
+
 /* 头部 */
 .header {
   text-align: center;
@@ -23,7 +66,7 @@
 
 /* 当前星座 */
 .current-zodiac {
-  background: linear-gradient(135deg, #E8DFD0 0%, #D4C4B0 100%);
+  background: linear-gradient(135deg, #e8dfd0 0%, #d4c4b0 100%);
   border-radius: 20rpx;
   padding: 40rpx;
   margin: 0 20rpx 20rpx;
@@ -57,7 +100,7 @@
 
 /* 生日输入 */
 .birthday-section {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 20rpx;
   padding: 30rpx;
   margin: 0 20rpx 20rpx;
@@ -72,7 +115,7 @@
 }
 
 .birthday-picker {
-  background: #F5F1E8;
+  background: #f5f1e8;
   border-radius: 12rpx;
   padding: 24rpx;
   font-size: 28rpx;
@@ -91,7 +134,7 @@
 
 /* 星座列表 */
 .zodiac-list {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 20rpx;
   padding: 30rpx;
   margin: 0 20rpx;
@@ -109,7 +152,7 @@
   flex-direction: column;
   align-items: center;
   padding: 20rpx;
-  background: #F5F1E8;
+  background: #f5f1e8;
   border-radius: 12rpx;
 }
 
@@ -129,4 +172,3 @@
   color: #999999;
   text-align: center;
 }
-

@@ -6,26 +6,64 @@
   box-sizing: border-box;
 }
 
+.pressable {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.pressable-active {
+  transform: translateY(2rpx) scale(0.98);
+  box-shadow: 0 6rpx 16rpx rgba(139, 115, 85, 0.12);
+  filter: brightness(0.98);
+}
+
 /* 今日一句 - 优化版 */
 .quote-card {
-  background: linear-gradient(135deg, #fff9f0 0%, #f5f1e8 100%);
+  background: linear-gradient(135deg, #fffaf3 0%, #f4ede2 100%),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15) 0 4rpx,
+      rgba(230, 214, 194, 0.12) 4rpx 8rpx
+    );
   text-align: center;
   position: relative;
   overflow: hidden;
+  border-radius: 24rpx;
+  border: 1rpx solid rgba(200, 162, 126, 0.16);
+  box-shadow: 0 10rpx 30rpx rgba(139, 115, 85, 0.08),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2rpx 6rpx rgba(161, 136, 111, 0.08);
 }
 .quote-card::before {
   content: "";
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  inset: 12rpx;
+  border-radius: 18rpx;
   background: radial-gradient(
-    circle,
-    rgba(255, 249, 240, 0.8) 0%,
-    transparent 70%
+      circle at 30% 20%,
+      rgba(255, 255, 255, 0.55),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 80% 0%,
+      rgba(255, 255, 255, 0.35),
+      transparent 50%
+    );
+  opacity: 0.85;
+  z-index: 0;
+  pointer-events: none;
+}
+.quote-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.015) 0 2rpx,
+    transparent 2rpx 6rpx
   );
-  opacity: 0.5;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .quote-icon {
@@ -81,26 +119,52 @@
 
 /* 塔罗牌 - 优化版 */
 .tarot-card {
-  background: linear-gradient(135deg, #f0e6d7 0%, #deccb5 100%);
+  background: linear-gradient(135deg, #f3ebdf 0%, #e5d5c1 100%),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0 4rpx,
+      rgba(221, 206, 187, 0.1) 4rpx 8rpx
+    );
   padding: 2rpx;
   border-radius: 24rpx;
   position: relative;
   overflow: hidden;
+  border: 1rpx solid rgba(200, 162, 126, 0.22);
+  box-shadow: 0 12rpx 32rpx rgba(139, 115, 85, 0.12),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2rpx 6rpx rgba(161, 136, 111, 0.09);
 }
 
 .tarot-card::before {
   content: "";
   position: absolute;
-  top: -30%;
-  right: -30%;
-  width: 160%;
-  height: 160%;
+  inset: 10rpx;
+  border-radius: 20rpx;
   background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.3) 0%,
-    transparent 60%
+      circle at 70% 0%,
+      rgba(255, 255, 255, 0.4),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(255, 255, 255, 0.3),
+      transparent 55%
+    );
+  opacity: 0.8;
+  pointer-events: none;
+}
+.tarot-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.015) 0 2rpx,
+    transparent 2rpx 6rpx
   );
+  mix-blend-mode: multiply;
   opacity: 0.6;
+  pointer-events: none;
 }
 
 .tarot-header {
@@ -112,21 +176,64 @@
   z-index: 1;
 }
 
-.tarot-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333333;
-  letter-spacing: 0.5rpx;
+.tarot-title-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 6rpx 9rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1rpx solid rgba(200, 162, 126, 0.22);
+  box-shadow: 0 4rpx 12rpx rgba(139, 115, 85, 0.12);
+}
+
+.tarot-title-icon {
+  font-size: 28rpx;
+}
+
+.tarot-title-text {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #3a2d1e;
+  letter-spacing: 0.6rpx;
 }
 
 .tarot-status {
-  font-size: 22rpx;
-  color: #8b7355;
-  background: rgba(255, 255, 255, 0.6);
-  padding: 10rpx 20rpx;
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 10rpx 18rpx;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(244, 232, 214, 0.92) 100%
+  );
   border-radius: 999rpx;
-  font-weight: 500;
+  border: 1rpx solid rgba(198, 154, 104, 0.3);
+  box-shadow: 0 6rpx 16rpx rgba(161, 136, 111, 0.12);
   backdrop-filter: blur(10rpx);
+}
+
+.tarot-status-text {
+  font-size: 24rpx;
+  color: #7b6246;
+  font-weight: 600;
+  letter-spacing: 0.4rpx;
+}
+
+.tarot-status-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #d6c7b5;
+  box-shadow: 0 0 0 3rpx rgba(200, 162, 126, 0.18);
+  transition: all 0.2s ease;
+}
+
+.tarot-status-dot.is-done {
+  background: #c69a68;
+  box-shadow: 0 0 0 3rpx rgba(198, 154, 104, 0.3),
+    0 4rpx 10rpx rgba(198, 154, 104, 0.28);
 }
 
 .tarot-content {
@@ -186,20 +293,43 @@
 }
 
 .tarot-redo-btn {
-  background: linear-gradient(135deg, #c7b299 0%, #a1886f 100%);
+  background: linear-gradient(135deg, #d5b48c 0%, #b08c68 100%);
   color: #fff;
   border: none;
   padding: 14rpx 36rpx;
   border-radius: 999rpx;
-  box-shadow: 0 8rpx 20rpx rgba(161, 136, 111, 0.35);
+  box-shadow: 0 10rpx 24rpx rgba(161, 136, 111, 0.35);
   font-size: 26rpx;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.tarot-redo-btn:active {
-  transform: scale(0.95);
-  box-shadow: 0 4rpx 12rpx rgba(161, 136, 111, 0.4);
+.tarot-redo-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.35),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.tarot-redo-btn:active,
+.tarot-redo-hover {
+  transform: translateY(2rpx) scale(0.97);
+  box-shadow: 0 6rpx 16rpx rgba(161, 136, 111, 0.3);
+  filter: brightness(0.98);
+}
+
+.tarot-redo-btn:active::after,
+.tarot-redo-hover::after {
+  opacity: 1;
 }
 
 /* 快捷入口 - 优化版：更精致、更专业 */
@@ -280,32 +410,78 @@
 
 /* 自我探索 - 优化版 */
 .explore-card {
-  background: linear-gradient(135deg, #f0e8ff 0%, #e0d5f5 100%);
+  background: linear-gradient(
+      135deg,
+      #faf3e8 0%,
+      #f3ecfe 45%,
+      #e8e0fc 70%,
+      #faf3e8 100%
+    ),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.16) 0 4rpx,
+      rgba(228, 218, 255, 0.12) 4rpx 8rpx
+    );
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  border-radius: 24rpx;
+  border: 1rpx solid rgba(216, 184, 134, 0.24);
+  box-shadow: 0 0 0 5rpx rgba(216, 184, 134, 0.1),
+    0 10rpx 20rpx rgba(132, 104, 160, 0.08),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2rpx 6rpx rgba(120, 90, 150, 0.06);
 }
 
 .explore-card::before {
   content: "";
   position: absolute;
-  bottom: -40%;
-  left: -20%;
-  width: 140%;
-  height: 140%;
+  inset: 12rpx;
+  border-radius: 20rpx;
   background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.4) 0%,
-    transparent 65%
+      circle at 28% 36%,
+      rgba(255, 255, 255, 0.55),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 78% 12%,
+      rgba(255, 255, 255, 0.32),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 72% 80%,
+      rgba(255, 222, 196, 0.28),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 18% 80%,
+      rgba(255, 239, 215, 0.24),
+      transparent 58%
+    );
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.explore-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.02) 0 2rpx,
+    transparent 2rpx 6rpx
   );
-  opacity: 0.5;
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 .explore-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4rpx;
+  margin-bottom: 10rpx;
   position: relative;
   z-index: 1;
 }
@@ -318,19 +494,27 @@
 }
 
 .explore-arrow {
-  font-size: 32rpx;
-  color: #8b7355;
-  transition: transform 0.3s ease;
+  font-size: 30rpx;
+  color: #8c6f40;
+  transition: all 0.25s ease;
+  padding: 12rpx 16rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff7ec 0%, #f1e8ff 100%);
+  border: 1rpx solid rgba(200, 162, 126, 0.25);
+  box-shadow: 0 6rpx 14rpx rgba(139, 115, 85, 0.12),
+    0 0 0 6rpx rgba(255, 255, 255, 0.42);
 }
 
-.explore-card:active .explore-arrow {
-  transform: translateX(4rpx);
+.explore-arrow:active {
+  transform: translateX(3rpx);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4rpx 10rpx rgba(139, 115, 85, 0.16);
 }
 
 .explore-items {
   display: flex;
   flex-wrap: wrap;
-  gap: 12rpx;
+  gap: 16rpx;
   position: relative;
   z-index: 1;
 }
@@ -338,15 +522,23 @@
 .explore-tag {
   display: inline-flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.7);
-  padding: 14rpx 28rpx;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 14rpx 26rpx;
   border-radius: 40rpx;
   font-size: 26rpx;
-  color: #666666;
+  color: #4f4f4f;
   font-weight: 500;
   backdrop-filter: blur(10rpx);
-  border: 1rpx solid rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
+  border: 1rpx solid rgba(205, 180, 235, 0.55);
+  box-shadow: 0 2rpx 8rpx rgba(90, 70, 120, 0.08),
+    0 6rpx 16rpx rgba(235, 225, 251, 0.75);
+  transition: all 0.2s ease;
+}
+
+.explore-tag:active {
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 2rpx 6rpx rgba(90, 70, 120, 0.12);
 }
 
 .explore-tag-icon {
@@ -397,24 +589,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36rpx;
-  height: 36rpx;
-  background: rgba(200, 162, 126, 0.08);
+  width: 48rpx;
+  height: 48rpx;
+  background: rgba(255, 255, 255, 0.82);
   border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.habit-card:active .habit-arrow {
-  transform: translateX(3rpx);
-  background: rgba(200, 162, 126, 0.12);
+  transition: all 0.25s ease;
+  border: 1rpx solid rgba(200, 162, 126, 0.25);
+  box-shadow: 0 6rpx 14rpx rgba(139, 115, 85, 0.12);
 }
 
 .habit-arrow-icon {
-  width: 18rpx;
-  height: 18rpx;
-  opacity: 0.6;
+  width: 22rpx;
+  height: 22rpx;
+  opacity: 0.8;
 }
 
+.habit-arrow-hover,
+.habit-card:active .habit-arrow {
+  transform: translateX(3rpx);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4rpx 10rpx rgba(139, 115, 85, 0.16);
+}
 /* 打卡点阵区域 */
 .habit-grid {
   display: flex;
@@ -768,4 +963,146 @@
 .popup-btn:active {
   transform: scale(0.98);
   opacity: 0.9;
+}
+
+/* ==================== 个人档案引导弹窗 ==================== */
+.profile-prompt-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 弹窗卡片 - 居中显示 */
+.profile-prompt-card {
+  position: relative;
+  width: 600rpx;
+  background: linear-gradient(180deg, #fffbf5 0%, #ffffff 100%);
+  border-radius: 32rpx;
+  padding: 48rpx 40rpx 40rpx;
+  box-shadow: 0 20rpx 60rpx rgba(139, 115, 85, 0.2),
+    0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 顶部装饰图标 */
+.profile-prompt-icon {
+  font-size: 72rpx;
+  margin-bottom: 20rpx;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* 标题 */
+.profile-prompt-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 16rpx;
+  letter-spacing: 1rpx;
+}
+
+/* 描述文字 */
+.profile-prompt-desc {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.6;
+  margin-bottom: 32rpx;
+}
+
+/* 好处列表 */
+.profile-prompt-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 36rpx;
+  padding: 24rpx;
+  background: rgba(200, 162, 126, 0.08);
+  border-radius: 20rpx;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.benefit-icon {
+  font-size: 28rpx;
+}
+
+.benefit-text {
+  font-size: 26rpx;
+  color: #555555;
+}
+
+/* 按钮组 */
+.profile-prompt-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.profile-prompt-btn {
+  width: 100%;
+  height: 88rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.profile-prompt-btn::after {
+  border: none;
+}
+
+.profile-prompt-btn.primary {
+  background: linear-gradient(135deg, #c8a27e 0%, #a1886f 100%);
+  color: #ffffff;
+  box-shadow: 0 8rpx 24rpx rgba(161, 136, 111, 0.35);
+}
+
+.profile-prompt-btn.primary:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(161, 136, 111, 0.3);
+}
+
+.profile-prompt-btn.secondary {
+  background: transparent;
+  color: #999999;
+  font-weight: 500;
+}
+
+.profile-prompt-btn.secondary:active {
+  background: rgba(0, 0, 0, 0.03);
 }

@@ -3,8 +3,10 @@ const db = wx.cloud.database();
 
 Page({
   data: {
+    navBarHeight: 0, // 导航栏高度
     birthday: "",
     currentZodiac: "",
+    showProfileTip: false, // 是否显示档案完善提示
     zodiacList: [
       { id: "aries", name: "白羊座", icon: "♈", date: "3.21-4.19" },
       { id: "taurus", name: "金牛座", icon: "♉", date: "4.20-5.20" },
@@ -97,6 +99,35 @@ Page({
 
   onLoad() {
     this.loadBirthday();
+    this.checkProfileTip();
+  },
+
+  // 导航栏准备完成
+  onNavReady(e) {
+    this.setData({
+      navBarHeight: e.detail.navBarHeight || 0,
+    });
+  },
+
+  // 检查是否需要显示档案完善提示
+  checkProfileTip() {
+    const profile = wx.getStorageSync("userProfile");
+    // 如果没有出生日期，显示提示
+    if (!profile || !profile.birthDate) {
+      this.setData({ showProfileTip: true });
+    }
+  },
+
+  // 跳转到个人档案页面
+  goToProfileInfo() {
+    wx.navigateTo({
+      url: "/pages/profile/profile-info/profile-info",
+    });
+  },
+
+  // 关闭档案提示
+  closeProfileTip() {
+    this.setData({ showProfileTip: false });
   },
 
   // 加载生日

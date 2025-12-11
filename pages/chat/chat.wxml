@@ -11,7 +11,7 @@
     </view>
     <!-- 中间从本地存储加载 从本地存储加载题 -->
     <view class="navbar-center">
-      <image class="navbar-logo" src="/images/logo.png" mode="aspectFit" />
+      <image class="navbar-logo" src="/images/logo.svg" mode="aspectFit" />
       <view class="navbar-title">可乐心岛</view>
     </view>
     <!-- 右侧从本地存储加载 位（保持对称） -->
@@ -23,16 +23,18 @@
 <!--      整体容器          -->
 <!-- ===================== -->
 <view
-  class="chat-page-root"
-  style="padding-top: {{navBarHeight}}px;"
+  class="chat-page-root {{isSwipingHorizontal ? 'swiping' : ''}}"
+  style="padding-top: {{navBarHeight}}px; transform: translateX({{swipeOffsetX}}px);"
   bindtouchstart="onTouchStart"
+  bindtouchmove="onTouchMove"
   bindtouchend="onTouchEnd"
 >
   <!-- ===================== -->
   <!--      聊天消息列表      -->
   <!-- ===================== -->
   <scroll-view
-    class="chat-scroll {{tagPanelExpanded ? 'panel-open' : ''}}"
+    class="chat-scroll"
+    style="padding-bottom: {{scrollPaddingBottom}}rpx;"
     scroll-y="true"
     scroll-with-animation="true"
     scroll-into-view="{{scrollToView}}"
@@ -41,30 +43,58 @@
     bindscroll="onChatScroll"
   >
     <!-- 欢迎界面（从本地存储加载 聊天记录时显示） -->
-    <view wx:if="{{messages.length === 0}}" class="welcome-section">
-      <view class="welcome-center">
-        <view class="welcome-icon">🌸</view>
-        <view class="welcome-text">你好，我是你的心灵陪伴者</view>
-        <view class="welcome-subtitle">
-          在这里，你可以自由表达内心的感受
-        </view>
-        <!-- 🔥 快捷回复入口 -->
-        <view class="quick-prompts">
-          <view class="quick-prompt-item" bindtap="quickSend" data-text="今天心情有点低落">
-            💭 今天心情有点低落
-          </view>
-          <view class="quick-prompt-item" bindtap="quickSend" data-text="做了一个奇怪的梦">
-            🌙 做了一个奇怪的梦
-          </view>
-          <view class="quick-prompt-item" bindtap="quickSend" data-text="工作压力有点大">
-            💼 工作压力有点大
-          </view>
-          <view class="quick-prompt-item" bindtap="quickSend" data-text="想聊聊最近的烦恼">
-            🍃 想聊聊最近的烦恼
-          </view>
-        </view>
-      </view>
+   <!-- 欢迎页（无聊天记录时显示） -->
+<view wx:if="{{messages.length === 0}}" class="welcome-section page-fade-in">
+
+  <!-- ✨ 奶咖灵性流光能量球 -->
+<view class="energy-orb">
+
+  <!-- 外层柔光 -->
+  <view class="orb-glow-3"></view>
+  <view class="orb-glow-2"></view>
+  <view class="orb-glow-1"></view>
+
+  <!-- 球体主体 -->
+  <view class="orb-core"></view>
+
+  <!-- 内部缓慢流动的能量云雾 -->
+  <view class="orb-cloud cloud-1"></view>
+  <view class="orb-cloud cloud-2"></view>
+
+  <!-- 灵性闪烁星点 -->
+  <view class="orb-stars"></view>
+
+</view>
+
+
+
+  <!-- 文案 -->
+  <view class="welcome-center">
+    <view class="welcome-title">你好，我是你的心灵陪伴者</view>
+    <view class="welcome-subtitle">{{welcomeTexts[currentTopicId]}}</view>
+  </view>
+
+  <!-- 快捷按钮区（灵性卡片风） -->
+  <view class="welcome-actions">
+    <view class="welcome-action-card action-1" bindtap="quickSend" data-text="今天心情有点低落">
+      🌧️ 今天心情有点低落
     </view>
+    <view class="welcome-action-card action-2" bindtap="quickSend" data-text="做了一个奇怪的梦">
+      🌙 做了一个奇怪的梦
+    </view>
+    <view class="welcome-action-card action-3" bindtap="quickSend" data-text="工作压力有点大">
+      💼 工作压力有点大
+    </view>
+    <view class="welcome-action-card action-4" bindtap="quickSend" data-text="想聊聊最近的烦恼">
+      🍃 想聊聊最近的烦恼
+    </view>
+  </view>
+
+  <!-- 合规提示 -->
+  <view class="compliance-tip">本功能仅用于情绪表达与自我反思，不提供心理诊断或医学建议</view>
+
+</view>
+
 
     <!-- 消息气泡列表 -->
     <block
@@ -109,7 +139,7 @@
       </view>
     </block>
 
-    <!-- 加载中（AI 正在思考） -->
+    <!-- 加载中（小岛正在思考） -->
     <view wx:if="{{loading}}" id="msg_loading" class="msg-row msg-row-other msg-row-switch">
       <view class="msg-bubble msg-bubble-other msg-bubble-loading">
         <view class="typing-indicator">
@@ -156,6 +186,37 @@
       </view>
     </view>
 
+    <!-- 录音提示 -->
+    <view wx:if="{{recording}}" class="recording-banner">
+      <view class="recording-dot"></view>
+      <view class="recording-texts">
+        <text class="recording-text">录音中 · {{recordTimeDisplay}}</text>
+        <text class="recording-subtext">点击麦克风结束</text>
+      </view>
+    </view>
+
+    <!-- 识别进度提示 -->
+    <view wx:if="{{recognizing}}" class="recognizing-banner">
+      <view class="recognizing-spinner"></view>
+      <view class="recording-texts">
+        <text class="recognizing-text">转写中…</text>
+        <text class="recognizing-subtext">请稍等，完成后可编辑再发送</text>
+      </view>
+    </view>
+
+    <!-- 语音提示小字 -->
+    <view wx:if="{{voiceTip}}" class="voice-tip">{{voiceTip}}</view>
+
+    <!-- 长文本编辑提示/辅助 -->
+    <view wx:if="{{inputText && inputText.length > 80}}" class="edit-helper">
+      <view class="edit-helper-left">转写文本可修改后再发送</view>
+      <view class="edit-helper-actions">
+        <text class="edit-helper-count">{{inputText.length}}字</text>
+        <view class="edit-helper-btn" bindtap="openFullEditor">全屏编辑</view>
+        <view class="edit-helper-btn" bindtap="clearInput">清空</view>
+      </view>
+    </view>
+
     <!-- 底部输入从本地存储加载 从本地存储加载（微信风从本地存储加载 从本地存储加载极简） -->
     <view class="composer-input-bar">
       <!-- 左侧 + 按钮（切换面板展开/收起） -->
@@ -166,16 +227,19 @@
       <!-- 中间输入框（胶囊形） -->
       <view class="composer-input-field {{textareaHeight > 60 ? 'composer-input-field-expanded' : ''}}">
         <textarea
-          class="composer-textarea"
+          class="composer-textarea {{isLongInput ? 'composer-textarea-fixed' : ''}}"
           placeholder="说点什么吧…"
           placeholder-class="composer-input-placeholder"
           value="{{inputText}}"
           bindinput="onInput"
+          bindfocus="onInputFocus"
+          bindblur="onInputBlur"
           bindconfirm="sendMessage"
+          bindlinechange="onLineChange"
           confirm-type="send"
           adjust-position="{{true}}"
           cursor-spacing="120"
-          auto-height="{{true}}"
+          auto-height="{{!isLongInput}}"
           maxlength="2000"
           show-confirm-bar="{{false}}"
           disable-default-padding="{{true}}"
@@ -183,12 +247,43 @@
       </view>
 
       <!-- 右侧：语音按钮 / 发送按钮 -->
-      <view wx:if="{{!inputText}}" class="composer-icon-btn" bindtap="onVoiceTap">
+      <view
+        wx:if="{{!inputText}}"
+        class="composer-icon-btn {{recording ? 'mic-recording' : ''}} {{recognizing ? 'mic-disabled' : ''}} {{micTapped ? 'mic-tapped' : ''}}"
+        bindtap="onVoiceTap"
+      >
         <image class="composer-icon-img" src="/images/icons/mic.svg" mode="aspectFit" />
       </view>
       <view wx:else class="composer-send-btn" bindtap="sendMessage">
         <image class="composer-send-icon" src="/images/icons/send-arrow.svg" mode="aspectFit" />
       </view>
+    </view>
+  </view>
+</view>
+
+<!-- 全屏编辑弹层 -->
+<view wx:if="{{fullEditVisible}}" class="full-editor-mask">
+  <view class="full-editor-panel">
+    <view class="full-editor-header">
+      <view class="full-editor-title">全屏编辑</view>
+      <view class="full-editor-count">{{fullEditText.length}}字</view>
+    </view>
+    <view class="full-editor-body">
+      <textarea
+        class="full-editor-textarea"
+        value="{{fullEditText}}"
+        bindinput="onFullEditInput"
+        placeholder="在这里整理你的长文…"
+        placeholder-class="full-editor-placeholder"
+        auto-focus="{{true}}"
+        cursor-spacing="120"
+        maxlength="2000"
+        show-confirm-bar="{{false}}"
+      />
+    </view>
+    <view class="full-editor-footer">
+      <view class="full-editor-btn ghost" bindtap="closeFullEditor">取消</view>
+      <view class="full-editor-btn primary" bindtap="saveFullEditor">保存</view>
     </view>
   </view>
 </view>

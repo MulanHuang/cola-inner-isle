@@ -8,12 +8,20 @@ const { callAIStream } = require("../../utils/aiStream.js");
 
 Page({
   data: {
+    navBarHeight: 0, // 导航栏高度
     type: "", // MBTI 类型
     typeInfo: {}, // 类型信息
     scores: {}, // 分数对象
     dimensions: [], // 四个维度的对比数据
     analysis: "", // AI 解读内容
     showAnalysis: false, // 是否显示 AI 解读
+  },
+
+  // 导航栏准备完成
+  onNavReady(e) {
+    this.setData({
+      navBarHeight: e.detail.navBarHeight || 0,
+    });
   },
 
   onLoad(options) {

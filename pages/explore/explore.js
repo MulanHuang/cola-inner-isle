@@ -35,6 +35,13 @@ Page({
     }
   },
 
+  // 跳转到 OH 卡
+  goToOH() {
+    wx.navigateTo({
+      url: "/pages/oh/oh",
+    });
+  },
+
   // 跳转到情绪记录
   goToEmotion() {
     wx.navigateTo({

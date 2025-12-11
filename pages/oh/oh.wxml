@@ -3,7 +3,21 @@
 <!-- OH卡自我探索页面 -->
 <!-- 模式: imageOnly（自由图卡） | imageAndWord（图卡+字卡） -->
 
-<view class="container oh-container">
+<!-- 自定义导航栏，对齐 chat 页视觉 -->
+<view class="custom-navbar oh-navbar" style="padding-top: {{statusBarHeight}}px;">
+  <view class="oh-navbar-content">
+    <view class="oh-nav-left" bindtap="handleBack">
+      <text class="oh-back-icon">‹</text>
+    </view>
+    <view class="oh-nav-center">
+      <image class="navbar-logo" src="/images/logo.svg" mode="aspectFit" />
+      <view class="navbar-title">可乐心岛</view>
+    </view>
+    <view class="oh-nav-right"></view>
+  </view>
+</view>
+
+<view class="container oh-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
 
   <!-- 顶部区域 -->
   <view class="header-section">
@@ -18,7 +32,7 @@
       bindtap="switchMode"
       data-mode="imageOnly"
     >
-      自由图卡
+      🎴 自由图卡
     </view>
 
     <view
@@ -26,7 +40,25 @@
       bindtap="switchMode"
       data-mode="imageAndWord"
     >
-      图卡 + 字卡
+      📝 图卡 + 字卡
+    </view>
+  </view>
+
+  <!-- 轻量步骤指示 -->
+  <view class="stepper">
+    <view class="step-item {{!selectedImageCard ? 'active' : 'done'}}">
+      <view class="step-dot">1</view>
+      <view class="step-label">抽卡</view>
+    </view>
+    <view class="step-connector {{selectedImageCard ? 'active' : ''}}"></view>
+    <view class="step-item {{selectedImageCard && !(aiResult && aiResult.insight) ? 'active' : (aiResult && aiResult.insight ? 'done' : '')}}">
+      <view class="step-dot">2</view>
+      <view class="step-label">写感受</view>
+    </view>
+    <view class="step-connector {{aiResult && aiResult.insight ? 'active' : ''}}"></view>
+    <view class="step-item {{aiResult && aiResult.insight ? 'done active' : ''}}">
+      <view class="step-dot">3</view>
+      <view class="step-label">看解读</view>
     </view>
   </view>
 
@@ -68,13 +100,14 @@
   </view>
 
   <!-- 已抽卡展示区 -->
-  <view class="result-section" wx:if="{{selectedImageCard}}">
+  <view class="result-section" id="ohResultSection" wx:if="{{selectedImageCard}}">
 
-    <view class="card-display">
+    <view class="card-stage">
+      <view class="card-display">
 
       <!-- 仅图卡模式 -->
       <view
-        class="image-card-wrapper image-only-mode"
+        class="image-card-wrapper image-only-mode {{cardFlipActive ? 'card-flip-animate' : ''}}"
         wx:if="{{mode === 'imageOnly'}}"
       >
         <image
@@ -88,7 +121,7 @@
 
       <!-- 图卡 + 字卡模式 -->
       <view
-        class="combo-card-wrapper"
+        class="combo-card-wrapper {{cardFlipActive ? 'card-flip-animate' : ''}}"
         wx:if="{{mode === 'imageAndWord' && selectedWordCard}}"
         bindtap="previewImage"
         data-url="{{selectedImageCard.fileId}}"
@@ -122,78 +155,152 @@
         </view>
 
       </view>
+      </view>
     </view>
 
     <!-- 用户输入区 -->
     <view class="input-section">
-      <view class="input-guide">
-        「看到这张卡，你的第一感受是什么？」
+      <view class="input-guide input-guide-merged">
+        <view class="guide-line">「关于这张卡，你看到了什么？」</view>
+        <view class="guide-line">「你的第一感受是什么？」</view>
+        <view class="guide-line">「你现在最想探索的是什么问题？」</view>
       </view>
 
-      <view class="input-guide-sub">
-        「你现在最想探索的是什么问题？」
+      <view class="input-tags">
+        <view class="tag-chip tag-icon">🖼 描述卡牌</view>
+        <view class="tag-chip tag-icon">⚡ 第一感觉</view>
+        <view class="tag-chip tag-icon">❓ 当下疑问</view>
+        <view class="tag-chip tag-ghost">💭 灵感速记</view>
+      </view>
+
+      <view class="input-quick-hints">
+        <view class="hint-pill">颜色/光影</view>
+        <view class="hint-pill">人物/情绪</view>
+        <view class="hint-pill">此刻的需求</view>
+        <view class="hint-pill">想要的行动</view>
       </view>
 
       <textarea
         class="user-input {{inputJustShown ? 'just-drawn' : ''}}"
-        placeholder="写下你的第一反应、当下的问题或情绪..."
+        placeholder="简单描述下你看到了什么，写下你的第一反应、当下的问题或情绪..."
         value="{{userInput}}"
         bindinput="onInputChange"
         maxlength="500"
         focus="{{!!selectedImageCard && !aiResult.insight}}"
       ></textarea>
 
-      <view class="char-count {{charNearLimit ? 'warning' : ''}}">
-        {{userInput.length}}/500
+      <view class="input-footer">
+        <view class="char-count {{charNearLimit ? 'warning' : ''}}">
+          {{userInput.length}}/500
+        </view>
+        <view class="input-hint-soft">随手写几个关键词也可以</view>
       </view>
     </view>
 
-    <!-- AI 解读按钮 -->
-    <button
-      class="btn-interpret"
-      bindtap="handleAskOhMaster"
-      disabled="{{loading}}"
-      hover-class="none"
-    >
-      {{loading ? '正在解读...' : '请OH卡导师解读'}}
-    </button>
+    <!-- 解读按钮 -->
+    <view class="action-footer">
+      <view class="action-buttons">
+        <button
+          class="btn-interpret"
+          bindtap="handleAskOhMaster"
+          disabled="{{loading}}"
+          hover-class="none"
+        >
+          {{loading ? '正在解读...' : '🎴 一键解读'}}
+        </button>
 
-    <!-- AI 解读结果 -->
-    <view class="ai-result-section" wx:if="{{aiResult.insight}}">
+        <button
+          class="btn-chat"
+          bindtap="goToOhChatPage"
+          disabled="{{chatLoading}}"
+          hover-class="none"
+        >
+          {{chatLoading ? 'OH聊天中...' : (chatMessages.length ? '💬 继续聊天' : '💬 和导师聊聊')}}
+        </button>
+      </view>
+    </view>
+
+    <!-- OH chat 聊天区 -->
+    <view class="oh-chat-section" id="ohChatSection" wx:if="{{showInlineChat}}">
+
+      <scroll-view
+        class="chat-window"
+        scroll-y="true"
+        scroll-with-animation="true"
+        scroll-into-view="{{chatScrollTo}}"
+      >
+        <block wx:for="{{chatMessages}}" wx:key="id">
+          <view
+            id="chat_{{item.id}}"
+            class="chat-bubble {{item.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-assistant'}}"
+            user-select="{{item.role !== 'user'}}"
+          >
+            <text class="chat-text">{{item.content}}</text>
+          </view>
+        </block>
+
+        <view id="chat_bottom"></view>
+      </scroll-view>
+
+      <view class="chat-input-row">
+        <input
+          class="chat-input"
+          placeholder="想说什么就直接输入"
+          value="{{chatInput}}"
+          bindinput="onChatInputChange"
+          bindconfirm="sendOhChat"
+          confirm-type="send"
+          focus="{{chatInputFocus}}"
+          maxlength="500"
+        />
+        <button
+          class="chat-send-btn"
+          bindtap="sendOhChat"
+          disabled="{{chatLoading}}"
+          hover-class="none"
+        >
+          {{chatLoading ? '生成中' : '发送'}}
+        </button>
+      </view>
+      <view class="chat-note">聊天仅作陪伴与启发，不代替专业诊疗</view>
+    </view>
+
+    <!-- 解读结果 -->
+    <view class="ai-result-section" wx:if="{{aiResult && aiResult.insight}}">
 
       <view class="result-card">
         <view class="result-title">🔮 心理洞察</view>
-        <text class="result-content" user-select="{{true}}">
-          {{aiResult.insight}}
-        </text>
+        <view class="result-paragraphs" wx:for="{{formattedResult.insight}}" wx:key="*this">
+          <view class="result-paragraph" user-select="{{true}}">{{item}}</view>
+        </view>
       </view>
 
       <view class="result-card">
         <view class="result-title">🌙 潜意识线索</view>
-        <text class="result-content" user-select="{{true}}">
-          {{aiResult.subconscious}}
-        </text>
+        <view class="result-paragraphs" wx:for="{{formattedResult.subconscious}}" wx:key="*this">
+          <view class="result-paragraph" user-select="{{true}}">{{item}}</view>
+        </view>
       </view>
 
       <view class="result-card">
         <view class="result-title">🔥 行动建议</view>
-        <text class="result-content" user-select="{{true}}">
-          {{aiResult.actions}}
-        </text>
+        <view class="result-paragraphs" wx:for="{{formattedResult.actions}}" wx:key="*this">
+          <view class="result-paragraph" user-select="{{true}}">{{item}}</view>
+        </view>
       </view>
 
       <view class="result-card">
         <view class="result-title">💭 可以问自己的问题</view>
-        <text class="result-content" user-select="{{true}}">
-          {{aiResult.reflectionQuestions}}
-        </text>
+        <view class="result-paragraphs" wx:for="{{formattedResult.reflectionQuestions}}" wx:key="*this">
+          <view class="result-paragraph" user-select="{{true}}">{{item}}</view>
+        </view>
       </view>
 
       <view class="result-card">
         <view class="result-title">💛 温柔收尾</view>
-        <text class="result-content" user-select="{{true}}">
-          {{aiResult.closing}}
-        </text>
+        <view class="result-paragraphs" wx:for="{{formattedResult.closing}}" wx:key="*this">
+          <view class="result-paragraph" user-select="{{true}}">{{item}}</view>
+        </view>
       </view>
 
     </view>
@@ -202,7 +309,13 @@
     <button class="btn-reset" bindtap="resetDraw" hover-class="none">
       重新抽取
     </button>
+    <view class="tiny-disclaimer">提示：解读/聊天仅用于自我探索，非专业咨询</view>
 
+  </view>
+
+  <!-- 页面底部提示 -->
+  <view class="page-foot-note">
+    可乐心岛 · 用卡片陪你练习觉察与自我连接
   </view>
 
 </view>

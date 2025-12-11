@@ -1,5 +1,7 @@
 <!--pages/dreamGrid/dreamGrid.wxml-->
-<view class="dream-grid-page">
+<brand-navbar title="可乐心岛" showBack="{{true}}" bind:ready="onNavReady" />
+
+<view class="dream-grid-page" style="padding-top: {{navBarHeight}}px;">
   <!-- 顶部标题区域 -->
   <view class="header">
     <view class="main-title"><text class="title-icon">✨</text> 人生梦想九宫格</view>

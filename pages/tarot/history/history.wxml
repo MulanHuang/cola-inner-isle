@@ -15,7 +15,7 @@
     <block wx:for="{{list}}" wx:key="_id">
       <view class="card">
         <view class="card-left">
-          <image class="card-image" src="{{item.cardImage}}" mode="aspectFit"></image>
+          <image class="card-image" src="{{item.cardImage}}" mode="aspectFit" lazy-load="{{true}}"></image>
         </view>
         <view class="card-right">
           <view class="card-name">{{item.cardName}}</view>

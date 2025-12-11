@@ -59,10 +59,19 @@ Page({
     // 首次保存提示
     showSaveTip: false,
     saveTipFading: false,
+    // 导航栏高度
+    navBarHeight: 0,
   },
 
   onLoad() {
     this.loadFromStorage();
+  },
+
+  // 导航栏准备完成
+  onNavReady(e) {
+    this.setData({
+      navBarHeight: e.detail.navBarHeight || 0,
+    });
   },
 
   loadFromStorage() {

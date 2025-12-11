@@ -7,6 +7,16 @@
 
   <!-- 探索项目 -->
   <view class="explore-list">
+    <!-- OH 卡解读 -->
+    <view class="explore-item" bindtap="goToOH">
+      <view class="explore-icon">🎴</view>
+      <view class="explore-content">
+        <view class="explore-name">OH 卡解读</view>
+        <view class="explore-desc">抽取卡牌，探索潜意识的声音</view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+
     <!-- 情绪记录 -->
     <view class="explore-item" bindtap="goToEmotion">
       <view class="explore-icon explore-icon-img">

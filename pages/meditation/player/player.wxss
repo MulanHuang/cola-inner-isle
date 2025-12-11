@@ -277,6 +277,40 @@
     inset 0 1rpx 2rpx rgba(255, 255, 255, 0.2);
 }
 
+/* 🚀 缓冲状态下的主按钮样式 */
+.ctrl-btn-main.buffering {
+  opacity: 0.9;
+}
+
+/* 🚀 缓冲加载动画容器 */
+.buffering-spinner {
+  position: relative;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🚀 旋转环动画 */
+.spinner-ring {
+  width: 48rpx;
+  height: 48rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* 主按钮光晕效果 */
 .main-btn-glow {
   position: absolute;
@@ -312,6 +346,11 @@
   height: 52rpx;
   position: relative;
   z-index: 1;
+}
+
+/* 播放图标（三角形）视觉重心偏左，添加左偏移使其视觉居中 */
+.ctrl-icon-main.play-icon {
+  margin-left: 6rpx;
 }
 
 /* -------- 功能控制区 - 统一 Toolbar -------- */

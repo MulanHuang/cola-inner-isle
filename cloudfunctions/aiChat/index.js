@@ -52,7 +52,7 @@ exports.main = async (event, context) => {
     const rawReply = await callOpenAI({
       messages, // 直接发送消息数组
       options: {
-        model: "gpt-5-mini", // 使用 OpenAI 的 gpt-5-mini 模型
+        model: "gpt-5.1", // 升级到 GPT-5.1，更强的理解和共情能力
         temperature: 0.9, // 稍微降低，提高情绪陪伴质量
         timeout: 55000, // 55 秒（微信云函数最大 60 秒）
       },

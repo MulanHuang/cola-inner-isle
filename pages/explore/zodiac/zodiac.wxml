@@ -1,5 +1,17 @@
 <!--pages/explore/zodiac/zodiac.wxml-->
-<view class="container zodiac-container">
+<brand-navbar title="可乐心岛" showBack="{{true}}" bind:ready="onNavReady" />
+
+<view class="container zodiac-container" style="padding-top: {{navBarHeight}}px;">
+  <!-- 档案完善提示条 -->
+  <view class="profile-tip-banner" wx:if="{{showProfileTip}}">
+    <view class="profile-tip-content" bindtap="goToProfileInfo">
+      <text class="profile-tip-icon">🔔</text>
+      <text class="profile-tip-text">完善出生信息，星座解读更准确哦！</text>
+      <text class="profile-tip-arrow">去完善 ›</text>
+    </view>
+    <view class="profile-tip-close" catchtap="closeProfileTip">✕</view>
+  </view>
+
   <view class="header">
     <view class="header-title">⭐ 星座档案</view>
     <view class="header-subtitle">探索你的星座特质</view>

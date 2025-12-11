@@ -1,4 +1,9 @@
 {
-  "navigationBarTitleText": "MBTI 人格类型",
-  "usingComponents": {}
+  "navigationStyle": "custom",
+  "navigationBarBackgroundColor": "#F7F7FB",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#F7F7FB",
+  "usingComponents": {
+    "brand-navbar": "/components/brand-navbar/brand-navbar"
+  }
 }

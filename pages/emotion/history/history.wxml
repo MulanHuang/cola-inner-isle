@@ -70,11 +70,11 @@
         <text class="description-content" user-select="{{true}}">{{item.description}}</text>
       </view>
 
-      <!-- � �签 -->
+      <!-- 标签 -->
       <view wx:if="{{item.tagsDisplay && item.tagsDisplay.length > 0}}" class="record-tags">
         <view class="tags-header">
           <text class="tags-icon">🏷️</text>
-          <text class="tags-title">� �签</text>
+          <text class="tags-title">标签</text>
         </view>
         <view class="tags-list">
           <view wx:for="{{item.tagsDisplay}}" wx:key="id" wx:for-item="tag" class="record-tag">
@@ -89,7 +89,7 @@
     <view wx:if="{{emotions.length === 0}}" class="empty">
       <view class="empty-icon">💭</view>
       <view class="empty-text">还没有情绪记录</view>
-      <view class="empty-hint">记录� 的感受，了解自己的情绪变化</view>
+      <view class="empty-hint">记录你的感受，了解自己的情绪变化</view>
     </view>
   </view>
 </view>

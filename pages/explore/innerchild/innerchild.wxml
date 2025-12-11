@@ -1,5 +1,7 @@
 <!--pages/explore/innerchild/innerchild.wxml-->
-<view class="container innerchild-container">
+<brand-navbar title="可乐心岛" showBack="{{true}}" bind:ready="onNavReady" />
+
+<view class="container innerchild-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
   <view class="header">
     <view class="header-title">👶 内在小孩</view>
     <view class="header-subtitle">疗愈童年的自己</view>
@@ -14,10 +16,10 @@
     </view>
   </view>
 
-  <!-- 疗愈练�  -->
+  <!-- 疗愈练习 -->
   <view class="practice-section">
-    <view class="section-title">疗愈练� </view>
-    
+    <view class="section-title">疗愈练习</view>
+
     <view class="practice-list">
       <view class="practice-item" bindtap="goToMeditation" data-category="innerchild">
         <view class="practice-icon">🎵</view>
@@ -31,14 +33,14 @@
       <view class="practice-item" bindtap="goToChat">
         <view class="practice-icon">💬</view>
         <view class="practice-content">
-          <view class="practice-name">与AI对话</view>
+          <view class="practice-name">心语对话</view>
           <view class="practice-desc">倾诉童年的感受和经历</view>
         </view>
         <view class="practice-arrow">→</view>
       </view>
 
       <view class="practice-item" bindtap="writeJournal">
-        <view class="practice-icon">📝</view>
+        <view class="practice-icon">📓</view>
         <view class="practice-content">
           <view class="practice-name">写给内在小孩</view>
           <view class="practice-desc">写一封信给童年的自己</view>
@@ -69,4 +71,3 @@
     </view>
   </view>
 </view>
-

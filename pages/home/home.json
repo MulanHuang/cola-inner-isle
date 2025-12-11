@@ -2,6 +2,6 @@
   "navigationBarTitleText": "",
   "navigationStyle": "custom",
   "usingComponents": {
-    "shortcut-icon": "/components/shortcut-icon/shortcut-icon"
+    "brand-navbar": "/components/brand-navbar/brand-navbar"
   }
 }

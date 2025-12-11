@@ -145,10 +145,10 @@ exports.main = async (event, context) => {
       systemPrompt: SYSTEM_PROMPT,
       userPrompt,
       options: {
-        model: "gpt-5-mini",
+        model: "gpt-5.1", // 升级到 GPT-5.1，更强的推理和生成能力
         temperature: 1,
-        maxTokens: 1200,
-        timeout: 2500, // 控制在 3 秒以内
+        maxTokens: 2000, // GPT-5.1 可输出更多内容
+        timeout: 45000, // 45秒，给 GPT-5.1 足够时间
       },
     });
 

@@ -166,7 +166,7 @@ exports.main = async (event, context) => {
 
     // 调用 OpenAI 进行分析
     console.log("📡 开始调用 OpenAI API...");
-    console.log("模型: gpt-5-mini");
+    console.log("模型:gpt-5.1");
     console.log("温度: 0.7");
     console.log("最大 tokens: 1500");
 

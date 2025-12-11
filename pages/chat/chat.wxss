@@ -7,7 +7,7 @@
 /* 防止横向滚动，统一背景色 */
 page {
   overflow-x: hidden;
-  background: #f5f1e8;
+  background: linear-gradient(180deg, #f6f1e7 0%, #f5efe6 35%, #f5f1e8 100%);
   box-sizing: border-box;
   height: 100%;
 }
@@ -63,8 +63,8 @@ page {
 }
 
 .navbar-logo {
-  width: 64rpx;
-  height: 64rpx;
+  width: 48rpx;
+  height: 48rpx;
   margin-right: 12rpx;
 }
 
@@ -91,6 +91,15 @@ page {
   background-color: #f5f1e8;
   box-sizing: border-box;
   overflow: hidden;
+  background: transparent;
+  /* 🔥 滑动手势过渡动画 */
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+}
+
+/* 滑动过程中禁用过渡，保持跟手感 */
+.chat-page-root.swiping {
+  transition: none;
 }
 
 /* ===================== */
@@ -100,16 +109,11 @@ page {
 /* scroll-view 占据 navbar 和 input-bar 之间的所有空间 */
 .chat-scroll {
   flex: 1;
-  padding: 24rpx 24rpx 140rpx; /* 底部留白：仅极简输入栏高度 +20rpx */
+  padding: 24rpx 24rpx 150rpx; /* 底部留白：默认值，会被动态 style 覆盖 */
   box-sizing: border-box;
   overflow-y: auto;
   background-color: #f5f1e8;
   transition: padding-bottom 0.25s ease;
-}
-
-/* 面板展开时增加底部留白 */
-.chat-scroll.panel-open {
-  padding-bottom: 320rpx; /* 输入栏高度 + 面板高度 +20rpx */
 }
 
 /* ===================== */
@@ -154,7 +158,7 @@ page {
 .msg-bubble-other {
   max-width: 78%;
   background: #ffffff;
-  border-radius: 16rpx;
+  border-radius: 20rpx 20rpx 20rpx 8rpx;
   /* 轻微阴影增强卡片质感 */
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
@@ -164,8 +168,8 @@ page {
   max-width: 68%;
   background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
   color: #ffffff;
-  border-radius: 16rpx;
-  box-shadow: 0 1rpx 4rpx rgba(139, 115, 85, 0.15);
+  border-radius: 20rpx 20rpx 8rpx 20rpx;
+  box-shadow: 0 2rpx 8rpx rrgba(0, 0, 0, 0.04);
 }
 
 /* loading 气泡特殊样式 */
@@ -178,7 +182,7 @@ page {
 /* ===================== */
 
 .msg-text {
-  font-size: 30rpx;
+  font-size: 32rpx;
   line-height: 1.7; /* 提升可读性 */
   text-align: left;
   word-wrap: break-word;
@@ -192,7 +196,10 @@ page {
 .msg-time {
   font-size: 22rpx;
   color: #c9bfb2; /* 浅灰棕色，弱化视觉 */
-  margin-top: 2rpx; /* 紧贴气泡下方 */
+  margin-top: 0;
+  padding-top: 6rpx;
+  padding-bottom: 4rpx;
+  line-height: 1.5;
 }
 
 /* ===================== */
@@ -215,10 +222,13 @@ page {
 }
 
 .msg-date-divider-text {
+  background: rgba(255, 255, 255, 0.6);
   font-size: 20rpx;
-  color: #d8d3cd;
-  padding: 0 16rpx;
+  color: #a08878;
+  padding: 6rpx 20rpx;
   white-space: nowrap;
+  border-radius: 999rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
 }
 
 /* ===================== */
@@ -250,9 +260,9 @@ page {
 
 @keyframes typing {
   0%,
-  60%,
+  70%,
   100% {
-    opacity: 0.3;
+    opacity: 0.25;
     transform: translateY(0);
   }
   30% {
@@ -327,7 +337,7 @@ page {
   padding-top: 12rpx;
   padding-bottom: calc(env(safe-area-inset-bottom) + 12rpx);
   background: rgba(245, 241, 232, 0.95);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(10px);
   box-sizing: border-box;
   z-index: 100;
@@ -426,6 +436,260 @@ page {
   transform: scale(0.96);
 }
 
+/* 录音提示条 */
+.recording-banner {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin: 10rpx 24rpx 0;
+  padding: 14rpx 16rpx;
+  border-radius: 18rpx;
+  background: linear-gradient(
+    135deg,
+    rgba(240, 232, 220, 0.98),
+    rgba(243, 236, 226, 0.95)
+  );
+  box-shadow: 0 8rpx 18rpx rgba(0, 0, 0, 0.06);
+  color: #5a4a3a;
+}
+
+.recording-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #e7625f;
+  box-shadow: 0 0 0 0 rgba(231, 98, 95, 0.6);
+  animation: recordingPulse 1.2s infinite;
+}
+
+.recording-text {
+  font-size: 30rpx;
+  color: #5a4a3a;
+  font-weight: 600;
+}
+
+.recording-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.recording-subtext {
+  font-size: 24rpx;
+  color: #a18872;
+}
+
+.recognizing-banner {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin: 10rpx 24rpx 0;
+  padding: 14rpx 16rpx;
+  border-radius: 18rpx;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 240, 233, 0.96),
+    rgba(240, 232, 220, 0.9)
+  );
+  box-shadow: 0 8rpx 18rpx rgba(0, 0, 0, 0.05);
+}
+
+.recognizing-spinner {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  border: 3rpx solid rgba(90, 74, 58, 0.2);
+  border-top-color: #b08a61;
+  animation: spinnerRotate 0.9s linear infinite;
+}
+
+.recognizing-text {
+  font-size: 30rpx;
+  color: #6b5845;
+  font-weight: 600;
+}
+
+.recognizing-subtext {
+  font-size: 24rpx;
+  color: #a18872;
+}
+
+.voice-tip {
+  margin: 8rpx 24rpx 2rpx;
+  font-size: 24rpx;
+  color: #9c8f80;
+}
+
+.edit-helper {
+  margin: 8rpx 24rpx 4rpx;
+  padding: 14rpx 18rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1rpx solid rgba(176, 138, 97, 0.18);
+  box-shadow: 0 10rpx 18rpx rgba(0, 0, 0, 0.05);
+}
+
+.edit-helper-left {
+  font-size: 26rpx;
+  color: #6b5845;
+  font-weight: 600;
+}
+
+.edit-helper-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.edit-helper-count {
+  font-size: 22rpx;
+  color: #9c8f80;
+  padding: 6rpx 12rpx;
+  background: rgba(180, 140, 110, 0.1);
+  border-radius: 999rpx;
+}
+
+.edit-helper-btn {
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(180, 140, 110, 0.12);
+  color: #5a4a3a;
+  font-size: 24rpx;
+  transition: all 0.15s ease;
+  border: 1rpx solid rgba(180, 140, 110, 0.32);
+}
+
+.edit-helper-btn:active {
+  transform: scale(0.95);
+  background: rgba(180, 140, 110, 0.26);
+}
+
+/* 全屏编辑弹层 */
+.full-editor-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 999;
+}
+
+.full-editor-panel {
+  width: 100%;
+  max-height: 80vh;
+  background: linear-gradient(180deg, #f8f2e9 0%, #f2e8db 100%);
+  border-radius: 24rpx 24rpx 0 0;
+  box-shadow: 0 -8rpx 24rpx rgba(0, 0, 0, 0.08);
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.full-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.full-editor-title {
+  font-size: 30rpx;
+  color: #5a4a3a;
+  font-weight: 600;
+}
+
+.full-editor-count {
+  font-size: 24rpx;
+  color: #9c8f80;
+}
+
+.full-editor-body {
+  background: #ffffff;
+  border-radius: 18rpx;
+  padding: 12rpx 12rpx 18rpx;
+  box-shadow: inset 0 1rpx 0 rgba(0, 0, 0, 0.03);
+  max-height: 56vh;
+}
+
+.full-editor-textarea {
+  width: 100%;
+  min-height: 320rpx;
+  max-height: 52vh;
+  font-size: 30rpx;
+  color: #5a4a3a;
+  line-height: 1.7;
+  background: transparent;
+}
+
+.full-editor-placeholder {
+  color: #b3a699;
+}
+
+.full-editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+  margin-top: 14rpx;
+}
+
+.full-editor-btn {
+  padding: 14rpx 26rpx;
+  border-radius: 14rpx;
+  font-size: 26rpx;
+  min-width: 140rpx;
+  text-align: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.04);
+}
+
+.full-editor-btn.ghost {
+  background: rgba(90, 74, 58, 0.08);
+  color: #6b5845;
+}
+
+.full-editor-btn.primary {
+  background: linear-gradient(135deg, #b8956a, #8b7355);
+  color: #fff;
+  box-shadow: 0 6rpx 16rpx rgba(139, 115, 85, 0.28);
+}
+
+.full-editor-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+@keyframes recordingPulse {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(231, 98, 95, 0.6);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 12rpx rgba(231, 98, 95, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(231, 98, 95, 0);
+  }
+}
+
+@keyframes spinnerRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* ===================== */
 /*   底部极简输入栏        */
 /* ===================== */
@@ -435,8 +699,8 @@ page {
   display: flex;
   align-items: center;
   gap: 12rpx;
-  padding: 10rpx 20rpx 12rpx;
-  min-height: 68rpx;
+  padding: 14rpx 36rpx 22rpx;
+  min-height: 78rpx;
 }
 
 /* 左侧 + 按钮（圆形） */
@@ -448,7 +712,8 @@ page {
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50%;
-  background: rgba(180, 140, 110, 0.15);
+  background: rgba(180, 140, 110, 0.12);
+  border: 1rpx solid rgba(180, 140, 110, 0.28);
   transition: all 0.2s ease;
 }
 
@@ -459,8 +724,8 @@ page {
 
 /* + 按钮激活态（面板展开时） */
 .composer-plus-btn.plus-btn-active {
-  background: rgba(180, 140, 110, 0.4);
-  transform: rotate(45deg);
+  background: rgba(180, 140, 110, 0.3);
+  transform: rotate(135deg);
 }
 
 .plus-btn-icon {
@@ -487,6 +752,49 @@ page {
   background: rgba(180, 140, 110, 0.08);
 }
 
+.mic-recording {
+  background: linear-gradient(
+    135deg,
+    rgba(231, 98, 95, 0.16),
+    rgba(231, 98, 95, 0.12)
+  );
+  border: 1rpx solid rgba(231, 98, 95, 0.35);
+  box-shadow: 0 0 0 0 rgba(231, 98, 95, 0.28);
+  animation: micPulse 1.4s ease-in-out infinite;
+}
+
+.mic-disabled {
+  opacity: 0.35;
+}
+
+.mic-tapped {
+  transform: scale(0.92);
+}
+
+.mic-recording .composer-icon-img {
+  opacity: 0.9;
+}
+
+.mic-disabled .composer-icon-img {
+  opacity: 0.4;
+}
+
+.mic-tapped .composer-icon-img {
+  transform: translateY(2rpx);
+}
+
+@keyframes micPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(231, 98, 95, 0.28);
+  }
+  70% {
+    box-shadow: 0 0 0 14rpx rgba(231, 98, 95, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(231, 98, 95, 0);
+  }
+}
+
 .composer-icon-img {
   width: 40rpx;
   height: 40rpx;
@@ -496,25 +804,26 @@ page {
 /* 中间输入框 - 更轻盈更扁 */
 .composer-input-field {
   flex: 1;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 32rpx;
-  padding: 0 24rpx;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 44rpx;
+  padding: 0 26rpx;
   display: flex;
   align-items: center;
   height: 78rpx;
   line-height: 78rpx;
   min-height: 78rpx;
-  max-height: 140rpx;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  max-height: 300rpx; /* 增大到约6-8行，像微信一样 */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0);
   overflow: hidden;
-  transition: border-radius 0.2s ease, background 0.2s ease;
+  transition: border-radius 0.2s ease, background 0.2s ease,
+    max-height 0.2s ease;
 }
 
 /* 多行展开时调整圆角 */
 .composer-input-field-expanded {
-  border-radius: 24rpx;
+  border-radius: 26rpx;
   align-items: flex-end;
-  padding: 14rpx 28rpx;
+  padding: 16rpx 28rpx;
   height: auto;
   line-height: 1.6;
 }
@@ -522,18 +831,24 @@ page {
 /* 多行输入框 textarea 样式 */
 .composer-textarea {
   width: 100%;
-  font-size: 28rpx;
+  font-size: 30rpx;
   color: #5a4a3a;
   background: transparent;
   line-height: 1.6;
   min-height: 40rpx;
-  max-height: 140rpx;
+  max-height: 280rpx; /* 配合输入框容器增大 */
   box-sizing: border-box;
+}
+
+.composer-textarea-fixed {
+  max-height: 320rpx;
+  min-height: 140rpx;
+  overflow-y: auto;
 }
 
 .composer-input-placeholder {
   color: #9c8f80;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 /* 发送按钮 - 微信绿色风格 */
@@ -546,7 +861,7 @@ page {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.3);
+  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.4);
   transition: all 0.2s ease;
   animation: sendBtnAppear 0.2s ease;
 }
@@ -589,20 +904,41 @@ page {
 .welcome-center {
   text-align: center;
   padding: 0 60rpx;
+  animation: float 3s ease-in-out infinite;
 }
 
 .welcome-icon {
   font-size: 80rpx;
   margin-bottom: 20rpx;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10rpx);
+  }
 }
 
 .welcome-text {
+  animation: fadeIn 0.8s ease forwards;
+  opacity: 0;
+  animation-delay: 0.3s;
   font-size: 32rpx;
   color: #333333;
   font-weight: 600;
   margin-bottom: 12rpx;
 }
-
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .welcome-subtitle {
   font-size: 26rpx;
   color: #999999;
@@ -631,6 +967,32 @@ page {
   color: #5a4a3a;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
+  opacity: 0;
+  transform: translateY(20rpx);
+  animation: popIn 0.45s cubic-bezier(0.25, 0.8, 0.3, 1) forwards;
+}
+.quick-prompt-item:nth-child(1) {
+  animation-delay: 0.4s;
+}
+.quick-prompt-item:nth-child(2) {
+  animation-delay: 0.55s;
+}
+.quick-prompt-item:nth-child(3) {
+  animation-delay: 0.7s;
+}
+.quick-prompt-item:nth-child(4) {
+  animation-delay: 0.85s;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .quick-prompt-item:active {
@@ -645,11 +1007,11 @@ page {
 @keyframes msgSlideIn {
   from {
     opacity: 0;
-    transform: translateY(20rpx);
+    transform: translateY(12rpx) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -679,5 +1041,430 @@ page {
   51%,
   100% {
     opacity: 0;
+  }
+}
+/* ========================== */
+/*       欢迎页（重设计）       */
+/* ========================== */
+
+.page-fade-in {
+  animation: fadeInPage 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInPage {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 中心布局 */
+.welcome-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 40rpx 200rpx;
+  box-sizing: border-box;
+  min-height: 80vh;
+  justify-content: flex-start;
+  position: relative;
+}
+
+/* ========================== */
+/*     纯 CSS 灵性光晕球体      */
+/* ========================== */
+
+.welcome-glow-container {
+  position: relative;
+  width: 320rpx;
+  height: 320rpx;
+  margin-top: 40rpx;
+  animation: floatGlow 6s ease-in-out infinite;
+}
+
+@keyframes floatGlow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14rpx);
+  }
+}
+
+.welcome-glow-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 230, 200, 0.9) 0%,
+    rgba(240, 210, 180, 0.6) 40%,
+    rgba(230, 200, 165, 0.3) 70%,
+    rgba(245, 241, 232, 0) 100%
+  );
+}
+
+.welcome-glow-blur {
+  position: absolute;
+  top: -40rpx;
+  left: -40rpx;
+  width: 400rpx;
+  height: 400rpx;
+  background: radial-gradient(
+    circle,
+    rgba(255, 236, 214, 0.7),
+    rgba(240, 220, 190, 0.25),
+    transparent
+  );
+  filter: blur(60rpx);
+  z-index: -1;
+}
+
+/* ========================== */
+/*         文案部分            */
+/* ========================== */
+
+.welcome-title {
+  font-size: 34rpx;
+  margin-top: 40rpx;
+  font-weight: 600;
+  color: #5a4a3a;
+  text-align: center;
+  animation: fadeInUp 0.8s ease forwards;
+  opacity: 0;
+}
+
+.welcome-subtitle {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #8c7f70;
+  text-align: center;
+  line-height: 1.6;
+  padding: 0 40rpx;
+  animation: fadeInUp 1s ease forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================== */
+/*     奶咖色轻卡片按钮组       */
+/* ========================== */
+
+.welcome-actions {
+  width: 100%;
+  margin-top: 60rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.welcome-action-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24rpx;
+  padding: 26rpx 32rpx;
+  text-align: center;
+  color: #5a4a3a;
+  font-size: 28rpx;
+  box-shadow: 0 6rpx 14rpx rgba(0, 0, 0, 0.06);
+  animation: popIn 0.45s cubic-bezier(0.25, 0.8, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(20rpx) scale(0.96);
+}
+
+.action-1 {
+  animation-delay: 0.35s;
+}
+.action-2 {
+  animation-delay: 0.48s;
+}
+.action-3 {
+  animation-delay: 0.61s;
+}
+.action-4 {
+  animation-delay: 0.74s;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.welcome-action-card:active {
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* 合规提示样式 */
+.compliance-tip {
+  margin-top: 40rpx;
+  padding: 16rpx 24rpx;
+  font-size: 22rpx;
+  color: #999;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* =============================== */
+/* ✨ 灵性三层柔光能量球（强化版） */
+/* =============================== */
+
+.glow-wrapper {
+  position: relative;
+  width: 320rpx;
+  height: 320rpx;
+  margin: 50rpx auto 28rpx;
+}
+
+/* 主光球（核心） */
+.glow-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 220, 180, 0.95) 0%,
+    rgba(252, 202, 160, 0.6) 45%,
+    rgba(248, 190, 150, 0.35) 70%,
+    rgba(245, 185, 145, 0.1) 100%
+  );
+  filter: blur(4rpx);
+  position: relative;
+  z-index: 3;
+}
+
+/* 第一层扩散光（最清晰，靠近核心） */
+.glow-layer-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 190, 150, 0.28) 0%,
+    rgba(255, 190, 150, 0.16) 50%,
+    rgba(255, 190, 150, 0.05) 100%
+  );
+  filter: blur(18rpx);
+  z-index: 2;
+}
+
+/* 第二层柔光扩散（更大更软） */
+.glow-layer-2 {
+  position: absolute;
+  top: -20rpx;
+  left: -20rpx;
+  width: 360rpx;
+  height: 360rpx;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 200, 170, 0.18) 0%,
+    rgba(255, 200, 170, 0.1) 55%,
+    rgba(255, 200, 170, 0.04) 100%
+  );
+  filter: blur(28rpx);
+  z-index: 1;
+}
+
+/* 第三层超级柔光（氛围光） */
+.glow-layer-3 {
+  position: absolute;
+  top: -50rpx;
+  left: -50rpx;
+  width: 420rpx;
+  height: 420rpx;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 210, 190, 0.12) 0%,
+    rgba(255, 210, 190, 0.06) 60%,
+    rgba(255, 210, 190, 0.02) 100%
+  );
+  filter: blur(40rpx);
+  z-index: 0;
+}
+/* =============================== */
+/* ✨ 奶咖灵性流光能量球（完整版） */
+/* =============================== */
+
+.energy-orb {
+  position: relative;
+  width: 320rpx;
+  height: 320rpx;
+  margin: 40rpx auto 20rpx;
+}
+
+/* 外层柔光 */
+
+.orb-glow-3,
+.orb-glow-2,
+.orb-glow-1 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40rpx);
+}
+
+.orb-glow-3 {
+  width: 420rpx;
+  height: 420rpx;
+  top: -50rpx;
+  left: -50rpx;
+  background: radial-gradient(
+    circle,
+    rgba(255, 220, 180, 0.12) 0%,
+    rgba(255, 210, 170, 0.06) 55%,
+    rgba(255, 210, 170, 0.02) 100%
+  );
+}
+
+.orb-glow-2 {
+  width: 360rpx;
+  height: 360rpx;
+  top: -20rpx;
+  left: -20rpx;
+  filter: blur(30rpx);
+  background: radial-gradient(
+    circle,
+    rgba(255, 200, 160, 0.18) 0%,
+    rgba(255, 200, 160, 0.1) 55%,
+    rgba(255, 200, 160, 0.04) 100%
+  );
+}
+
+.orb-glow-1 {
+  width: 320rpx;
+  height: 320rpx;
+  filter: blur(20rpx);
+  background: radial-gradient(
+    circle,
+    rgba(255, 190, 150, 0.28) 0%,
+    rgba(255, 190, 150, 0.15) 50%,
+    rgba(255, 190, 150, 0.05) 100%
+  );
+}
+
+/* 球体主体 */
+
+.orb-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 5;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 235, 215, 1) 0%,
+    rgba(250, 210, 170, 0.75) 45%,
+    rgba(245, 190, 150, 0.35) 70%,
+    rgba(225, 160, 120, 0.12) 100%
+  );
+
+  filter: blur(6rpx); /* ⬅ 变更关键：更柔更治愈 */
+}
+
+/* 云雾流动 */
+
+..orb-cloud {
+  position: absolute;
+  width: 260rpx;
+  height: 260rpx;
+  top: 30rpx;
+  left: 30rpx;
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 245, 230, 0.45) 0%,
+    rgba(255, 240, 220, 0.1) 70%,
+    transparent 100%
+  );
+
+  filter: blur(40rpx); /* ← 大幅增加模糊 */
+  opacity: 0.55; /* ← 更柔的透明度 */
+  animation: cloudMove 22s infinite linear;
+}
+
+.cloud-2 {
+  animation-duration: 32s;
+  opacity: 0.38;
+  filter: blur(55rpx); /* 再柔一点 */
+}
+
+@keyframes cloudMove {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+.orb-glow-1 {
+  filter: blur(30rpx);
+}
+.orb-glow-2 {
+  filter: blur(45rpx);
+}
+.orb-glow-3 {
+  filter: blur(55rpx);
+}
+
+/* 星点闪烁 */
+
+.orb-stars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: starFlicker 4s infinite ease-in-out;
+  background-image: radial-gradient(
+      circle,
+      rgba(255, 220, 180, 0.9) 0%,
+      transparent 70%
+    ),
+    radial-gradient(circle, rgba(255, 220, 180, 0.7) 0%, transparent 70%),
+    radial-gradient(circle, rgba(255, 220, 180, 0.5) 0%, transparent 70%);
+  background-size: 14rpx 14rpx, 10rpx 10rpx, 8rpx 8rpx;
+  background-position: 40% 30%, 70% 60%, 25% 75%;
+}
+
+@keyframes starFlicker {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
   }
 }

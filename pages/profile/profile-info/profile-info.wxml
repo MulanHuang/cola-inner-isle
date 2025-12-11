@@ -1,0 +1,225 @@
+<!--pages/profile/profile-info/profile-info.wxml-->
+<view class="profile-info-page">
+  <!-- 顶部提示条 -->
+  <view class="tip-banner">
+    <text class="tip-icon">🔔</text>
+    <text class="tip-text">完善个人资料，获得更准确的解读哦！</text>
+  </view>
+
+  <!-- 性别选择 -->
+  <view class="section">
+    <view class="section-title">性别</view>
+    <view class="gender-row">
+      <view
+        class="gender-card {{gender === 'male' ? 'active' : ''}}"
+        data-gender="male"
+        bindtap="selectGender"
+        hover-class="gender-card-hover"
+      >
+        <view class="gender-avatar-wrap {{gender === 'male' ? 'active' : ''}}">
+          <view class="gender-avatar male">🧑</view>
+          <view class="gender-glow" wx:if="{{gender === 'male'}}"></view>
+        </view>
+        <view class="gender-label">男生</view>
+        <view class="gender-check" wx:if="{{gender === 'male'}}">✓</view>
+      </view>
+      <view
+        class="gender-card {{gender === 'female' ? 'active' : ''}}"
+        data-gender="female"
+        bindtap="selectGender"
+        hover-class="gender-card-hover"
+      >
+        <view class="gender-avatar-wrap {{gender === 'female' ? 'active' : ''}}">
+          <view class="gender-avatar female">👩</view>
+          <view class="gender-glow" wx:if="{{gender === 'female'}}"></view>
+        </view>
+        <view class="gender-label">女生</view>
+        <view class="gender-check" wx:if="{{gender === 'female'}}">✓</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 出生信息 -->
+  <view class="section">
+    <view class="section-title">出生信息</view>
+    <view class="form-card">
+      <view class="form-item" bindtap="openDateTimePicker">
+        <view class="label">出生日期</view>
+        <view class="picker-value {{birthDate ? '' : 'placeholder'}}">
+          {{birthDate || '请选择'}}
+          <text class="arrow">›</text>
+        </view>
+      </view>
+      <view class="form-item" bindtap="openDateTimePicker">
+        <view class="label">出生时间</view>
+        <view class="picker-value {{birthTime ? '' : 'placeholder'}}">
+          {{birthTime || '请选择'}}
+          <text class="arrow">›</text>
+        </view>
+      </view>
+      <view class="form-item" bindtap="openRegionPicker" data-type="birth">
+        <view class="label">出生地点</view>
+        <view class="picker-value {{birthPlace ? '' : 'placeholder'}}">
+          {{birthPlace || '请选择'}}
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 现居地 -->
+  <view class="section">
+    <view class="section-title">现居地</view>
+    <view class="form-card">
+      <view class="form-item" bindtap="openRegionPicker" data-type="live">
+        <view class="label">所在城市</view>
+        <view class="picker-value {{livePlace ? '' : 'placeholder'}}">
+          {{livePlace || '请选择'}}
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 完成按钮 -->
+  <button class="primary-btn" bindtap="handleComplete">完成</button>
+</view>
+
+<!-- 日期时间选择器弹窗 -->
+<view class="picker-modal {{showDateTimePicker ? 'visible' : ''}}" catchtouchmove="preventBubble">
+  <view class="picker-mask" bindtap="closeDateTimePicker"></view>
+  <view class="picker-panel">
+    <!-- 头部 -->
+    <view class="picker-header">
+      <text class="picker-cancel" bindtap="closeDateTimePicker">取消</text>
+      <text class="picker-hint">若生时不详，可选择12:00作为参考</text>
+      <text class="picker-confirm" bindtap="dateTimeNextStep">
+        {{dateTimePickerTab === 'date' ? '下一步' : '确认'}}
+      </text>
+    </view>
+    <!-- Tab 切换 -->
+    <view class="picker-tabs">
+      <view
+        class="picker-tab {{dateTimePickerTab === 'date' ? 'active' : ''}}"
+        bindtap="switchDateTimeTab"
+        data-tab="date"
+      >
+        选择日期
+        <view class="tab-indicator" wx:if="{{dateTimePickerTab === 'date'}}"></view>
+      </view>
+      <view
+        class="picker-tab {{dateTimePickerTab === 'time' ? 'active' : ''}}"
+        bindtap="switchDateTimeTab"
+        data-tab="time"
+      >
+        选择时间
+        <view class="tab-indicator" wx:if="{{dateTimePickerTab === 'time'}}"></view>
+      </view>
+    </view>
+    <!-- 日期选择器 -->
+    <view class="picker-content" wx:if="{{dateTimePickerTab === 'date'}}">
+      <view class="picker-columns-labels columns-3">
+        <text>年</text>
+        <text>月</text>
+        <text>日</text>
+      </view>
+      <picker-view
+        class="date-picker-view"
+        value="{{datePickerValue}}"
+        bindchange="onDatePickerChange"
+        indicator-class="picker-indicator"
+      >
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{years}}" wx:key="*this">{{item}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{months}}" wx:key="*this">{{item}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{days}}" wx:key="*this">{{item}}</view>
+        </picker-view-column>
+      </picker-view>
+    </view>
+    <!-- 时间选择器 -->
+    <view class="picker-content" wx:if="{{dateTimePickerTab === 'time'}}">
+      <view class="picker-columns-labels columns-2">
+        <text>时</text>
+        <text>分</text>
+      </view>
+      <picker-view
+        class="time-picker-view"
+        value="{{timePickerValue}}"
+        bindchange="onTimePickerChange"
+        indicator-class="picker-indicator"
+      >
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{hours}}" wx:key="*this">{{item}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{minutes}}" wx:key="*this">{{item}}</view>
+        </picker-view-column>
+      </picker-view>
+    </view>
+  </view>
+</view>
+
+<!-- 地区选择器弹窗 -->
+<view class="picker-modal {{showRegionPicker ? 'visible' : ''}}" catchtouchmove="preventBubble">
+  <view class="picker-mask" bindtap="closeRegionPicker"></view>
+  <view class="region-panel">
+    <!-- 头部 -->
+    <view class="region-header">
+      <text class="region-title">请选择所在地区</text>
+      <text class="region-close" bindtap="closeRegionPicker">✕</text>
+    </view>
+    <!-- 面包屑导航 -->
+    <view class="region-breadcrumb">
+      <text
+        class="breadcrumb-item {{regionLevel === 0 ? 'active' : ''}}"
+        bindtap="clickBreadcrumb"
+        data-level="{{-1}}"
+      >
+        {{regionBreadcrumb.length === 0 ? '请选择' : regionBreadcrumb[0].name}}
+      </text>
+      <text
+        wx:if="{{regionBreadcrumb.length >= 1}}"
+        class="breadcrumb-item {{regionLevel === 1 ? 'active' : ''}}"
+        bindtap="clickBreadcrumb"
+        data-level="{{0}}"
+      >
+        {{regionBreadcrumb.length >= 2 ? regionBreadcrumb[1].name : '请选择'}}
+      </text>
+      <text
+        wx:if="{{regionBreadcrumb.length >= 2}}"
+        class="breadcrumb-item active"
+      >
+        请选择
+      </text>
+      <view class="breadcrumb-indicator" style="left: {{regionLevel * 120 + 60}}rpx;"></view>
+    </view>
+    <!-- 地区列表 -->
+    <scroll-view
+      class="region-list"
+      scroll-y
+      wx:if="{{regionList.length}}"
+      scroll-into-view="{{regionListScrollIntoView}}"
+    >
+      <view
+        class="region-item {{regionSelectedCodes[regionLevel] === item.code ? 'active' : ''}}"
+        wx:for="{{regionList}}"
+        wx:key="code"
+        bindtap="selectRegionItem"
+        data-item="{{item}}"
+        id="region-item-{{item.code}}"
+      >
+        {{item.name}}
+      </view>
+    </scroll-view>
+    <view class="region-empty" wx:else>
+      <text class="region-empty-text">暂无下级地区</text>
+      <button class="region-empty-btn" bindtap="confirmCurrentRegion">
+        直接使用当前选择
+      </button>
+    </view>
+  </view>
+</view>

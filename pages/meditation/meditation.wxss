@@ -1,9 +1,27 @@
 /* pages/meditation/meditation.wxss */
 .meditation-container {
-  min-height: 100vh;
-  padding: 20rpx;
-  padding-bottom: 40rpx;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 60rpx 20rpx;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 固定头部区域 */
+.fixed-header {
+  flex-shrink: 0;
+}
+
+/* 可滚动的音频列表scroll-view */
+.audio-scroll-view {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 列表底部安全间距 */
+.audio-list-bottom-space {
+  height: 120rpx;
 }
 
 /* 头部 */
@@ -131,4 +149,6 @@
   font-size: 28rpx;
   flex-shrink: 0;
   margin-left: 20rpx;
+  /* 三角形图标视觉重心偏左，添加左偏移使其视觉居中 */
+  padding-left: 4rpx;
 }

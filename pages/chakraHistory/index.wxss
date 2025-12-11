@@ -19,13 +19,13 @@
 .header-title {
   font-size: 48rpx;
   font-weight: 600;
-  color: #333333;
+  color: #1f1a12;
   margin-bottom: 12rpx;
 }
 
 .header-subtitle {
   font-size: 26rpx;
-  color: #999999;
+  color: #736550;
   font-style: italic;
 }
 
@@ -97,11 +97,27 @@
   padding: 30rpx;
   background: #ffffff;
   transition: all 0.3s;
+  /* 左侧彩虹边框 - 呼应脉轮七彩主题 */
+  border-left: 6rpx solid transparent;
+  background-image: linear-gradient(white, white),
+    linear-gradient(
+      180deg,
+      #e53935,
+      #ff6f00,
+      #fdd835,
+      #43a047,
+      #1e88e5,
+      #5e35b1,
+      #9c27b0
+    );
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 10rpx 28rpx rgba(26, 16, 4, 0.06);
 }
 
 .history-card:active {
   transform: scale(0.98);
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4rpx 12rpx rgba(129, 199, 132, 0.15);
 }
 
 /* 卡片头部 */
@@ -138,7 +154,8 @@
   display: flex;
   align-items: center;
   padding: 16rpx 20rpx;
-  background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+  /* 柔和绿蓝渐变 - 与结果页风格协调 */
+  background: rgba(122, 198, 164, 0.16);
   border-radius: 12rpx;
   margin-bottom: 20rpx;
 }
@@ -151,7 +168,7 @@
 .status-text {
   font-size: 28rpx;
   font-weight: 600;
-  color: #8b7355;
+  color: #2a7a4a;
 }
 
 /* 脉轮能量预览 */
@@ -232,15 +249,15 @@
 
 .btn-secondary {
   background: #ffffff;
-  color: #8b7355;
-  border: 2rpx solid rgba(139, 115, 85, 0.3);
-  box-shadow: 0 4rpx 12rpx rgba(139, 115, 85, 0.08);
+  color: #6f5840;
+  border: 2rpx solid rgba(122, 98, 72, 0.35);
+  box-shadow: 0 4rpx 12rpx rgba(26, 16, 4, 0.08);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  background: linear-gradient(135deg, #9a7b52 0%, #6f5840 100%);
   color: #ffffff;
-  box-shadow: 0 8rpx 16rpx rgba(139, 115, 85, 0.25);
+  box-shadow: 0 8rpx 18rpx rgba(26, 16, 4, 0.18);
   font-weight: 600;
 }
 

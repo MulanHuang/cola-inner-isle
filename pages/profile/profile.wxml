@@ -2,81 +2,130 @@
 <!-- 自定义导航栏 -->
 <view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
   <view class="navbar-content">
-    <image class="navbar-logo" src="/images/logo.png" mode="aspectFit"></image>
+    <image class="navbar-logo" src="/images/logo.svg" mode="aspectFit"></image>
     <view class="navbar-title">可乐心岛</view>
   </view>
 </view>
 
 <view class="profile-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
-  <!-- 用户信息卡片 -->
-  <view class="user-card">
-    <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
-    <view class="user-info">
-      <view class="user-name">{{userInfo.name || '未设置昵称'}}</view>
-      <view class="user-meta">
-        <text wx:if="{{userInfo.zodiac}}">{{userInfo.zodiac}} · </text>
-        <text wx:if="{{userInfo.mbti}}">{{userInfo.mbti}}</text>
+  <!-- 卡片一：头像 + 名称 + 数据统计 -->
+  <view class="card hero-card">
+    <view class="hero-wave wave-one"></view>
+    <view class="hero-wave wave-two"></view>
+    <view class="hero-body">
+      <!-- 头像选择按钮：使用微信头像昵称填写能力 -->
+      <button class="avatar-shell avatar-btn"
+              open-type="chooseAvatar"
+              bindchooseavatar="onChooseAvatar">
+        <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="avatar-edit-hint">换</view>
+      </button>
+      <view class="hero-text">
+        <view class="hero-name-row">
+          <!-- 昵称输入框：type=nickname 会显示微信昵称键盘 -->
+          <input type="nickname"
+                 class="hero-name hero-name-input"
+                 value="{{userInfo.name}}"
+                 placeholder="点击设置昵称"
+                 placeholder-class="hero-name-placeholder"
+                 bindblur="onNicknameBlur"
+                 bindinput="onNicknameInput"
+                 maxlength="20" />
+        </view>
+        <view class="hero-meta-row">
+          <!-- 星座展示：根据生日自动计算 -->
+          <view class="hero-zodiac" wx:if="{{userZodiac}}" bindtap="goToProfileInfo">
+            <text class="zodiac-emoji">{{userZodiac.emoji}}</text>
+            <text class="zodiac-name">{{userZodiac.name}}</text>
+          </view>
+          <view class="hero-chip ghost" bindtap="goToProfileInfo">完善档案</view>
+        </view>
+        <view class="hero-sub hero-quote">
+          <text class="quote-mark">“</text>
+          <text class="quote-content">{{dailyAffirmation || '保持这份热情，你很闪耀 👋'}}</text>
+          <text class="quote-mark">”</text>
+        </view>
       </view>
     </view>
-    <view class="edit-btn" bindtap="editProfile">
-      <text class="icon">✏️</text>
+    <!-- 数据统计区 -->
+    <view class="hero-stats">
+      <view class="stat-item" bindtap="goToMeditationHistory">
+        <text class="stat-value">{{stats.meditationCount || 0}}</text>
+        <text class="stat-label">次冥想</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item" bindtap="goToTarotHistory">
+        <text class="stat-value">{{stats.tarotCount || 0}}</text>
+        <text class="stat-label">次塔罗</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value">{{totalCheckinDays || 0}}</text>
+        <text class="stat-label">天签到</text>
+      </view>
     </view>
   </view>
 
-  <!-- 统计数据 -->
-  <view class="stats-grid">
-    <view class="stat-item">
-      <view class="stat-value">{{stats.emotionCount}}</view>
-      <view class="stat-label">情绪记录</view>
+  <!-- 卡片二：每日签到 -->
+  <view class="card checkin-card">
+    <view class="checkin-header">
+      <view class="card-title">每日签到</view>
+      <view class="checkin-stats">本周 {{weekCheckinCount}}/7 天</view>
     </view>
-    <view class="stat-item">
-      <view class="stat-value">{{stats.chatCount}}</view>
-      <view class="stat-label">对话次数</view>
+    <view class="checkin-track">
+      <view
+        wx:for="{{weekDays}}"
+        wx:key="date"
+        class="checkin-dot {{item.checked ? 'checked' : ''}} {{item.isToday ? 'today' : ''}} {{item.isPast && !item.checked ? 'missed' : ''}}"
+      >
+        <text wx:if="{{item.isToday}}">{{item.checked ? '✓' : '今'}}</text>
+        <text wx:elif="{{item.checked}}">✓</text>
+        <text wx:else>{{item.label}}</text>
+      </view>
     </view>
-    <view class="stat-item">
-      <view class="stat-value">{{stats.meditationCount}}</view>
-      <view class="stat-label">冥想次数</view>
-    </view>
-    <view class="stat-item">
-      <view class="stat-value">{{stats.tarotCount}}</view>
-      <view class="stat-label">塔罗记录</view>
-    </view>
-  </view>
-
-  <!-- 功能列表 -->
-  <view class="menu-list">
-    <view class="menu-item" bindtap="goToEmotionHistory">
-      <view class="menu-icon">💭</view>
-      <view class="menu-text">情绪历史</view>
-      <view class="menu-arrow">→</view>
-    </view>
-
-    <view class="menu-item" bindtap="goToMeditationHistory">
-      <view class="menu-icon">🧘</view>
-      <view class="menu-text">冥想记录</view>
-      <view class="menu-arrow">→</view>
-    </view>
-
-    <view class="menu-item" bindtap="goToTarotHistory">
-      <view class="menu-icon">🔮</view>
-      <view class="menu-text">塔罗历史</view>
-      <view class="menu-arrow">→</view>
-    </view>
-
-    <view class="menu-item" bindtap="goToExplore">
-      <view class="menu-icon">🌱</view>
-      <view class="menu-text">自我探索</view>
-      <view class="menu-arrow">→</view>
+    <view
+      class="checkin-btn {{!todayChecked && !checkinLoading ? 'shimmer' : ''}} {{todayChecked ? 'checked' : ''}} {{checkinLoading ? 'loading' : ''}}"
+      bindtap="handleCheckinTap"
+    >
+      {{checkinLoading ? '签到中...' : (todayChecked ? '今日已签到 ✓' : '立即签到')}}
     </view>
   </view>
 
-  <!-- 设置 -->
-  <view class="settings-section">
-    <view class="menu-item" bindtap="showAbout">
-      <view class="menu-icon">ℹ️</view>
-      <view class="menu-text">关于 可乐心岛</view>
-      <view class="menu-arrow">→</view>
+  <!-- 卡片三：我的内容 -->
+  <view class="card content-card">
+    <view class="card-title">我的内容</view>
+    <view class="content-grid">
+      <view class="content-chip primary" bindtap="goToProfileInfo">
+        <text class="chip-icon">🪪</text>
+        <text class="chip-text">个人档案</text>
+      </view>
+      <view class="content-chip primary" bindtap="goToMeditationHistory">
+        <text class="chip-icon">🧘</text>
+        <text class="chip-text">冥想记录</text>
+      </view>
+      <view class="content-chip primary" bindtap="goToTarotHistory">
+        <text class="chip-icon">🔮</text>
+        <text class="chip-text">塔罗历史</text>
+      </view>
+      <view class="content-chip" bindtap="goToExplore">
+        <text class="chip-icon">🌱</text>
+        <text class="chip-text">自我探索</text>
+      </view>
+      <view class="content-chip primary" bindtap="goToEmotionHistory">
+        <text class="chip-icon">📝</text>
+        <text class="chip-text">情绪历史</text>
+      </view>
+      <view class="content-chip" bindtap="showAbout">
+        <text class="chip-icon">ℹ️</text>
+        <text class="chip-text">关于我们</text>
+      </view>
     </view>
+  </view>
+
+  <!-- 页面底部信息 -->
+  <view class="page-footer">
+    <text class="footer-text">可乐心岛 v1.0.0</text>
+    <text class="footer-sub">你的心灵陪伴者 💖</text>
   </view>
 </view>
 

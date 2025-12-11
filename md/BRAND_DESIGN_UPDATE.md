@@ -32,7 +32,7 @@
 ## 📱 查看效果
 
 ### 步骤 1：确保 Logo 文件存在
-确认 `/images/logo.png` 文件已存在。如果没有，请将你的 Logo 图片保存到该路径。
+确认 `/images/logo.svg` 文件已存在。如果没有，请将你的 Logo 图片保存到该路径。
 
 **Logo 规格建议：**
 - 尺寸：512px × 512px 或更大
@@ -158,7 +158,7 @@ Logo 浮动：
 <view class="app-header">
   <view class="header-decoration decoration-left">✨</view>
   <view class="header-decoration decoration-right">🌊</view>
-  <image class="app-logo" src="/images/logo.png"></image>
+  <image class="app-logo" src="/images/logo.svg"></image>
   <view class="app-title">可乐心岛</view>
   <view class="app-subtitle">Your Inner Island</view>
   <view class="app-tagline">探索内心的宁静与力量</view>

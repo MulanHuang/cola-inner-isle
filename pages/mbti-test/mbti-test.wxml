@@ -1,8 +1,19 @@
 <!--pages/mbti-test/mbti-test.wxml-->
-<view class="container test-container">
+<brand-navbar title="可乐心岛" showBack="{{true}}" bind:ready="onNavReady" />
+
+<view class="container test-container" style="padding-top: {{navBarHeight}}px;">
+  <view class="bg-blur bg-1"></view>
+  <view class="bg-blur bg-2"></view>
+
   <!-- 调试信息 -->
   <view wx:if="{{debugInfo}}" class="debug-banner">
     {{debugInfo}}
+  </view>
+
+  <!-- 顶部标题 -->
+  <view class="page-hero">
+    <view class="hero-title">MBTI 性格测试</view>
+    <view class="hero-subtitle">保持第一反应，轻松完成这一刻的小冒险</view>
   </view>
 
   <!-- 进度条 -->
@@ -12,6 +23,7 @@
       <view class="progress-fill" style="width: {{progress}}%"></view>
     </view>
     <view class="progress-percent">{{progress}}%</view>
+    <view class="progress-subtitle">每次点击都会记录，请按节奏慢慢来</view>
   </view>
 
   <!-- 题目卡片 -->
@@ -28,6 +40,9 @@
       wx:key="key"
       class="option-button"
       bindtap="selectOption"
+      hover-class="option-hover"
+      hover-start-time="0"
+      hover-stay-time="120"
       data-value="{{item.value}}">
       <view class="option-key">{{item.key}}</view>
       <view class="option-text">{{item.text}}</view>
@@ -39,13 +54,17 @@
     <button 
       class="btn-secondary prev-btn" 
       bindtap="prevQuestion"
+      hover-class="btn-hover"
+      hover-start-time="0"
+      hover-stay-time="120"
       disabled="{{currentIndex === 0}}">
       ← 上一题
     </button>
   </view>
 
   <!-- 提示 -->
-  <view class="hint-text">
-    💡 请根据你自己的真实感受选择，没有对错之分
+  <view class="hint-card">
+    <view class="hint-icon">💡</view>
+    <view class="hint-text">按照第一反应选择，无需纠结对错，保持当下感受即可</view>
   </view>
 </view>

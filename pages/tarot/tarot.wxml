@@ -6,305 +6,296 @@
 <!-- ============================================================ -->
 <view class="container tarot-container phase-{{phase}}">
 
-<!-- 星光粒子效果层 - 细腻轻柔 -->
-<view class="stars-container">
-  <view class="star star-1"></view>
-  <view class="star star-2"></view>
-  <view class="star star-3"></view>
-  <view class="star star-4"></view>
-  <view class="star star-5"></view>
-  <view class="star star-6"></view>
-  <view class="star star-7"></view>
-  <view class="star star-8"></view>
-</view>
-
-<!-- ========== 未抽牌状态 (idle/shuffling/spreading/selecting/selected) ========== -->
-<view wx:if="{{phase !== 'result' && !drawnCard}}" class="draw-section">
-
-  <!-- 顶部标题区 -->
-  <view class="header-row">
-    <view class="tarot-title">🔮 每日塔罗</view>
-    <view class="header-actions">
-      <view class="pill">今日 {{todayCount}}/100</view>
-      <navigator url="/pages/tarot/history/history" class="history-link">
-        <text>📖 历史记录</text>
-      </navigator>
+  <!-- 档案完善提示条 -->
+  <view class="profile-tip-banner" wx:if="{{showProfileTip && phase === 'idle'}}">
+    <view class="profile-tip-content" bindtap="goToProfileInfo">
+      <text class="profile-tip-icon">🔔</text>
+      <text class="profile-tip-text">完善个人信息，塔罗解读更准确哦！</text>
+      <text class="profile-tip-arrow">去完善 ›</text>
     </view>
-  </view>
-  <view class="tarot-subtitle">先写下你的问题，小岛会自动挑选合适的牌阵并高亮指引</view>
-
-  <!-- 流程步骤指示器 -->
-  <view class="flow-steps">
-    <view class="step-item {{phase === 'idle' ? 'active' : 'done'}}">1 · 提问</view>
-    <view class="step-item {{phase === 'selecting' || phase === 'selected' ? 'active' : (phase === 'shuffling' || phase === 'spreading' ? 'current' : '')}}">2 · 选牌</view>
-    <view class="step-item {{phase === 'selected' ? 'active' : ''}}">3 · 抽牌</view>
+    <view class="profile-tip-close" catchtap="closeProfileTip">✕</view>
   </view>
 
-  <!-- 问题输入区域 (仅在 idle 阶段可编辑，紧凑版) -->
-  <view class="question-section question-section-compact" wx:if="{{phase === 'idle'}}">
-    <view class="section-title">💭 你想问什么？</view>
-    <scroll-view class="template-scroll" scroll-x="true">
-      <view
-        class="template-chip"
-        wx:for="{{questionTemplates}}"
-        wx:key="index"
-        bindtap="selectTemplate"
-        data-text="{{item}}"
-      >
-        {{item}}
+  <!-- 星光粒子效果层 - 细腻轻柔 -->
+  <view class="stars-container">
+    <view class="star star-1"></view>
+    <view class="star star-2"></view>
+    <view class="star star-3"></view>
+    <view class="star star-4"></view>
+    <view class="star star-5"></view>
+    <view class="star star-6"></view>
+    <view class="star star-7"></view>
+    <view class="star star-8"></view>
+  </view>
+
+  <!-- ========== 未抽牌状态 (idle/shuffling/spreading/selecting/selected) ========== -->
+  <view wx:if="{{phase !== 'result' && !drawnCard}}" class="draw-section">
+
+    <!-- 顶部标题区 -->
+    <view class="header-row">
+      <view class="tarot-title">🔮 每日塔罗</view>
+      <view class="header-actions">
+        <view class="pill">今日 {{todayCount}}/100</view>
+        <navigator url="/pages/tarot/history/history" class="history-link">
+          <text>📖 历史记录</text>
+        </navigator>
       </view>
-    </scroll-view>
-    <textarea
-      class="question-input question-input-compact"
-      placeholder="写下你的问题，小岛帮你选牌阵"
-      value="{{question}}"
-      bindinput="onQuestionInput"
-      maxlength="200"
-    ></textarea>
-    <view class="char-count">{{question.length}}/200</view>
-  </view>
-
-  <!-- 牌阵信息 (洗牌后隐藏，紧凑版) -->
-  <view class="spread-info spread-info-inline" wx:if="{{phase === 'idle'}}">
-    <text class="spread-label">牌阵：</text>
-    <text class="spread-name-inline">{{selectedSpread.name}}</text>
-    <text class="spread-desc-inline">（{{requiredCardCount}}张牌）</text>
-  </view>
-
-  <!-- 选牌进度指示器 (选牌阶段显示) -->
-  <view class="card-progress" wx:if="{{phase === 'selecting' || phase === 'spreading' || phase === 'selected'}}">
-    <view class="progress-info">
-      <text class="progress-label">{{selectedSpread.name}}</text>
-      <text class="progress-count">已选 {{selectedCardIndices.length}} / {{requiredCardCount}} 张</text>
     </view>
-    <view class="progress-slots">
-      <view
-        wx:for="{{requiredCardCount}}"
-        wx:key="index"
-        class="progress-slot {{index < selectedCardIndices.length ? 'filled' : ''}}"
-      >
-        <text class="slot-label">
-          {{selectedSpread.positions[index] || '牌' + (index + 1)}}
+    <view class="tarot-subtitle">先写下你的问题，小岛会自动挑选合适的牌阵并高亮指引</view>
+    <!-- 合规提示 -->
+    <view class="compliance-tip">塔罗内容仅作为象征反思工具，不提供任何预测或占卜指导</view>
+
+    <!-- 流程步骤指示器 -->
+    <view class="flow-steps">
+      <view class="step-item {{phase === 'idle' ? 'active' : 'done'}}">1 · 提问</view>
+      <view class="step-item {{phase === 'selecting' || phase === 'selected' ? 'active' : (phase === 'shuffling' || phase === 'spreading' ? 'current' : '')}}">2 · 选牌</view>
+      <view class="step-item {{phase === 'selected' ? 'active' : ''}}">3 · 抽牌</view>
+    </view>
+
+    <!-- 问题输入区域 (仅在 idle 阶段可编辑，紧凑版) -->
+    <view class="question-section question-section-compact" wx:if="{{phase === 'idle'}}">
+      <view class="section-title">💭 你想问什么？</view>
+      <scroll-view class="template-scroll" scroll-x="true">
+        <view
+          class="template-chip"
+          wx:for="{{questionTemplates}}"
+          wx:key="index"
+          bindtap="selectTemplate"
+          data-text="{{item}}"
+        >
+          {{item}}
+        </view>
+      </scroll-view>
+      <textarea
+        class="question-input question-input-compact"
+        placeholder="写下你的问题，小岛帮你选牌阵"
+        value="{{question}}"
+        bindinput="onQuestionInput"
+        maxlength="200"
+      ></textarea>
+      <view class="char-count">{{question.length}}/200</view>
+    </view>
+
+    <!-- 牌阵信息 (洗牌后隐藏，紧凑版) -->
+    <view class="spread-info spread-info-inline" wx:if="{{phase === 'idle'}}">
+      <text class="spread-label">牌阵：</text>
+      <text class="spread-name-inline">{{selectedSpread.name}}</text>
+      <text class="spread-desc-inline">（{{requiredCardCount}}张牌）</text>
+    </view>
+
+    <!-- 选牌进度指示器 (选牌阶段显示) -->
+    <view class="card-progress" wx:if="{{phase === 'selecting' || phase === 'spreading' || phase === 'selected'}}">
+      <view class="progress-info">
+        <text class="progress-label">{{selectedSpread.name}}</text>
+        <text class="progress-count">
+          已选 {{selectedCardIndices.length}} / {{requiredCardCount}} 张
         </text>
       </view>
-    </view>
-  </view>
-
-  <!-- ========== 核心牌阵交互区域 ========== -->
-  <!-- 洗牌动画区域 (idle时静态预览，shuffling时播放动画，结束时淡出) -->
-  <view class="cards-area-wrapper" wx:if="{{phase === 'idle' || phase === 'shuffling'}}">
-    <view class="shuffle-animation-container {{phase === 'idle' ? 'shuffle-static' : (shuffleFadeOut ? 'shuffle-fade-out' : 'shuffle-animating')}}">
-      <view class="shuffle-deck">
-        <!-- 8张牌：idle时静态摆放，shuffling时播放动画 -->
+      <view class="progress-slots">
         <view
-          wx:for="{{8}}"
+          wx:for="{{requiredCardCount}}"
           wx:key="index"
-          class="shuffle-card {{phase === 'shuffling' ? 'shuffle-card-' + index : 'shuffle-card-static'}}"
+          class="progress-slot {{index < selectedCardIndices.length ? 'filled' : ''}}"
         >
-          <image class="shuffle-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
+          <text class="slot-label">
+            {{selectedSpread.positions[index] || '牌' + (index + 1)}}
+          </text>
         </view>
       </view>
-      <view class="shuffle-text">
-        {{phase === 'idle' ? '🃏 准备好你的问题，开始洗牌' : (shuffleFadeOut ? '✨ 牌阵展开中...' : '✨ 正在洗牌...')}}
-      </view>
     </view>
-  </view>
 
-  <!-- 扇形牌阵交互区域 (spreading/selecting/selected 阶段) -->
-  <view
-    class="cards-area-wrapper"
-    wx:if="{{phase === 'spreading' || phase === 'selecting' || phase === 'selected'}}"
-  >
-    <view class="fan-container {{phase === 'selected' ? 'cards-fading' : ''}}">
-      <!-- 扇形牌阵 -->
-      <view class="fan-deck">
-        <view
-          wx:for="{{deckCards}}"
-          wx:key="id"
-          class="fan-card-item {{item.isSpread ? 'spread' : ''}} {{item.isChosen ? 'card-chosen' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex === index ? 'card-flying' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex !== index ? 'card-dimmed' : ''}}"
-          style="--angle: {{item.angle}}deg; --x: {{item.x}}rpx; --y: {{item.y}}rpx; --z-index: {{item.zIndex}}; --delay: {{item.animationDelay}}ms;"
-          bindtap="onFanCardTap"
-          data-index="{{index}}"
-        >
-          <image class="fan-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
-          <!-- 已选中顺序标记 - 仅当该牌被选中时显示 -->
+    <!-- ========== 核心牌阵交互区域 ========== -->
+    <!-- 洗牌动画区域 -->
+    <view class="cards-area-wrapper" wx:if="{{phase === 'idle' || phase === 'shuffling'}}">
+      <view class="shuffle-animation-container {{phase === 'idle' ? 'shuffle-static' : (shuffleFadeOut ? 'shuffle-fade-out' : 'shuffle-animating')}}">
+        <view class="shuffle-deck">
           <view
-            wx:if="{{item.isChosen && item.selectionOrder > 0}}"
-            class="card-selected-badge"
+            wx:for="{{8}}"
+            wx:key="index"
+            class="shuffle-card {{phase === 'shuffling' ? 'shuffle-card-' + index : 'shuffle-card-static'}}"
           >
-            <text>{{item.selectionOrder}}</text>
+            <image class="shuffle-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
           </view>
         </view>
-      </view>
-
-      <!-- 选牌提示 -->
-      <view class="select-hint" wx:if="{{phase === 'selecting' || phase === 'selected'}}">
-        <text wx:if="{{remainingCardCount === requiredCardCount}}">
-          ✨ 请跟随直觉，选择 {{requiredCardCount}} 张牌
-        </text>
-        <text wx:elif="{{remainingCardCount > 0}}">
-          ✨ 还需选择 {{remainingCardCount}} 张牌
-        </text>
-        <text wx:else>
-          ✨ 牌已选完，正在揭示...
-        </text>
+        <view class="shuffle-text">
+          {{phase === 'idle' ? '🃏 准备好你的问题，开始洗牌' : (shuffleFadeOut ? '✨ 牌阵展开中...' : '✨ 正在洗牌...')}}
+        </view>
       </view>
     </view>
 
-    <!-- 飞出放大的选中牌（可用于额外强调或做遮罩） -->
-    <view
-      wx:if="{{showFlyingCard && selectedCardIndex >= 0}}"
-      class="flying-card-overlay"
-    >
-      <view class="flying-card">
-        <image class="flying-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
+    <!-- 扇形牌阵交互区域 -->
+    <view class="cards-area-wrapper" wx:if="{{phase === 'spreading' || phase === 'selecting' || phase === 'selected'}}">
+      <view class="fan-container {{phase === 'selected' ? 'cards-fading' : ''}}">
+        <view class="fan-deck">
+          <view
+            wx:for="{{deckCards}}"
+            wx:key="id"
+            class="fan-card-item {{item.isSpread ? 'spread' : ''}} {{item.isChosen ? 'card-chosen' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex === index ? 'card-flying' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex !== index ? 'card-dimmed' : ''}}"
+            style="--angle: {{item.angle}}deg; --x: {{item.x}}rpx; --y: {{item.y}}rpx; --z-index: {{item.zIndex}}; --delay: {{item.animationDelay}}ms;"
+            bindtap="onFanCardTap"
+            data-index="{{index}}"
+          >
+            <image class="fan-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
+
+            <!-- 选中顺序标记 -->
+            <view wx:if="{{item.isChosen && item.selectionOrder > 0}}" class="card-selected-badge">
+              <text>{{item.selectionOrder}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="select-hint" wx:if="{{phase === 'selecting' || phase === 'selected'}}">
+          <text wx:if="{{remainingCardCount === requiredCardCount}}">
+            ✨ 请跟随直觉，选择 {{requiredCardCount}} 张牌
+          </text>
+          <text wx:elif="{{remainingCardCount > 0}}">
+            ✨ 还需选择 {{remainingCardCount}} 张牌
+          </text>
+          <text wx:else>✨ 牌已选完，正在揭示...</text>
+        </view>
       </view>
-      <view class="flying-card-hint">🔮 正在揭示你的牌面...</view>
-    </view>
-  </view>
 
-  <!-- 开始洗牌按钮 (仅 idle 阶段显示) -->
-  <button
-    wx:if="{{phase === 'idle'}}"
-    class="btn-primary draw-btn"
-    bindtap="startShuffle"
-    disabled="{{!question}}"
-  >
-    开始洗牌
-  </button>
-
-</view>
-
-<!-- ========== 已抽牌结果状态 (result) ========== -->
-<view
-  wx:if="{{phase === 'result' || drawnCard}}"
-  class="result-section"
->
-
-  <!-- 牌阵标题 -->
-  <view class="spread-result-header">
-    <view class="spread-result-title">🔮 {{selectedSpread.name}}</view>
-    <view class="spread-result-count">共 {{drawnCards.length || 1}} 张牌</view>
-  </view>
-
-  <!-- 多张塔罗牌展示 (当有多张牌时) -->
-  <scroll-view
-    wx:if="{{drawnCards.length > 1}}"
-    class="cards-scroll"
-    scroll-x="true"
-    enhanced="{{true}}"
-    show-scrollbar="{{false}}"
-  >
-    <view class="cards-result-row">
-      <view
-        wx:for="{{drawnCards}}"
-        wx:key="_id"
-        class="card-result-item card-reveal-animation"
-        style="animation-delay: {{index * 150}}ms"
-      >
-        <view class="card-position-label">{{item.position}}</view>
-        <image class="card-image-small" src="{{item.image}}" mode="aspectFit" />
-        <view class="card-name-small">{{item.name}}</view>
-        <view class="card-keywords-small">{{item.keywords}}</view>
+      <!-- 飞出放大 -->
+      <view wx:if="{{showFlyingCard && selectedCardIndex >= 0}}" class="flying-card-overlay">
+        <view class="flying-card">
+          <image class="flying-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
+        </view>
+        <view class="flying-card-hint">🔮 正在揭示你的牌面...</view>
       </view>
     </view>
-  </scroll-view>
 
-  <!-- 单张塔罗牌展示 (兼容单卡模式) -->
-  <view wx:elif="{{drawnCard}}" class="card-result card-reveal-animation">
-    <view wx:if="{{selectedSpread.positions[0]}}" class="card-position-label">
-      {{selectedSpread.positions[0]}}
-    </view>
-    <image class="card-image" src="{{drawnCard.image}}" mode="aspectFit" />
-    <view class="card-name">{{drawnCard.name}}</view>
-    <view class="card-keywords">{{drawnCard.keywords}}</view>
-  </view>
-
-  <!-- 牌阵位置说明 -->
-  <view class="spread-info compact" wx:if="{{drawnCards.length > 1}}">
-    <view class="spread-positions">
-      <view
-        class="pos-chip"
-        wx:for="{{drawnCards}}"
-        wx:key="_id"
-      >
-        <text class="pos-index">{{index + 1}}</text>
-        <text class="pos-label">{{item.position}}: {{item.name}}</text>
-      </view>
-    </view>
-  </view>
-
-  <!-- 问题与解读 -->
-  <view class="question-section" wx:if="{{question}}">
-    <view class="section-title">💭 你的问题</view>
-    <view class="question-display">{{question}}</view>
+    <!-- 开始洗牌按钮 -->
     <button
-      class="btn-primary"
-      bindtap="getInterpretation"
-      disabled="{{!question || loading}}"
+      wx:if="{{phase === 'idle'}}"
+      class="btn-primary draw-btn"
+      bindtap="startShuffle"
+      disabled="{{!question}}"
     >
-      {{loading ? '解读中...' : '获取解读'}}
+      开始洗牌
     </button>
-  </view>
 
-  <!-- AI 解读结果 -->
-  <view
-    wx:if="{{interpretation}}"
-    class="interpretation-section"
-  >
-    <view class="section-title">✨ 小岛解读</view>
-    <text
-      class="interpretation-content"
-      user-select="{{true}}"
-    >
-      {{interpretation}}
-    </text>
-  </view>
+  </view> <!-- 未抽牌状态 End -->
 
-  <!-- 操作按钮 -->
-  <view class="action-buttons">
-    <button
-      class="btn-secondary"
-      bindtap="resetDraw"
-    >
-      重新抽取
-    </button>
-    <navigator
-      url="/pages/tarot/history/history"
-      class="btn-secondary nav-btn"
-    >
-      <text>查看历史</text>
-    </navigator>
-  </view>
+  <!-- ========== 已抽牌结果状态 ========== -->
+  <view wx:if="{{phase === 'result' || drawnCard}}" class="result-section">
 
-  <!-- 行动计划 -->
-  <view
-    wx:if="{{drawnCard}}"
-    class="action-section"
-  >
-    <view class="section-title action-title">☀ 今日行动 · 最多 3 条小步骤</view>
-    <view class="action-hint">
-      一张卡对应一个行动框，按行列出 1-3 条小步骤，想好再写也没关系。
+    <view class="spread-result-header">
+      <view class="spread-result-title">🔮 {{selectedSpread.name}}</view>
+      <view class="spread-result-count">共 {{drawnCards.length || 1}} 张牌</view>
     </view>
-    <view class="action-onebox">
-      <textarea
-        class="action-input single"
-        placeholder="1) 写下第一个可执行的小动作&#10;2) 写下第二个小动作（可选）&#10;3) 写下第三个小动作（可选）"
-        value="{{actionText}}"
-        bindinput="onActionInput"
-        maxlength="300"
-      ></textarea>
-      <view class="action-count">
-        {{actionText.length || 0}}/300
+
+    <!-- 多张 -->
+    <scroll-view
+      wx:if="{{drawnCards.length > 1}}"
+      class="cards-scroll"
+      scroll-x="true"
+      enhanced="{{true}}"
+      show-scrollbar="{{false}}"
+    >
+      <view class="cards-result-row">
+        <view
+          wx:for="{{drawnCards}}"
+          wx:key="_id"
+          class="card-result-item card-reveal-animation"
+          style="animation-delay: {{index * 150}}ms"
+        >
+          <image class="card-image-small" src="{{item.image}}" mode="aspectFit" />
+
+          <view class="card-info-row">
+            <view class="card-position-label">{{item.position}}</view>
+            <view class="card-name-small">{{item.name}}</view>
+          </view>
+
+          <view class="card-keywords-small">{{item.keywords}}</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 单张 -->
+    <view wx:elif="{{drawnCard}}" class="card-result card-reveal-animation">
+
+      <image class="card-image" src="{{drawnCard.image}}" mode="aspectFit" />
+
+      <view class="card-info-row">
+        <view wx:if="{{selectedSpread.positions[0]}}" class="card-position-label">
+          {{selectedSpread.positions[0]}}
+        </view>
+        <view class="card-name">{{drawnCard.name}}</view>
+      </view>
+
+      <view class="card-keywords">{{drawnCard.keywords}}</view>
+    </view>
+
+    <!-- 牌阵位置说明 -->
+    <view class="spread-info compact" wx:if="{{drawnCards.length > 1}}">
+      <view class="spread-positions">
+        <view wx:for="{{drawnCards}}" wx:key="_id" class="pos-chip">
+          <text class="pos-index">{{index + 1}}</text>
+          <text class="pos-label">{{item.position}}: {{item.name}}</text>
+        </view>
       </view>
     </view>
-    <button
-      class="btn-secondary solid"
-      bindtap="saveActionPlan"
-    >
-      保存行动计划
-    </button>
-  </view>
-</view>
+
+    <!-- 问题展示 -->
+    <view class="question-section" wx:if="{{question}}">
+      <view class="section-title">💭 你的问题</view>
+      <view class="question-display">{{question}}</view>
+
+      <button class="btn-primary" bindtap="getInterpretation" disabled="{{!question || loading}}">
+        {{loading ? '解读中...' : '获取解读'}}
+      </button>
+    </view>
+
+    <!-- 小岛解读 -->
+    <view wx:if="{{interpretationBlocks.length > 0}}" class="interpretation-section">
+      <view class="section-title">✦ 小岛解读</view>
+
+      <view class="interpretation-blocks">
+        <view
+          wx:for="{{interpretationBlocks}}"
+          wx:key="index"
+          class="interpretation-block"
+          style="animation-delay: {{index * 100}}ms"
+        >
+          <view class="block-title">{{item.title}}</view>
+          <text class="block-content" user-select="{{true}}">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 老版本兼容 -->
+    <view wx:elif="{{interpretation}}" class="interpretation-section">
+      <view class="section-title">✦ 小岛解读</view>
+      <text class="interpretation-content" user-select="{{true}}">{{interpretation}}</text>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="btn-secondary" bindtap="resetDraw">重新抽取</button>
+      <navigator url="/pages/tarot/history/history" class="btn-secondary nav-btn">
+        <text>查看历史</text>
+      </navigator>
+    </view>
+
+    <!-- 行动计划 -->
+    <view wx:if="{{drawnCard}}" class="action-section">
+      <view class="section-title action-title">☀ 今日行动 · 最多 3 条小步骤</view>
+      <view class="action-hint">一张卡对应一个行动框，按行列出 1-3 条小步骤，想好再写也没关系。</view>
+
+      <view class="action-onebox">
+        <textarea
+          class="action-input single"
+          placeholder="1) 写下第一个可执行的小动作&#10;2) 写下第二个小动作（可选）&#10;3) 写下第三个小动作（可选）"
+          value="{{actionText}}"
+          bindinput="onActionInput"
+          maxlength="300"
+        ></textarea>
+        <view class="action-count">{{actionText.length || 0}}/300</view>
+      </view>
+
+      <button class="btn-secondary solid" bindtap="saveActionPlan">保存行动计划</button>
+    </view>
+
+  </view> <!-- result-section END -->
 
 </view>

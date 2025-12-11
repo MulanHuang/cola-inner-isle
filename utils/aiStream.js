@@ -5,7 +5,7 @@
 // 支持 SSE 流式输出，让用户 0.2 秒内看到字符开始出现
 // ============================================================
 
-const API_URL = "https://api.cola.center/api/openai";
+const API_URL = "https://innerseed-openai-proxy.vercel.app/api/openai";
 
 /**
  * 流式调用 AI 接口

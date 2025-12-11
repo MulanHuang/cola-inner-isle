@@ -1,5 +1,7 @@
 <!--pages/explore/mbti/mbti.wxml-->
-<view class="container mbti-container">
+<brand-navbar title="可乐心岛" showBack="{{true}}" bind:ready="onNavReady" />
+
+<view class="container mbti-container" style="padding-top: {{navBarHeight}}px;">
   <view class="header">
     <view class="header-title">🧩 MBTI 人格类型</view>
     <view class="header-subtitle">16种人格，你是哪一种？</view>

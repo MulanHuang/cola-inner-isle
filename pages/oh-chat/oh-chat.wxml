@@ -1,0 +1,119 @@
+<!-- pages/oh-chat/oh-chat.wxml -->
+
+<!-- 自定义导航栏（与 chat 同风格） -->
+<view class="custom-navbar oh-navbar" style="padding-top: {{statusBarHeight}}px;">
+  <view class="oh-navbar-content">
+    <view class="oh-nav-left" bindtap="handleBack">
+      <text class="oh-back-icon">‹</text>
+    </view>
+    <view class="oh-nav-center">
+      <image class="navbar-logo" src="/images/logo.svg" mode="aspectFit" />
+      <view class="navbar-title">可乐心岛</view>
+    </view>
+    <view class="oh-nav-right"></view>
+  </view>
+</view>
+
+<!-- ===================== -->
+<!--      整体容器          -->
+<!-- ===================== -->
+<view class="chat-page-root page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
+  <!-- ===================== -->
+  <!--    OH 卡牌展示区域     -->
+  <!-- ===================== -->
+  <view class="card-hero">
+    <view class="card-preview" wx:if="{{selectedImageCard}}">
+      <image
+        class="card-img"
+        src="{{selectedImageCard.fileId}}"
+        mode="aspectFit"
+      />
+      <view
+        class="word-tag"
+        wx:if="{{mode === 'imageAndWord' && selectedWordCard}}"
+      >
+        {{selectedWordCard.name}}
+      </view>
+    </view>
+    <view class="card-placeholder" wx:if="{{!selectedImageCard}}">
+      暂未获取到卡牌信息，可以返回上一页重新抽取后再试
+    </view>
+    <view class="user-note" wx:if="{{userInput}}">
+      {{userInput}}
+    </view>
+    <view class="user-note placeholder" wx:if="{{!userInput && selectedImageCard}}">
+      你从这张卡片里看到了什么，感受如何？
+    </view>
+  </view>
+
+  <!-- ===================== -->
+  <!--      聊天消息列表      -->
+  <!-- ===================== -->
+  <scroll-view
+    class="chat-scroll"
+    style="padding-bottom: {{scrollPaddingBottom}}rpx;"
+    scroll-y="true"
+    scroll-with-animation="true"
+    scroll-into-view="{{scrollToView}}"
+    enhanced="true"
+    show-scrollbar="false"
+  >
+    <!-- 消息气泡列表 -->
+    <block wx:for="{{messages}}" wx:key="id">
+      <view
+        id="msg_{{item.id}}"
+        class="msg-row {{item.role === 'user' ? 'msg-row-self' : 'msg-row-other'}}"
+      >
+        <view class="msg-bubble {{item.role === 'user' ? 'msg-bubble-self' : 'msg-bubble-other'}}">
+          <text class="msg-text" user-select="true">{{item.content}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 加载中（小岛正在思考） -->
+    <view wx:if="{{loading && messages.length > 0 && !messages[messages.length - 1].content}}" class="msg-row msg-row-other">
+      <view class="msg-bubble msg-bubble-other msg-bubble-loading">
+        <view class="typing-indicator">
+          <view class="dot"></view>
+          <view class="dot"></view>
+          <view class="dot"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部锚点 -->
+    <view id="bottom" class="scroll-bottom-anchor"></view>
+  </scroll-view>
+
+  <!-- ===================== -->
+  <!--   底部悬浮输入卡片      -->
+  <!-- ===================== -->
+  <view class="chat-composer">
+    <!-- 底部输入栏 -->
+    <view class="composer-input-bar">
+      <!-- 输入框（支持多行） -->
+      <view class="composer-input-field {{textareaHeight > 60 ? 'input-expanded' : ''}}">
+        <textarea
+          class="composer-textarea"
+          placeholder="想说什么就直接输入..."
+          placeholder-class="composer-input-placeholder"
+          value="{{inputText}}"
+          bindinput="onInput"
+          bindconfirm="sendMessage"
+          bindlinechange="onLineChange"
+          confirm-type="send"
+          auto-height="{{true}}"
+          maxlength="500"
+          show-confirm-bar="{{false}}"
+          disable-default-padding="{{true}}"
+          cursor-spacing="120"
+        />
+      </view>
+
+      <!-- 发送按钮 -->
+      <view class="composer-send-btn" bindtap="sendMessage">
+        <image class="composer-send-icon" src="/images/icons/send-arrow.svg" mode="aspectFit" />
+      </view>
+    </view>
+  </view>
+</view>

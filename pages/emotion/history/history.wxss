@@ -212,7 +212,7 @@
   word-break: break-all;
 }
 
-/* æ ‡ç­¾ */
+/* æ ‡ç­¾ */
 .record-tags {
   margin-top: 16rpx;
   padding: 20rpx;

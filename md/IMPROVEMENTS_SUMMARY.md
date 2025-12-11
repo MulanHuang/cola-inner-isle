@@ -128,7 +128,7 @@
 === OpenAI Client 开始执行 ===
 ✅ API Key 已获取，前缀: sk-proj-ab...
 📋 配置信息:
-  - 模型: gpt-5-mini
+  - 模型:gpt-5.1
   - 温度: 0.7
   - 最大 tokens: 2000
 📡 发送请求到 OpenAI API...

@@ -16,6 +16,9 @@ Page({
     loopMode: false,
     speed: 1.0,
     isPreparing: false,
+    // 🚀 音频缓冲状态（用于UI显示加载动画）
+    audioBuffering: false,
+    audioReady: false,
     // 定时关闭
     sleepTimer: 0, // 剩余秒数，0 表示未设置
     sleepTimerStr: "", // 显示文本
@@ -43,8 +46,28 @@ Page({
 
     if (options.id) {
       this.setData({ audioId: options.id });
+
+      // 🚀 优化方案2：并行初始化音频管理器
       this.initAudioManager();
-      this.loadAudioInfo();
+
+      // 🚀 优化方案1：优先使用列表页传递的数据，跳过数据库查询
+      if (options.audioData) {
+        try {
+          const audioData = JSON.parse(decodeURIComponent(options.audioData));
+          console.log("[player] ✅ 使用列表页传递的数据，跳过数据库查询");
+          this.handleAudioData(audioData);
+        } catch (parseErr) {
+          console.warn(
+            "[player] ⚠️ 解析传递数据失败，回退到数据库查询:",
+            parseErr.message
+          );
+          this.loadAudioInfo();
+        }
+      } else {
+        // 没有传递数据时（如从分享链接进入），回退到数据库查询
+        console.log("[player] 📡 无传递数据，执行数据库查询");
+        this.loadAudioInfo();
+      }
     } else {
       console.error("[player] ❌ 缺少音频 ID");
       wx.showModal({
@@ -54,6 +77,65 @@ Page({
         success: () => {
           wx.navigateBack();
         },
+      });
+    }
+  },
+
+  // 🚀 处理音频数据（从传递数据或数据库查询结果）
+  async handleAudioData(audioData) {
+    const fileId = audioData.audioUrl || audioData.audioURL;
+
+    console.log("[player] 音频数据:");
+    console.log("[player] - _id:", audioData._id);
+    console.log("[player] - title:", audioData.title);
+    console.log("[player] - fileId:", fileId);
+
+    if (!fileId) {
+      console.error("[player] ❌ 音频文件地址缺失");
+      wx.showModal({
+        title: "播放失败",
+        content: "音频文件地址缺失",
+        showCancel: false,
+      });
+      return;
+    }
+
+    this.setData({
+      audio: {
+        ...audioData,
+        audioUrl: fileId,
+      },
+    });
+
+    // 解析并预设 duration
+    const dbDuration = audioData.duration;
+    if (dbDuration) {
+      const durationInSeconds = this.parseDurationString(dbDuration);
+      if (durationInSeconds > 0) {
+        console.log(
+          "[player] 预设时长:",
+          dbDuration,
+          "->",
+          durationInSeconds,
+          "秒"
+        );
+        this.setData({
+          duration: durationInSeconds,
+          durationStr: this.formatTime(durationInSeconds),
+        });
+      }
+    }
+
+    // 准备音频（会优先使用缓存的临时URL）
+    try {
+      await this.prepareAudio(fileId);
+      console.log("[player] ✅ 音频准备完成，等待用户点击播放");
+    } catch (prepareError) {
+      console.error("[player] ❌ prepareAudio 执行失败:", prepareError);
+      wx.showModal({
+        title: "加载失败",
+        content: `准备音频时出错: ${prepareError.message || "未知错误"}`,
+        showCancel: false,
       });
     }
   },
@@ -130,23 +212,39 @@ Page({
           },
         });
 
-        console.log("[player] 准备播放音频，fileId:", fileId);
+        // 🔧 解析并预设 duration，在播放前就显示正确的总时长
+        const dbDuration = audioData.duration;
+        if (dbDuration) {
+          const durationInSeconds = this.parseDurationString(dbDuration);
+          if (durationInSeconds > 0) {
+            console.log(
+              "[player] 预设时长:",
+              dbDuration,
+              "->",
+              durationInSeconds,
+              "秒"
+            );
+            this.setData({
+              duration: durationInSeconds,
+              durationStr: this.formatTime(durationInSeconds),
+            });
+          }
+        }
 
-        // 先转换 fileID -> 临时可播放 URL，再启动播放
+        console.log("[player] 准备音频，fileId:", fileId);
+
+        // 先转换 fileID -> 临时可播放 URL
         try {
-          await this.prepareAndPlay(fileId);
-          console.log("[player] ✅ prepareAndPlay 执行完成");
+          await this.prepareAudio(fileId);
+          console.log("[player] ✅ prepareAudio 执行完成，等待用户点击播放");
         } catch (prepareError) {
-          console.error("[player] ❌ prepareAndPlay 执行失败:", prepareError);
+          console.error("[player] ❌ prepareAudio 执行失败:", prepareError);
           wx.showModal({
-            title: "播放失败",
-            content: `准备播放时出错: ${prepareError.message || "未知错误"}`,
+            title: "加载失败",
+            content: `准备音频时出错: ${prepareError.message || "未知错误"}`,
             showCancel: false,
           });
         }
-
-        // 记录播放历史
-        this.recordPlayHistory();
       } else {
         console.error("[player] ❌ 未找到音频数据");
         wx.showToast({
@@ -182,18 +280,8 @@ Page({
     audioManager.onPlay(() => {
       console.log("[player] ✅ 音频开始播放");
       console.log("[player] 当前 src:", audioManager.src);
-      console.log("[player] 当前 title:", audioManager.title);
-      console.log("[player] 当前 paused:", audioManager.paused);
       console.log("[player] 当前 duration:", audioManager.duration);
-      console.log("[player] 当前 currentTime:", audioManager.currentTime);
       this.setData({ playing: true });
-
-      // 显示播放成功提示
-      wx.showToast({
-        title: "开始播放",
-        icon: "success",
-        duration: 1500,
-      });
     });
 
     audioManager.onPause(() => {
@@ -252,14 +340,21 @@ Page({
       });
     });
 
-    // 监听等待加载事件（真机调试用）
+    // 🚀 监听等待加载事件 - 显示缓冲状态
     audioManager.onWaiting(() => {
-      console.log("[player] ⏳ 音频加载中...");
+      console.log("[player] ⏳ 音频缓冲中...");
+      this.setData({ audioBuffering: true });
     });
 
-    // 监听可以播放事件（真机调试用）
+    // 🚀 监听可以播放事件 - 隐藏缓冲状态，提供触感反馈
     audioManager.onCanplay(() => {
-      console.log("[player] ✅ 音频可以播放了");
+      console.log("[player] ✅ 音频缓冲完成，可以流畅播放了");
+      this.setData({
+        audioBuffering: false,
+        audioReady: true,
+      });
+      // 轻触感反馈，让用户感知到音频已准备好
+      wx.vibrateShort({ type: "light" }).catch(() => {});
     });
   },
 
@@ -274,180 +369,200 @@ Page({
     if (audioManager.offCanplay) audioManager.offCanplay();
   },
 
-  // 将 fileID 转成临时 https 并播放
-  async prepareAndPlay(fileId) {
-    console.log("[player] ========== 开始准备播放 ==========");
+  // 只准备音频（获取临时URL并设置播放器），不自动播放
+  async prepareAudio(fileId) {
+    console.log("[player] ========== 开始准备音频 ==========");
     console.log("[player] 输入 fileId:", fileId);
     console.log("[player] 音频标题:", this.data.audio.title);
 
     if (this.data.isPreparing) {
-      console.log("[player] ⚠️ 已有播放准备进行中，跳过重复调用");
-      return;
+      console.log("[player] ⚠️ 已有准备进行中，跳过重复调用");
+      return false;
     }
 
     if (!fileId) {
       console.error("[player] ❌ fileId 为空");
       wx.showToast({ title: "音频地址缺失", icon: "none" });
-      return;
+      return false;
+    }
+
+    // 🚀 优先检查本地缓存的临时URL（预加载优化）
+    try {
+      const urlCache = wx.getStorageSync("audioUrlCache") || {};
+      if (urlCache[fileId]) {
+        const cachedUrl = urlCache[fileId];
+        const safeUrl = encodeURI(cachedUrl);
+        console.log("[player] ✅ 使用缓存的临时URL（预加载命中）");
+        this.setData({ tempAudioUrl: safeUrl });
+        return true;
+      }
+    } catch (cacheErr) {
+      console.warn("[player] ⚠️ 读取缓存失败:", cacheErr.message);
     }
 
     wx.showLoading({ title: "加载音频..." });
     this.setData({ isPreparing: true });
 
     try {
-      // 清理旧的播放状态，避免残留
-      audioManager.stop();
-
       // 步骤1：调用 getTempFileURL 获取临时链接
       console.log("[player] 📡 正在调用 wx.cloud.getTempFileURL...");
-      console.log("[player] 请求参数:", { fileList: [fileId] });
-
+      console.log("[player] 📡 fileId:", fileId);
       const res = await wx.cloud.getTempFileURL({ fileList: [fileId] });
 
       console.log("[player] 📡 getTempFileURL 返回结果:");
-      console.log("[player] - 完整响应:", JSON.stringify(res, null, 2));
       console.log("[player] - fileList 长度:", res?.fileList?.length);
 
       // 步骤2：检查返回结果
       const fileInfo = res?.fileList?.[0];
       if (!fileInfo) {
         console.error("[player] ❌ fileList 为空或不存在");
-        wx.showModal({
-          title: "加载失败",
-          content: "未能获取音频文件信息，请检查 fileId 是否正确",
-          showCancel: false,
-        });
-        return;
+        throw new Error("未能获取音频文件信息");
       }
 
-      console.log("[player] 📄 文件信息:");
-      console.log("[player] - status:", fileInfo.status);
-      console.log("[player] - errMsg:", fileInfo.errMsg);
-      console.log("[player] - tempFileURL:", fileInfo.tempFileURL);
+      console.log("[player] 📄 文件信息 status:", fileInfo.status);
 
       if (fileInfo.status !== 0) {
-        console.error("[player] ❌ 获取临时链接失败");
-        console.error("[player] - 错误码:", fileInfo.status);
-        console.error("[player] - 错误信息:", fileInfo.errMsg);
-        if (fileInfo.status === -130 || /permission/i.test(fileInfo.errMsg)) {
-          wx.showModal({
-            title: "加载失败",
-            content: "云存储权限不足，无法获取文件，请检查读权限或重新上传",
-            showCancel: false,
-          });
-          return;
-        }
-        wx.showModal({
-          title: "加载失败",
-          content: `错误码: ${fileInfo.status}\n${
-            fileInfo.errMsg || "未知错误"
-          }`,
-          showCancel: false,
-        });
-        return;
+        console.error("[player] ❌ 获取临时链接失败，错误码:", fileInfo.status);
+        console.error("[player] ❌ 错误信息:", fileInfo.errMsg);
+        throw new Error(fileInfo.errMsg || "获取临时链接失败");
       }
 
       if (!fileInfo.tempFileURL) {
         console.error("[player] ❌ tempFileURL 为空");
-        wx.showModal({
-          title: "加载失败",
-          content: "未能获取临时播放链接",
-          showCancel: false,
-        });
-        return;
+        throw new Error("未能获取临时播放链接");
       }
 
       const rawUrl = fileInfo.tempFileURL;
-      const safeUrl = encodeURI(rawUrl); // 处理中文/空格，避免 iOS 播放器拒绝
-      console.log("[player] ✅ 成功获取临时链接:", rawUrl);
-      console.log("[player] ✅ 转换后的播放链接:", safeUrl);
+      // 对 URL 进行编码处理，处理中文和特殊字符
+      const safeUrl = encodeURI(rawUrl);
+      console.log("[player] ✅ 原始临时链接:", rawUrl);
+      console.log("[player] ✅ 编码后链接:", safeUrl);
+
       this.setData({ tempAudioUrl: safeUrl });
 
-      // 步骤3：设置 BackgroundAudioManager 属性
-      console.log("[player] 🎵 开始设置音频管理器属性...");
+      // 🚀 将新获取的URL存入缓存，供下次使用
+      try {
+        const urlCache = wx.getStorageSync("audioUrlCache") || {};
+        urlCache[fileId] = rawUrl;
+        wx.setStorageSync("audioUrlCache", urlCache);
+        console.log("[player] ✅ 临时URL已缓存");
+      } catch (cacheErr) {
+        console.warn("[player] ⚠️ 缓存URL失败:", cacheErr.message);
+      }
 
-      // iOS 真机必须先设置 title，否则可能无法播放
-      const audioTitle = this.data.audio.title || "冥想音频";
-      audioManager.title = audioTitle;
-      console.log("[player] - title:", audioTitle);
-
-      audioManager.epname = "可乐心岛冥想"; // 专辑名称
-      console.log("[player] - epname: 可乐心岛冥想");
-
-      audioManager.singer = "可乐心岛"; // 歌手名称
-      console.log("[player] - singer: 可乐心岛");
-
-      const coverUrl = this.data.audio.cover || "";
-      audioManager.coverImgUrl = coverUrl;
-      console.log("[player] - coverImgUrl:", coverUrl);
-
-      audioManager.playbackRate = this.data.speed;
-      console.log("[player] - playbackRate:", this.data.speed);
-
-      // src 必须最后设置
-      audioManager.src = safeUrl;
-      console.log("[player] - src:", safeUrl);
-
-      // 主动触发播放
-      audioManager.play();
-
-      console.log("[player] ✅ 音频管理器配置完成，等待播放...");
+      console.log("[player] ✅ 音频准备完成，tempAudioUrl 已保存");
+      return true;
     } catch (error) {
-      console.error("[player] ❌ 异常错误 ==========");
-      console.error("[player] 错误类型:", error.name);
-      console.error("[player] 错误信息:", error.message);
-      console.error("[player] 错误堆栈:", error.stack);
-      console.error("[player] 完整错误对象:", JSON.stringify(error, null, 2));
-
+      console.error("[player] ❌ 准备音频异常:", error.message);
       wx.showModal({
-        title: "播放失败",
-        content: `发生异常: ${
-          error.message || "未知错误"
-        }\n\n请检查：\n1. 网络连接\n2. 云存储权限\n3. 音频文件是否存在`,
+        title: "加载失败",
+        content: error.message || "未知错误",
         showCancel: false,
       });
-
-      // 重新抛出错误，让外层捕获
-      throw error;
+      return false;
     } finally {
       wx.hideLoading();
       this.setData({ isPreparing: false });
     }
   },
 
+  // 将 fileID 转成临时 https 并播放（用于循环播放等场景）
+  async prepareAndPlay(fileId) {
+    console.log("[player] ========== 开始准备并播放 ==========");
+
+    // 如果已经有临时URL，直接播放
+    if (this.data.tempAudioUrl) {
+      this.startPlayback();
+      return;
+    }
+
+    // 否则先准备再播放
+    const success = await this.prepareAudio(fileId);
+    if (success && this.data.tempAudioUrl) {
+      this.startPlayback();
+    } else {
+      console.error("[player] ❌ 准备失败，无法播放");
+    }
+  },
+
+  // 实际开始播放音频
+  startPlayback() {
+    console.log("[player] 🎵 开始设置音频管理器并播放...");
+
+    const safeUrl = this.data.tempAudioUrl;
+    if (!safeUrl) {
+      console.error("[player] ❌ 临时URL为空，无法播放");
+      wx.showToast({ title: "音频未准备好", icon: "none" });
+      return;
+    }
+
+    // iOS 真机必须先设置 title，否则可能无法播放
+    const audioTitle = this.data.audio.title || "冥想音频";
+    audioManager.title = audioTitle;
+    console.log("[player] - title:", audioTitle);
+
+    audioManager.epname = "可乐心岛冥想";
+    audioManager.singer = "可乐心岛";
+    audioManager.coverImgUrl = this.data.audio.cover || "";
+    audioManager.playbackRate = this.data.speed;
+
+    // src 必须最后设置，设置 src 后 BackgroundAudioManager 会自动开始播放
+    audioManager.src = safeUrl;
+    console.log("[player] - src 已设置，等待自动播放...");
+
+    // 记录播放历史（异步执行，不阻塞播放）
+    setTimeout(() => {
+      this.recordPlayHistory();
+    }, 100);
+  },
+
   // 切换播放/暂停
   togglePlay() {
     console.log("[player] ========== 用户点击播放/暂停按钮 ==========");
     console.log("[player] 当前 playing 状态:", this.data.playing);
-    console.log("[player] audioManager.src:", audioManager.src);
-    console.log("[player] audioManager.paused:", audioManager.paused);
+    console.log("[player] tempAudioUrl 存在:", !!this.data.tempAudioUrl);
+    console.log("[player] audioManager.src 存在:", !!audioManager.src);
 
     if (this.data.isPreparing) {
-      wx.showToast({ title: "正在准备音频...", icon: "none" });
+      console.log("[player] ⏳ 正在准备中，请稍候...");
+      wx.showToast({ title: "正在加载...", icon: "loading" });
       return;
     }
 
-    // 如果还没准备好音频源，先尝试重新准备并播放
-    if (!audioManager.src && this.data.audio?.audioUrl) {
-      console.log("[player] 音频源未设置，重新准备播放");
-      this.prepareAndPlay(this.data.audio.audioUrl);
-      return;
-    }
-
+    // 如果正在播放，则暂停
     if (this.data.playing) {
-      console.log("[player] 执行暂停操作");
+      console.log("[player] ⏸ 执行暂停操作");
       audioManager.pause();
-    } else {
-      console.log("[player] 执行播放操作");
-      audioManager.play();
+      return;
+    }
 
-      // 延迟检查播放状态
-      setTimeout(() => {
-        console.log("[player] 播放后检查状态:");
-        console.log("[player] - paused:", audioManager.paused);
-        console.log("[player] - currentTime:", audioManager.currentTime);
-        console.log("[player] - duration:", audioManager.duration);
-      }, 500);
+    // 检查当前 audioManager.src 是否是当前音频
+    const isCurrentAudio =
+      audioManager.src && audioManager.src === this.data.tempAudioUrl;
+    console.log("[player] 是否是当前音频:", isCurrentAudio);
+
+    // 如果是当前音频且已加载，直接继续播放
+    if (isCurrentAudio) {
+      console.log("[player] ▶️ 继续播放当前音频");
+      audioManager.play();
+      return;
+    }
+
+    // 首次播放或切换音频：使用已准备好的临时URL
+    if (this.data.tempAudioUrl) {
+      console.log("[player] ▶️ 首次播放，设置新的音频源");
+      // 🚀 显示缓冲状态
+      this.setData({ audioBuffering: true });
+      this.startPlayback();
+    } else if (this.data.audio?.audioUrl) {
+      // 如果临时URL也没有，重新准备并播放
+      console.log("[player] ⏳ 临时URL不存在，重新准备并播放");
+      // 🚀 显示缓冲状态
+      this.setData({ audioBuffering: true });
+      this.prepareAndPlay(this.data.audio.audioUrl);
+    } else {
+      console.error("[player] ❌ 没有可用的音频源");
+      wx.showToast({ title: "音频加载失败", icon: "none" });
     }
   },
 
@@ -834,13 +949,40 @@ Page({
     }
   },
 
-  // 格式化时间
+  // 格式化时间（支持小时格式）
   formatTime(seconds) {
     if (!seconds || isNaN(seconds)) return "00:00";
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min.toString().padStart(2, "0")}:${sec
-      .toString()
-      .padStart(2, "0")}`;
+    const totalSeconds = Math.floor(seconds);
+    const hours = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+
+    if (hours > 0) {
+      // HH:MM:SS 格式
+      return `${hours.toString().padStart(2, "0")}:${mins
+        .toString()
+        .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    } else {
+      // MM:SS 格式
+      return `${mins.toString().padStart(2, "0")}:${secs
+        .toString()
+        .padStart(2, "0")}`;
+    }
+  },
+
+  // 解析数据库中的 duration 字符串（支持 HH:MM:SS、MM:SS、M:SS 格式）
+  parseDurationString(durationStr) {
+    if (!durationStr || typeof durationStr !== "string") return 0;
+    const parts = durationStr.split(":").map(Number);
+    if (parts.some(isNaN)) return 0;
+
+    if (parts.length === 3) {
+      // HH:MM:SS 格式
+      return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    } else if (parts.length === 2) {
+      // MM:SS 格式
+      return parts[0] * 60 + parts[1];
+    }
+    return 0;
   },
 });

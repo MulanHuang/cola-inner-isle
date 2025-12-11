@@ -2,55 +2,63 @@
 <!-- 自定义导航栏 -->
 <view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
   <view class="navbar-content">
-    <image class="navbar-logo" src="/images/logo.png" mode="aspectFit"></image>
+    <image class="navbar-logo" src="/images/logo.svg" mode="aspectFit"></image>
     <view class="navbar-title">可乐心岛</view>
   </view>
 </view>
 
 <view class="meditation-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
-  <view class="header">
-    <view class="header-title">🧘 冥想空间</view>
-    <view class="header-subtitle">找到内心的平静</view>
+  <!-- 固定头部区域 -->
+  <view class="fixed-header">
+    <view class="header">
+      <view class="header-title">🧘 冥想空间</view>
+      <view class="header-subtitle">找到内心的平静</view>
+    </view>
+
+    <!-- 分类标签 -->
+    <scroll-view class="category-tabs" scroll-x>
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="category-tab {{currentCategory === item.id ? 'active' : ''}}"
+        bindtap="switchCategory"
+        data-id="{{item.id}}">
+        <text class="category-icon">{{item.icon}}</text>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
   </view>
 
-  <!-- 分类标签 -->
-  <scroll-view class="category-tabs" scroll-x>
-    <view 
-      wx:for="{{categories}}" 
-      wx:key="id"
-      class="category-tab {{currentCategory === item.id ? 'active' : ''}}"
-      bindtap="switchCategory"
-      data-id="{{item.id}}">
-      <text class="category-icon">{{item.icon}}</text>
-      <text class="category-name">{{item.name}}</text>
+  <!-- 可滚动的音频列表区域 -->
+  <scroll-view class="audio-scroll-view" scroll-y enhanced="{{true}}" show-scrollbar="{{false}}">
+    <view class="audio-list">
+      <view
+        wx:for="{{audioList}}"
+        wx:key="_id"
+        class="audio-item"
+        bindtap="playAudio"
+        data-audio="{{item}}">
+        <image class="audio-cover" src="{{item.cover}}" mode="aspectFill" lazy-load="{{true}}"></image>
+        <view class="audio-info">
+          <view class="audio-title">{{item.title}}</view>
+          <text class="audio-desc" user-select="{{true}}">{{item.description}}</text>
+          <view class="audio-meta">
+            <text class="audio-duration">{{item.duration}}</text>
+            <text class="audio-plays">{{item.smartPlays || item.plays || 0}} 次播放</text>
+          </view>
+        </view>
+        <view class="audio-play-icon">▶</view>
+      </view>
+
+      <!-- 空状态 -->
+      <view wx:if="{{audioList.length === 0}}" class="empty">
+        <view class="empty-text">暂无音频</view>
+      </view>
+
+      <!-- 底部安全间距 -->
+      <view class="audio-list-bottom-space"></view>
     </view>
   </scroll-view>
-
-  <!-- 音频列表 -->
-  <view class="audio-list">
-    <view 
-      wx:for="{{audioList}}" 
-      wx:key="_id"
-      class="audio-item"
-      bindtap="playAudio"
-      data-audio="{{item}}">
-      <image class="audio-cover" src="{{item.cover}}" mode="aspectFill"></image>
-      <view class="audio-info">
-        <view class="audio-title">{{item.title}}</view>
-        <text class="audio-desc" user-select="{{true}}">{{item.description}}</text>
-        <view class="audio-meta">
-          <text class="audio-duration">{{item.duration}}</text>
-          <text class="audio-plays">{{item.plays || 0}} 次播放</text>
-        </view>
-      </view>
-      <view class="audio-play-icon">▶</view>
-    </view>
-
-    <!-- 空状态 -->
-    <view wx:if="{{audioList.length === 0}}" class="empty">
-      <view class="empty-text">暂无音频</view>
-    </view>
-  </view>
 </view>
 
 <!-- 全局悬浮音乐控制按钮 -->

@@ -9,6 +9,7 @@ const mbtiQuestionsFallback = require("../../pages/explore/mbti/data/mbtiQuestio
 
 Page({
   data: {
+    navBarHeight: 0, // 导航栏高度
     questions: [], // 所有题目
     currentIndex: 0, // 当前题目索引
     currentQuestion: {}, // 当前题目
@@ -20,6 +21,13 @@ Page({
 
   onLoad() {
     this.initTest();
+  },
+
+  // 导航栏准备完成
+  onNavReady(e) {
+    this.setData({
+      navBarHeight: e.detail.navBarHeight || 0,
+    });
   },
 
   onShow() {
@@ -131,11 +139,7 @@ Page({
 
     // 防御：检查当前题目是否有效
     if (!currentQuestion || !currentQuestion.id) {
-      console.error(
-        "当前题目数据无效:",
-        currentIndex,
-        currentQuestion
-      );
+      console.error("当前题目数据无效:", currentIndex, currentQuestion);
       wx.showModal({
         title: "题目数据异常",
         content: `第 ${currentIndex + 1} 题数据异常，请重新编译小程序`,
@@ -161,6 +165,14 @@ Page({
     const { value } = e.currentTarget.dataset;
     const { currentQuestion, currentIndex, answers, questions, totalCount } =
       this.data;
+
+    // 轻触反馈，避免失败影响主流程
+    if (wx && wx.vibrateShort) {
+      wx.vibrateShort({
+        type: "light",
+        fail: () => {},
+      });
+    }
 
     // 防御：检查 currentQuestion 是否存在
     if (!currentQuestion || !currentQuestion.id) {

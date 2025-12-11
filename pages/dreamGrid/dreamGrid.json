@@ -1,8 +1,9 @@
 {
-  "navigationBarTitleText": "人生梦想九宫格",
+  "navigationStyle": "custom",
   "navigationBarBackgroundColor": "#F7F7FB",
   "navigationBarTextStyle": "black",
   "backgroundColor": "#F7F7FB",
-  "usingComponents": {}
+  "usingComponents": {
+    "brand-navbar": "/components/brand-navbar/brand-navbar"
+  }
 }
-

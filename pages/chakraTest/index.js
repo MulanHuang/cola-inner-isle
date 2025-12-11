@@ -3,6 +3,7 @@ const { CHAKRA_QUESTIONS, OPTION_LABELS } = require("./data/questions.js");
 
 Page({
   data: {
+    navBarHeight: 0, // 导航栏高度
     questions: [],
     currentIndex: 0,
     currentQuestion: {},
@@ -11,6 +12,13 @@ Page({
     selectedAnswer: null,
     optionLabels: OPTION_LABELS,
     progress: 0,
+  },
+
+  // 导航栏准备完成
+  onNavReady(e) {
+    this.setData({
+      navBarHeight: e.detail.navBarHeight || 0,
+    });
   },
 
   onLoad(options) {
@@ -74,6 +82,8 @@ Page({
   // 选择选项
   selectOption(e) {
     const value = e.currentTarget.dataset.value;
+    // 轻微震动反馈
+    this.triggerHaptic();
     this.setData({
       selectedAnswer: value,
     });
@@ -86,6 +96,12 @@ Page({
       }
       // 如果是最后一题，不自动提交，让用户点击"查看结果"按钮
     }, 300);
+  },
+
+  triggerHaptic() {
+    if (wx.vibrateShort) {
+      wx.vibrateShort({ type: "light" });
+    }
   },
 
   // 下一题

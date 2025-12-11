@@ -1,5 +1,6 @@
 /* pages/chakraTest/index.wxss */
 .chakra-test-container {
+  background: linear-gradient(180deg, #f8f3ea 0%, #fdfbf7 45%, #f8f3ea 100%);
   padding-bottom: 40rpx;
 }
 
@@ -7,7 +8,7 @@
 .header {
   position: relative;
   text-align: center;
-  padding: 40rpx 20rpx 30rpx;
+  padding: 46rpx 24rpx 36rpx;
 }
 
 .header-icon {
@@ -29,13 +30,13 @@
 .header-title {
   font-size: 48rpx;
   font-weight: 600;
-  color: #333333;
+  color: #1f1a12;
   margin-bottom: 12rpx;
 }
 
 .header-subtitle {
   font-size: 26rpx;
-  color: #999999;
+  color: #736550;
 }
 
 .header-action {
@@ -45,15 +46,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12rpx 16rpx;
-  background: rgba(139, 115, 85, 0.08);
-  border-radius: 12rpx;
-  transition: all 0.3s;
+  padding: 14rpx 18rpx;
+  background: rgba(154, 123, 82, 0.08);
+  border: 2rpx solid rgba(154, 123, 82, 0.15);
+  box-shadow: 0 8rpx 20rpx rgba(26, 16, 4, 0.08);
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
 }
 
 .header-action:active {
   transform: scale(0.95);
-  background: rgba(139, 115, 85, 0.15);
+  background: rgba(154, 123, 82, 0.16);
 }
 
 .action-icon {
@@ -63,18 +66,18 @@
 
 .action-text {
   font-size: 20rpx;
-  color: #8b7355;
+  color: #7a6248;
   font-weight: 500;
 }
 
 /* 进度条 */
 .progress-section {
-  padding: 0 40rpx 30rpx;
+  padding: 0 40rpx 34rpx;
 }
 
 .progress-bar {
   height: 8rpx;
-  background: rgba(139, 115, 85, 0.1);
+  background: rgba(122, 98, 72, 0.14);
   border-radius: 4rpx;
   overflow: hidden;
   margin-bottom: 12rpx;
@@ -82,7 +85,17 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #b8956a 0%, #8b7355 100%);
+  /* 彩虹渐变 - 呼应七脉轮颜色 */
+  background: linear-gradient(
+    90deg,
+    #e53935 0%,
+    /* 海底轮-红 */ #ff6f00 16%,
+    /* 腹轮-橙 */ #fdd835 32%,
+    /* 太阳轮-黄 */ #43a047 48%,
+    /* 心轮-绿 */ #1e88e5 64%,
+    /* 喉轮-蓝 */ #5e35b1 80%,
+    /* 眉心轮-靛 */ #9c27b0 100% /* 顶轮-紫 */
+  );
   border-radius: 4rpx;
   transition: width 0.3s ease;
 }
@@ -90,7 +103,7 @@
 .progress-text {
   text-align: center;
   font-size: 24rpx;
-  color: #8b7355;
+  color: #5e4a32;
   font-weight: 500;
 }
 
@@ -98,13 +111,15 @@
 .question-card {
   margin: 0 20rpx 30rpx;
   padding: 40rpx 30rpx;
-  background: linear-gradient(135deg, #fff9f0 0%, #ffffff 100%);
+  background: #ffffff;
+  border: 2rpx solid #efe7db;
+  box-shadow: 0 10rpx 28rpx rgba(26, 16, 4, 0.06);
 }
 
 .question-number {
   display: inline-block;
   padding: 8rpx 20rpx;
-  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  background: linear-gradient(135deg, #9a7b52 0%, #6f5840 100%);
   color: #ffffff;
   border-radius: 20rpx;
   font-size: 24rpx;
@@ -114,7 +129,7 @@
 .question-text {
   font-size: 32rpx;
   line-height: 1.8;
-  color: #333333;
+  color: #2b2216;
   margin-bottom: 40rpx;
   font-weight: 500;
 }
@@ -130,22 +145,29 @@
   display: flex;
   align-items: center;
   padding: 24rpx 28rpx;
-  background: #ffffff;
-  border: 2rpx solid rgba(139, 115, 85, 0.15);
+  background: #fffdf9;
+  border: 2rpx solid rgba(122, 98, 72, 0.16);
   border-radius: 16rpx;
   transition: all 0.3s;
 }
 
+.option-item-hover {
+  transform: translateY(-2rpx) scale(0.995);
+  box-shadow: 0 10rpx 22rpx rgba(26, 16, 4, 0.12);
+  border-color: rgba(122, 98, 72, 0.36);
+}
+
 .option-item.selected {
-  background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
-  border-color: #b8956a;
-  box-shadow: 0 4rpx 12rpx rgba(184, 149, 106, 0.2);
+  /* 柔和绿紫渐变 - 与结果页风格呼应 */
+  background: linear-gradient(135deg, #eef7f2 0%, #f4eefc 100%);
+  border-color: #7ac6a4;
+  box-shadow: 0 6rpx 18rpx rgba(122, 198, 164, 0.26);
 }
 
 .option-radio {
   width: 40rpx;
   height: 40rpx;
-  border: 3rpx solid rgba(139, 115, 85, 0.3);
+  border: 3rpx solid rgba(122, 98, 72, 0.35);
   border-radius: 50%;
   margin-right: 20rpx;
   display: flex;
@@ -156,24 +178,24 @@
 }
 
 .option-item.selected .option-radio {
-  border-color: #b8956a;
+  border-color: #66bb6a;
 }
 
 .option-radio-inner {
   width: 20rpx;
   height: 20rpx;
-  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  background: linear-gradient(135deg, #9a7b52 0%, #6f5840 100%);
   border-radius: 50%;
 }
 
 .option-label {
   font-size: 28rpx;
-  color: #333333;
+  color: #2b2216;
   flex: 1;
 }
 
 .option-item.selected .option-label {
-  color: #8b7355;
+  color: #2a7a4a;
   font-weight: 500;
 }
 
@@ -196,16 +218,16 @@
 
 .btn-secondary {
   background: #ffffff;
-  color: #8b7355;
-  border: 2rpx solid rgba(139, 115, 85, 0.3);
-  box-shadow: 0 4rpx 12rpx rgba(139, 115, 85, 0.08);
+  color: #6f5840;
+  border: 2rpx solid rgba(122, 98, 72, 0.35);
+  box-shadow: 0 4rpx 12rpx rgba(26, 16, 4, 0.08);
 }
 
 .btn-primary,
 .btn-submit {
-  background: linear-gradient(135deg, #b8956a 0%, #8b7355 100%);
+  background: linear-gradient(135deg, #9a7b52 0%, #6f5840 100%);
   color: #ffffff;
-  box-shadow: 0 8rpx 16rpx rgba(139, 115, 85, 0.25);
+  box-shadow: 0 8rpx 18rpx rgba(26, 16, 4, 0.18);
   font-weight: 600;
 }
 
@@ -220,8 +242,8 @@
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #ff9a8b 0%, #ff6b9d 100%);
-  box-shadow: 0 8rpx 16rpx rgba(255, 107, 157, 0.35);
+  background: linear-gradient(135deg, #8d7bff 0%, #6a74ff 100%);
+  box-shadow: 0 10rpx 20rpx rgba(104, 118, 255, 0.28);
 }
 
 button:active {
@@ -232,7 +254,7 @@ button:active {
 .hint-text {
   text-align: center;
   font-size: 24rpx;
-  color: #999999;
+  color: #6b5a43;
   padding: 0 40rpx;
   line-height: 1.6;
 }

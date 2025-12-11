@@ -128,6 +128,8 @@ Page({
       { id: "other", name: "其他", icon: "🔖" },
     ],
     selectedEmotion: "",
+    selectedEmotionName: "",
+    selectedEmotionIcon: "",
     emotionFeedback: "", // 当前情绪的反馈文案
     energyLevel: 0, // 今日能量指数 (0-5)
     gratitudeItems: ["", "", ""], // 3个感恩事项
@@ -148,6 +150,13 @@ Page({
     successExpandStates: [false, false, false], // 每条成功记录的展开状态
     // 字数限制
     maxTextLength: 100, // 最大字数
+    // 折叠控制
+    showMoreGratitude: false,
+    showMoreSuccess: false,
+    showThirdGratitude: false,
+    showThirdSuccess: false,
+    completionScore: 0,
+    completionTotal: 5,
   },
 
   onLoad() {
@@ -193,11 +202,16 @@ Page({
   // 选择情绪
   selectEmotion(e) {
     const emotionId = e.currentTarget.dataset.id;
+    const emotion =
+      this.data.emotions.find((item) => item.id === emotionId) || {};
     const feedback = this.data.emotionFeedbacks[emotionId] || "";
     this.setData({
       selectedEmotion: emotionId,
       emotionFeedback: feedback,
+      selectedEmotionName: emotion.name || "",
+      selectedEmotionIcon: emotion.icon || "",
     });
+    this.updateCompletion();
   },
 
   // 设置能量指数
@@ -206,6 +220,7 @@ Page({
     this.setData({
       energyLevel: parseInt(level),
     });
+    this.updateCompletion();
   },
 
   // 感恩输入框获得焦点
@@ -286,6 +301,7 @@ Page({
       gratitudeFocusStates,
       gratitudeCursorPositions,
     });
+    this.updateCompletion();
   },
 
   // 输入感恩事项
@@ -304,6 +320,7 @@ Page({
       gratitudeItems,
       gratitudeCursorPositions,
     });
+    this.updateCompletion();
   },
 
   // 成功输入框获得焦点
@@ -384,6 +401,7 @@ Page({
       successFocusStates,
       successCursorPositions,
     });
+    this.updateCompletion();
   },
 
   // 输入成功事项
@@ -402,6 +420,7 @@ Page({
       successItems,
       successCursorPositions,
     });
+    this.updateCompletion();
   },
 
   // 切换感恩记录的展开状态
@@ -412,12 +431,64 @@ Page({
     this.setData({ gratitudeExpandStates });
   },
 
+  // 展开/收起感恩列表
+  toggleGratitudeList() {
+    if (!this.data.showMoreGratitude) {
+      // 展开第二条并聚焦
+      const gratitudeFocusStates = [...this.data.gratitudeFocusStates];
+      gratitudeFocusStates[1] = true;
+      this.setData({
+        showMoreGratitude: true,
+        gratitudeFocusStates,
+        currentFocusedGratitudeIndex: 1,
+      });
+      return;
+    }
+
+    if (!this.data.showThirdGratitude) {
+      // 展开第三条并聚焦
+      const gratitudeFocusStates = [...this.data.gratitudeFocusStates];
+      gratitudeFocusStates[2] = true;
+      this.setData({
+        showThirdGratitude: true,
+        gratitudeFocusStates,
+        currentFocusedGratitudeIndex: 2,
+      });
+      return;
+    }
+  },
+
   // 切换成功记录的展开状态
   toggleSuccessExpand(e) {
     const index = e.currentTarget.dataset.index;
     const successExpandStates = [...this.data.successExpandStates];
     successExpandStates[index] = !successExpandStates[index];
     this.setData({ successExpandStates });
+  },
+
+  // 展开/收起成功列表
+  toggleSuccessList() {
+    if (!this.data.showMoreSuccess) {
+      const successFocusStates = [...this.data.successFocusStates];
+      successFocusStates[1] = true;
+      this.setData({
+        showMoreSuccess: true,
+        successFocusStates,
+        currentFocusedSuccessIndex: 1,
+      });
+      return;
+    }
+
+    if (!this.data.showThirdSuccess) {
+      const successFocusStates = [...this.data.successFocusStates];
+      successFocusStates[2] = true;
+      this.setData({
+        showThirdSuccess: true,
+        successFocusStates,
+        currentFocusedSuccessIndex: 2,
+      });
+      return;
+    }
   },
 
   // 获取字数统计文本
@@ -436,6 +507,20 @@ Page({
     this.setData({
       description: e.detail.value,
     });
+    this.updateCompletion();
+  },
+
+  // 更新完成度徽章
+  updateCompletion() {
+    const { selectedEmotion, energyLevel, gratitudeItems, successItems, description } =
+      this.data;
+    let score = 0;
+    if (selectedEmotion) score += 1;
+    if (energyLevel > 0) score += 1;
+    if (gratitudeItems.some((item) => item && item.trim())) score += 1;
+    if (successItems.some((item) => item && item.trim())) score += 1;
+    if (description && description.trim().length > 0) score += 1;
+    this.setData({ completionScore: score });
   },
 
   // 切换标签（增强版：添加触觉反馈和音效）
@@ -575,6 +660,8 @@ Page({
       setTimeout(() => {
         this.setData({
           selectedEmotion: "",
+          selectedEmotionName: "",
+          selectedEmotionIcon: "",
           emotionFeedback: "",
           energyLevel: 0,
           gratitudeItems: ["", "", ""],
@@ -582,6 +669,11 @@ Page({
           description: "",
           selectedTags: [],
           aiReply: "",
+          showMoreGratitude: false,
+          showMoreSuccess: false,
+          showThirdGratitude: false,
+          showThirdSuccess: false,
+          completionScore: 0,
         });
         // 刷新温暖一句
         this.loadEmotionQuote();

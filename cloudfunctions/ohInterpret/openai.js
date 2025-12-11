@@ -26,7 +26,7 @@ async function callOpenAI({
 
   // ======== OpenAI 接口必需参数 ========
   const config = {
-    model: options.model || "gpt-5-mini",
+    model: options.model || "gpt-5.1", // 默认使用 GPT-5.1
     temperature: options.temperature ?? 0.9,
     // 增加超时时间到 55 秒（微信云函数最大 60 秒）
     timeout: options.timeout || 55000,

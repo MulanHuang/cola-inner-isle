@@ -3,6 +3,7 @@ const db = wx.cloud.database();
 
 Page({
   data: {
+    navBarHeight: 0,
     currentMBTI: "",
     selectedMBTI: "",
     mbtiTypes: [
@@ -45,6 +46,13 @@ Page({
 
   onLoad() {
     this.loadCurrentMBTI();
+  },
+
+  // 导航栏准备完成
+  onNavReady(e) {
+    this.setData({
+      navBarHeight: e.detail.navBarHeight || 0,
+    });
   },
 
   // 加载当前MBTI

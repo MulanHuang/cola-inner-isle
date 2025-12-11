@@ -1,5 +1,7 @@
 // pages/profile/profile.js
 const db = wx.cloud.database();
+const _ = db.command;
+const { getUserProfile } = require("../../utils/userProfile");
 
 Page({
   data: {
@@ -13,9 +15,42 @@ Page({
       meditationCount: 0,
       tarotCount: 0,
     },
+    dailyAffirmation: "今天你很棒了。",
+    // 根据能量的肯定语映射
+    affirmationsByEnergy: {
+      high: [
+        "你今天能量满满，继续发光吧 ✨",
+        "感受到你的活力，真棒！🌟",
+        "保持这份热情，你很闪耀 💫",
+      ],
+      medium: [
+        "今天平稳地前进着，很棒 🌿",
+        "保持节奏，你做得很好 🌸",
+        "一步一步，稳稳地走 🍀",
+      ],
+      low: [
+        "累了就休息，你值得被温柔对待 🌙",
+        "慢慢来，没关系的 🫂",
+        "给自己一点时间，你已经很努力了 💝",
+      ],
+      default: [
+        "今天你很棒了。",
+        "你的存在本身就是一种力量 💖",
+        "允许自己慢下来，感受此刻 🌿",
+        "每一天都是重新开始的机会 ✨",
+        "你比想象中更勇敢、更坚强 🌟",
+      ],
+    },
+    // 周签到相关数据
+    weekDays: [], // 本周一到周日的签到状态
+    weekCheckinCount: 0, // 本周签到天数
+    todayChecked: false, // 今天是否已签到
+    checkinLoading: false, // 签到加载状态
+    totalCheckinDays: 0, // 累计签到天数
     statusBarHeight: 0,
     navBarHeight: 0,
     tarotCollection: "tarotDraws",
+    userZodiac: null, // 用户星座信息
   },
 
   onLoad() {
@@ -23,6 +58,10 @@ Page({
     this.loadUserFromCache();
     this.loadUserInfo();
     this.loadStats();
+    this.loadWeekCheckinData();
+    this.loadTotalCheckinDays();
+    this.loadUserZodiac();
+    this.loadDailyAffirmation();
   },
 
   // 页面显示时：高亮“我的”tab + 刷新信息与统计
@@ -32,6 +71,10 @@ Page({
     }
     this.loadUserInfo();
     this.loadStats();
+    this.loadWeekCheckinData();
+    this.loadTotalCheckinDays();
+    this.loadUserZodiac();
+    this.loadDailyAffirmation();
   },
 
   // 优先用本地缓存填充昵称，避免刷新时闪动
@@ -55,6 +98,53 @@ Page({
       statusBarHeight,
       navBarHeight,
     });
+  },
+
+  // 加载用户星座信息
+  loadUserZodiac() {
+    const profile = getUserProfile();
+    if (profile.zodiac) {
+      this.setData({ userZodiac: profile.zodiac });
+    } else {
+      this.setData({ userZodiac: null });
+    }
+  },
+
+  // 根据用户最近情绪记录的能量状态，动态生成肯定语
+  async loadDailyAffirmation() {
+    try {
+      const res = await db
+        .collection("emotions")
+        .where({ _openid: "{openid}" })
+        .orderBy("createTime", "desc")
+        .limit(1)
+        .get();
+
+      let affirmation = "";
+      if (res.data && res.data.length > 0) {
+        const record = res.data[0];
+        const energyLevel = record.energyLevel || 0;
+
+        let candidates;
+        if (energyLevel >= 4) {
+          candidates = this.data.affirmationsByEnergy.high;
+        } else if (energyLevel >= 2) {
+          candidates = this.data.affirmationsByEnergy.medium;
+        } else {
+          candidates = this.data.affirmationsByEnergy.low;
+        }
+        affirmation = candidates[Math.floor(Math.random() * candidates.length)];
+      } else {
+        const defaults = this.data.affirmationsByEnergy.default;
+        affirmation = defaults[Math.floor(Math.random() * defaults.length)];
+      }
+      this.setData({ dailyAffirmation: affirmation });
+    } catch (err) {
+      console.warn("[profile] 加载肯定语失败", err);
+      const defaults = this.data.affirmationsByEnergy.default;
+      const affirmation = defaults[Math.floor(Math.random() * defaults.length)];
+      this.setData({ dailyAffirmation: affirmation });
+    }
   },
 
   // 加载用户信息
@@ -205,7 +295,396 @@ Page({
       }
     }
 
-    this.setData({ stats });
+    this.setData({
+      stats,
+      // 以总冥想次数兜底展示连续天数，后续可接入真实 streak 数据
+      streakDays: stats.meditationCount || 0,
+    });
+  },
+
+  // ==================== 周签到功能 ====================
+
+  /**
+   * 获取本周一到周日的日期数组
+   * @returns {Array} weekDays - 包含 label, date, checked, isToday, isPast 的数组
+   */
+  getThisWeekDays() {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0-6, 周日为0
+    // 计算本周一的偏移量
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + mondayOffset);
+    monday.setHours(0, 0, 0, 0);
+
+    const weekDays = [];
+    const labels = ["一", "二", "三", "四", "五", "六", "日"];
+
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + i);
+      const dateStr = this.formatDate(date);
+      const todayStr = this.formatDate(today);
+
+      weekDays.push({
+        label: labels[i],
+        date: dateStr, // YYYY-MM-DD
+        checked: false,
+        isToday: dateStr === todayStr,
+        isPast: date < today && dateStr !== todayStr,
+      });
+    }
+    return weekDays;
+  },
+
+  /**
+   * 格式化日期为 YYYY-MM-DD
+   */
+  formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  },
+
+  /**
+   * 获取本周一的日期字符串
+   */
+  getWeekStart(date) {
+    const d = new Date(date);
+    const dayOfWeek = d.getDay();
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    d.setDate(d.getDate() + mondayOffset);
+    return this.formatDate(d);
+  },
+
+  /**
+   * 加载本周签到数据
+   */
+  async loadWeekCheckinData() {
+    try {
+      // 1. 获取本周日期
+      const weekDays = this.getThisWeekDays();
+      const weekStart = weekDays[0].date;
+      const weekEnd = weekDays[6].date;
+      const todayStr = this.formatDate(new Date());
+
+      // 2. 查询本周的签到记录
+      const checkins = await db
+        .collection("checkins")
+        .where({
+          _openid: "{openid}",
+          date: _.gte(weekStart).and(_.lte(weekEnd)),
+        })
+        .get();
+
+      // 3. 标记哪些天已签到
+      const checkedDates = new Set(checkins.data.map((c) => c.date));
+
+      weekDays.forEach((day) => {
+        day.checked = checkedDates.has(day.date);
+      });
+
+      // 4. 计算本周签到天数
+      const weekCheckinCount = checkedDates.size;
+      const todayChecked = checkedDates.has(todayStr);
+
+      this.setData({
+        weekDays,
+        weekCheckinCount,
+        todayChecked,
+      });
+    } catch (err) {
+      // 集合不存在时，初始化空数据
+      if (err && err.errCode === -502005) {
+        console.warn("[profile] checkins 集合不存在，请在云开发控制台创建");
+      } else {
+        console.error("[profile] 加载签到数据失败", err);
+      }
+
+      // 仍然初始化本周日期（未签到状态）
+      const weekDays = this.getThisWeekDays();
+      this.setData({
+        weekDays,
+        weekCheckinCount: 0,
+        todayChecked: false,
+      });
+    }
+  },
+
+  /**
+   * 加载累计签到天数
+   */
+  async loadTotalCheckinDays() {
+    try {
+      const countRes = await db
+        .collection("checkins")
+        .where({ _openid: "{openid}" })
+        .count();
+
+      this.setData({
+        totalCheckinDays: countRes.total || 0,
+      });
+    } catch (err) {
+      console.warn("[profile] 获取累计签到天数失败", err);
+      this.setData({ totalCheckinDays: 0 });
+    }
+  },
+
+  /**
+   * 签到操作
+   */
+  async handleCheckinTap() {
+    // 防止重复点击
+    if (this.data.checkinLoading || this.data.todayChecked) {
+      if (this.data.todayChecked) {
+        wx.showToast({ title: "今天已签到啦", icon: "none" });
+      }
+      return;
+    }
+
+    this.setData({ checkinLoading: true });
+
+    try {
+      const today = this.formatDate(new Date());
+      const weekStart = this.getWeekStart(new Date());
+
+      // 检查今天是否已签到（双重检查）
+      const existRes = await db
+        .collection("checkins")
+        .where({ _openid: "{openid}", date: today })
+        .count();
+
+      if (existRes.total > 0) {
+        wx.showToast({ title: "今天已签到啦", icon: "none" });
+        this.setData({ todayChecked: true, checkinLoading: false });
+        return;
+      }
+
+      // 写入签到记录
+      await db.collection("checkins").add({
+        data: {
+          date: today,
+          weekStart: weekStart,
+          createTime: db.serverDate(),
+        },
+      });
+
+      // 更新本地状态
+      const weekDays = [...this.data.weekDays];
+      const todayIndex = weekDays.findIndex((d) => d.isToday);
+      if (todayIndex !== -1) {
+        weekDays[todayIndex].checked = true;
+      }
+
+      this.setData({
+        weekDays,
+        weekCheckinCount: this.data.weekCheckinCount + 1,
+        todayChecked: true,
+        checkinLoading: false,
+        totalCheckinDays: this.data.totalCheckinDays + 1, // 累计签到天数+1
+      });
+
+      wx.showToast({ title: "签到成功！", icon: "success" });
+    } catch (err) {
+      console.error("[profile] 签到失败", err);
+
+      // 集合不存在的特殊提示
+      if (err && err.errCode === -502005) {
+        wx.showModal({
+          title: "请创建签到集合",
+          content:
+            '签到功能需要在云开发控制台创建 "checkins" 集合，并设置权限为"仅创建者可读写"。',
+          showCancel: false,
+          confirmText: "我知道了",
+        });
+      } else {
+        wx.showToast({ title: "签到失败，请重试", icon: "none" });
+      }
+
+      this.setData({ checkinLoading: false });
+    }
+  },
+
+  // ==================== 头像昵称填写能力（新API） ====================
+
+  /**
+   * 选择头像回调（微信新API：open-type="chooseAvatar"）
+   * 用户从相册、拍照或微信头像中选择后触发
+   */
+  async onChooseAvatar(e) {
+    const { avatarUrl } = e.detail;
+    if (!avatarUrl) return;
+
+    // 先更新本地显示（提升体验）
+    this.updateLocalUserInfo({
+      ...this.data.userInfo,
+      avatarUrl,
+    });
+
+    // 上传到云存储并保存到数据库
+    await this.uploadAndSaveAvatar(avatarUrl);
+  },
+
+  /**
+   * 上传头像到云存储并保存到数据库
+   */
+  async uploadAndSaveAvatar(tempFilePath) {
+    wx.showLoading({ title: "保存中...", mask: true });
+
+    try {
+      let avatarUrl = tempFilePath;
+
+      // 尝试上传到云存储
+      try {
+        const cloudPath = `avatars/${Date.now()}-${Math.floor(
+          Math.random() * 1e6
+        )}.png`;
+        const uploadRes = await wx.cloud.uploadFile({
+          cloudPath,
+          filePath: tempFilePath,
+        });
+        avatarUrl = uploadRes.fileID || tempFilePath;
+      } catch (err) {
+        console.warn("[profile] 云上传失败，使用临时路径", err);
+      }
+
+      // 保存到数据库
+      const { res: userRes, collectionName } =
+        await this.getUserDocWithFallback();
+
+      if (userRes.data && userRes.data.length > 0) {
+        await db
+          .collection(collectionName)
+          .doc(userRes.data[0]._id)
+          .update({
+            data: {
+              avatarUrl,
+              updateTime: db.serverDate(),
+            },
+          });
+      } else {
+        await db.collection(collectionName).add({
+          data: {
+            name: this.data.userInfo.name || "",
+            avatarUrl,
+            createTime: db.serverDate(),
+            updateTime: db.serverDate(),
+          },
+        });
+      }
+
+      // 更新本地（确保使用云存储URL）
+      this.updateLocalUserInfo({
+        ...this.data.userInfo,
+        avatarUrl,
+      });
+
+      wx.showToast({ title: "头像已更新", icon: "success" });
+    } catch (err) {
+      console.error("[profile] 保存头像失败", err);
+      wx.showToast({ title: "保存失败，请重试", icon: "none" });
+    } finally {
+      wx.hideLoading();
+    }
+  },
+
+  /**
+   * 昵称输入框失焦时保存（微信新API：type="nickname"）
+   */
+  onNicknameBlur(e) {
+    const name = (e.detail.value || "").trim();
+    const currentName = (this.data.userInfo.name || "").trim();
+
+    // 只有昵称有变化且不为空时才保存
+    if (name && name !== currentName) {
+      this.saveNickname(name);
+    }
+  },
+
+  /**
+   * 昵称输入时实时更新本地显示（可选）
+   */
+  onNicknameInput(e) {
+    const name = e.detail.value || "";
+    // 仅更新本地显示，不保存到数据库
+    this.setData({
+      "userInfo.name": name,
+    });
+  },
+
+  // [已废弃] 旧版上传头像方法，保留作为备用
+  // 新版请使用 onChooseAvatar + uploadAndSaveAvatar
+  async uploadAvatar() {
+    try {
+      const chooseRes = await wx.chooseImage({
+        count: 1,
+        sizeType: ["compressed"],
+      });
+      const filePath = chooseRes.tempFilePaths?.[0];
+      if (!filePath) return;
+
+      wx.showLoading({ title: "上传中..." });
+      let avatarUrl = filePath;
+
+      try {
+        const uploadRes = await wx.cloud.uploadFile({
+          cloudPath: `avatars/${Date.now()}-${Math.floor(
+            Math.random() * 1e6
+          )}.png`,
+          filePath,
+        });
+        avatarUrl = uploadRes.fileID || filePath;
+      } catch (err) {
+        console.warn("云上传失败，使用本地临时路径", err);
+      }
+
+      try {
+        const { res: userRes, collectionName } =
+          await this.getUserDocWithFallback();
+        if (userRes.data && userRes.data.length > 0) {
+          await db
+            .collection(collectionName)
+            .doc(userRes.data[0]._id)
+            .update({
+              data: {
+                avatarUrl,
+                updateTime: db.serverDate(),
+              },
+            });
+          this.updateLocalUserInfo({ ...userRes.data[0], avatarUrl });
+        } else {
+          const addRes = await db.collection(collectionName).add({
+            data: {
+              name: this.data.userInfo.name || "",
+              avatarUrl,
+              createTime: db.serverDate(),
+              updateTime: db.serverDate(),
+            },
+          });
+          this.updateLocalUserInfo({
+            _id: addRes._id,
+            name: this.data.userInfo.name,
+            avatarUrl,
+          });
+        }
+      } catch (err) {
+        console.error("保存头像失败", err);
+        this.updateLocalUserInfo({
+          ...this.data.userInfo,
+          avatarUrl,
+        });
+      } finally {
+        wx.hideLoading();
+      }
+
+      wx.showToast({ title: "头像已更新", icon: "success" });
+    } catch (err) {
+      if (err && err.errMsg && err.errMsg.includes("cancel")) return;
+      console.error("选择头像失败", err);
+      wx.showToast({ title: "更换失败，请重试", icon: "none" });
+    }
   },
 
   // 编辑个人资料
@@ -328,13 +807,6 @@ Page({
     return false;
   },
 
-  // 跳转到情绪历史
-  goToEmotionHistory() {
-    wx.navigateTo({
-      url: "/pages/emotion/history/history",
-    });
-  },
-
   // 跳转到冥想记录
   goToMeditationHistory() {
     wx.navigateTo({
@@ -370,12 +842,40 @@ Page({
     });
   },
 
+  // 跳转到情绪记录
+  goToEmotion() {
+    wx.navigateTo({
+      url: "/pages/emotion/emotion",
+    });
+  },
+
+  // 跳转到情绪历史
+  goToEmotionHistory() {
+    wx.navigateTo({
+      url: "/pages/emotion/history/history",
+      fail: (err) => {
+        console.error("打开情绪历史失败", err);
+        wx.showToast({
+          title: "打开失败",
+          icon: "none",
+        });
+      },
+    });
+  },
+
+  // 跳转到个人档案
+  goToProfileInfo() {
+    wx.navigateTo({
+      url: "/pages/profile/profile-info/profile-info",
+    });
+  },
+
   // 显示关于
   showAbout() {
     wx.showModal({
       title: "关于 可乐心岛",
       content:
-        "可乐心岛（Cole Inner Isle）是你的心灵陪伴者，帮助你探索内心、疗愈情绪、找到内在的平静与力量。\n\n版本：1.0.0\n\n注意：本应用不提供医疗诊断，如有严重心理问题请寻求专业帮助。",
+        "可乐心岛（Cola Inner Isle）是你的心灵陪伴者，帮助你探索内心、疗愈情绪、找到内在的平静与力量。\n\n版本：1.0.0\n\n注意：本应用不提供医疗诊断，如有严重心理问题请寻求专业帮助。",
       showCancel: false,
       confirmText: "知道了",
     });
