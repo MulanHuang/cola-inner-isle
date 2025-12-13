@@ -258,6 +258,9 @@
         <image class="composer-send-icon" src="/images/icons/send-arrow.svg" mode="aspectFit" />
       </view>
     </view>
+
+    <!-- AI 生成内容提示 -->
+    <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
   </view>
 </view>
 

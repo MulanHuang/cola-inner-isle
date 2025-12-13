@@ -1,7 +1,7 @@
 // cloudfunctions/common/index.js
 // ============================================================
-// 小程序云函数统一调用 Vercel 代理（HTTPS）
-// 地址：https://vercel-openai-proxy-lemon.vercel.app/api/openai
+// 小程序云函数统一调用阿里云代理（HTTPS）
+// 地址：https://api.cola.center/api/openai
 // 所有 AI 功能共用
 // ============================================================
 
@@ -47,7 +47,7 @@ async function callOpenAI({
   });
 
   const requestOptions = {
-    hostname: "vercel-openai-proxy-lemon.vercel.app",
+    hostname: "api.cola.center",
     port: 443,
     path: "/api/openai",
     method: "POST",
@@ -58,9 +58,7 @@ async function callOpenAI({
     timeout: config.timeout,
   };
 
-  console.log(
-    "🌐 请求地址：https://vercel-openai-proxy-lemon.vercel.app/api/openai"
-  );
+  console.log("🌐 请求地址：https://api.cola.center/api/openai");
   console.log("📦 请求大小:", Buffer.byteLength(postData));
 
   return new Promise((resolve, reject) => {

@@ -10,6 +10,8 @@ const db = wx.cloud.database();
 // ✅ OH卡解读改为前端直连 Vercel 代理（流式输出）
 const { callAIStream } = require("../../utils/aiStream.js");
 const { buildProfileContext } = require("../../utils/userProfile.js");
+// 🚀 云存储临时 URL 智能缓存工具
+const { getTempUrlWithCache } = require("../../utils/cloudUrlCache.js");
 
 // 解析 AI 返回的六段式内容
 function parseAIResponse(content) {
@@ -153,6 +155,35 @@ Page({
     this.setNavBarHeight();
     // 初始化时重置状态（不保留输入内容）
     this.resetState(false);
+    // 🖼️ 将卡背图片 cloud:// 转换为临时 URL（解决体验版图片不显示问题）
+    this.convertBackImageUrl();
+  },
+
+  // 🖼️ 将 OH 卡背面图片的 cloud:// 路径转换为临时 URL（使用智能缓存）
+  async convertBackImageUrl() {
+    const cloudUrl = this.data.backImage;
+    if (!cloudUrl || !cloudUrl.startsWith("cloud://")) return;
+
+    // 先尝试从 App 预加载缓存获取
+    const app = getApp();
+    const preloaded = app.globalData.preloadedImages?.[cloudUrl];
+    if (preloaded) {
+      console.log("[oh] ✅ 使用App预加载的卡背URL");
+      this.setData({ backImage: preloaded });
+      return;
+    }
+
+    try {
+      console.log("[oh] 🖼️ 转换卡背临时URL...");
+      // 使用智能缓存工具（自动缓存1.5小时）
+      const tempUrl = await getTempUrlWithCache(cloudUrl);
+      if (tempUrl && tempUrl !== cloudUrl) {
+        this.setData({ backImage: tempUrl });
+        console.log("[oh] ✅ 卡背临时URL转换成功");
+      }
+    } catch (err) {
+      console.warn("[oh] ⚠️ 卡背URL转换失败:", err.message);
+    }
   },
 
   onUnload() {

@@ -6,6 +6,12 @@ const ENV_MAP = {
   develop: "cloud1-5gc5jltwbcbef586",
 };
 
+// 🚀 云存储临时 URL 智能缓存工具
+const {
+  getTempUrlsWithCache,
+  cleanExpiredCache,
+} = require("./utils/cloudUrlCache.js");
+
 function getCloudEnvId() {
   try {
     const info = wx.getAccountInfoSync?.();
@@ -55,13 +61,13 @@ App({
   },
 
   /**
-   * 🚀 预加载关键图片
+   * 🚀 预加载关键图片（使用智能缓存）
    * 在 App 启动时预加载塔罗牌和 OH 卡的背面图片，
-   * 确保用户进入相关页面时能立即看到卡背，无需等待加载
+   * 转换为临时 URL 并缓存，确保用户进入相关页面时能立即看到卡背
    */
-  preloadCriticalImages() {
+  async preloadCriticalImages() {
     const criticalImages = [
-      // 塔罗牌背面（.webp 格式，tarot 页面使用）
+      // 塔罗牌背面（.webp 格式，tarot 页面和 home 页面使用）
       "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsBack/Back 1.webp",
       // OH 卡背面
       "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/ohCards-back.webp",
@@ -69,21 +75,36 @@ App({
 
     console.log("[App] 🚀 开始预加载关键图片...");
 
-    criticalImages.forEach((url) => {
-      wx.getImageInfo({
-        src: url,
-        success: () => {
-          console.log("[App] ✅ 预加载成功:", url.split("/").pop());
-        },
-        fail: (err) => {
-          console.warn(
-            "[App] ⚠️ 预加载失败:",
-            url.split("/").pop(),
-            err.errMsg
-          );
-        },
+    try {
+      // 使用智能缓存工具获取临时 URL（会自动缓存）
+      const urlMap = await getTempUrlsWithCache(criticalImages);
+
+      // 保存到 globalData，供各页面直接使用
+      this.globalData.preloadedImages = urlMap;
+
+      // 预热图片缓存（让微信客户端提前下载）
+      Object.values(urlMap).forEach((tempUrl) => {
+        wx.getImageInfo({
+          src: tempUrl,
+          success: () =>
+            console.log(
+              "[App] ✅ 图片预热成功:",
+              tempUrl.split("?")[0].split("/").pop()
+            ),
+          fail: () => {}, // 静默处理，不影响主流程
+        });
       });
-    });
+
+      console.log(
+        "[App] ✅ 关键图片预加载完成，数量:",
+        Object.keys(urlMap).length
+      );
+
+      // 清理过期缓存（异步执行，不阻塞）
+      cleanExpiredCache();
+    } catch (err) {
+      console.warn("[App] ⚠️ 预加载关键图片失败:", err.message);
+    }
   },
 
   // 获取用户信息
@@ -153,5 +174,6 @@ App({
     userInfo: null,
     cloudEnvId: "", // 云开发环境 ID
     loginInfo: null, // 登录信息
+    preloadedImages: {}, // 🚀 预加载的图片临时 URL 缓存
   },
 });

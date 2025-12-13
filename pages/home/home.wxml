@@ -28,7 +28,7 @@
     </view>
     <view class="tarot-content">
       <view wx:if="{{!todayTarot}}" class="tarot-undrawn">
-        <image class="tarot-card-back" src="cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsBack/Back 1.webp" mode="aspectFit"></image>
+        <image class="tarot-card-back" src="{{tarotCardBackUrl}}" mode="aspectFit"></image>
         <view class="tarot-hint">点击抽取今日塔罗牌</view>
       </view>
       <view wx:else class="tarot-drawn">

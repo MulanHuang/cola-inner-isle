@@ -887,6 +887,15 @@ page {
   height: 30rpx;
 }
 
+/* AI 生成内容提示 */
+.ai-disclaimer {
+  text-align: center;
+  font-size: 20rpx;
+  color: #b3a699;
+  padding: 4rpx 0 8rpx;
+  line-height: 1.4;
+}
+
 /* ===================== */
 /*      欢迎界面布局      */
 /* ===================== */

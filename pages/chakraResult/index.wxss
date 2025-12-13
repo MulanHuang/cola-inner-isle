@@ -240,6 +240,15 @@
   box-shadow: 0 8rpx 24rpx rgba(76, 175, 80, 0.3);
 }
 
+/* AI 生成内容提示 */
+.ai-disclaimer {
+  text-align: center;
+  font-size: 20rpx;
+  color: #9c9c9c;
+  margin-top: 20rpx;
+  line-height: 1.4;
+}
+
 /* AI 加载中 */
 .ai-loading {
   padding: 60rpx 30rpx;

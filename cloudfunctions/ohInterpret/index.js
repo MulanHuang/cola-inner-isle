@@ -4,7 +4,7 @@
 // 风格：心理学洞察 + 行动力教练
 // ============================================================
 const cloud = require("wx-server-sdk");
-// ✅ 统一通过公用 OpenAI 客户端，经由 Vercel 代理 https://vercel-openai-proxy-lemon.vercel.app/api/openai 调用
+// ✅ 统一通过公用 OpenAI 客户端，经由阿里云代理 https://api.cola.center/api/openai 调用
 const {
   callOpenAI,
   safeAIResponse,

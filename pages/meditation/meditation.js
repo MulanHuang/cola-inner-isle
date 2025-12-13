@@ -1,6 +1,9 @@
 // pages/meditation/meditation.js
 const db = wx.cloud.database();
 
+// 🚀 云存储临时 URL 智能缓存工具
+const { getTempUrlsWithCache } = require("../../utils/cloudUrlCache.js");
+
 // ============ 智能播放量系统配置 ============
 const PLAY_CONFIG = {
   // 内容热门度分类配置
@@ -105,7 +108,10 @@ Page({
       const res = await query.orderBy("order", "asc").get();
 
       // 应用智能播放量系统
-      const processedList = this.applySmartPlaySystem(res.data || []);
+      let processedList = this.applySmartPlaySystem(res.data || []);
+
+      // 🖼️ 将封面图片 cloud:// 转换为临时 URL（解决体验版图片不显示问题）
+      processedList = await this.convertCoverUrls(processedList);
 
       this.setData({
         audioList: processedList,
@@ -122,6 +128,34 @@ Page({
         title: "加载失败",
         icon: "none",
       });
+    }
+  },
+
+  // 🖼️ 批量将封面图片的 cloud:// 路径转换为临时 URL（使用智能缓存）
+  async convertCoverUrls(audioList) {
+    if (!audioList || audioList.length === 0) return audioList;
+
+    // 提取需要转换的 cloud:// 路径
+    const cloudUrls = audioList
+      .map((a) => a.cover)
+      .filter((url) => url && url.startsWith("cloud://"));
+
+    if (cloudUrls.length === 0) return audioList;
+
+    console.log("[meditation] 🖼️ 转换封面临时URL，数量:", cloudUrls.length);
+
+    try {
+      // 使用智能缓存工具（自动缓存1.5小时，再次访问秒开）
+      const urlMap = await getTempUrlsWithCache(cloudUrls);
+
+      // 替换 audioList 中的 cover
+      return audioList.map((audio) => ({
+        ...audio,
+        cover: urlMap[audio.cover] || audio.cover,
+      }));
+    } catch (err) {
+      console.warn("[meditation] ⚠️ 封面URL转换失败:", err.message);
+      return audioList;
     }
   },
 

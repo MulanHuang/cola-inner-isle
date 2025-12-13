@@ -18,9 +18,21 @@
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.55), transparent 45%),
-    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.4), transparent 40%),
-    radial-gradient(circle at 60% 80%, rgba(255, 255, 255, 0.35), transparent 45%);
+  background: radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 255, 255, 0.55),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(255, 255, 255, 0.4),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 60% 80%,
+      rgba(255, 255, 255, 0.35),
+      transparent 45%
+    );
   filter: blur(12rpx);
   pointer-events: none;
 }
@@ -151,11 +163,19 @@
 }
 
 .emotion-pill {
-  background: linear-gradient(135deg, rgba(255, 235, 227, 0.9), rgba(255, 222, 210, 0.9));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 235, 227, 0.9),
+    rgba(255, 222, 210, 0.9)
+  );
 }
 
 .energy-pill {
-  background: linear-gradient(135deg, rgba(255, 244, 225, 0.9), rgba(255, 237, 205, 0.9));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 244, 225, 0.9),
+    rgba(255, 237, 205, 0.9)
+  );
 }
 
 .badge-pill {
@@ -299,7 +319,12 @@
   right: 12rpx;
   height: 8rpx;
   border-radius: 8rpx;
-  background: linear-gradient(90deg, rgba(255, 154, 139, 0.2), rgba(255, 154, 139, 0.7), rgba(255, 154, 139, 0.2));
+  background: linear-gradient(
+    90deg,
+    rgba(255, 154, 139, 0.2),
+    rgba(255, 154, 139, 0.7),
+    rgba(255, 154, 139, 0.2)
+  );
 }
 
 /* 情绪反馈 */
@@ -569,6 +594,15 @@
   transform: none;
 }
 
+/* AI 生成内容提示 */
+.ai-disclaimer {
+  text-align: center;
+  font-size: 20rpx;
+  color: #9c9c9c;
+  margin-top: 16rpx;
+  line-height: 1.4;
+}
+
 /* AI   */
 .ai-section {
   margin: 32rpx 20rpx 0;
@@ -661,7 +695,12 @@
 .skeleton-line {
   height: 18rpx;
   border-radius: 10rpx;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.35));
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.35)
+  );
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
@@ -972,7 +1011,12 @@
   gap: 16rpx;
   padding: 12rpx 20rpx calc(env(safe-area-inset-bottom, 0rpx) + 12rpx);
   margin-top: 32rpx;
-  background: linear-gradient(180deg, rgba(253, 248, 243, 0) 0%, rgba(253, 248, 243, 0.9) 70%, rgba(253, 248, 243, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(253, 248, 243, 0) 0%,
+    rgba(253, 248, 243, 0.9) 70%,
+    rgba(253, 248, 243, 0.98) 100%
+  );
 }
 
 .action-bar button {
@@ -1022,5 +1066,9 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.5));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0.5)
+  );
 }

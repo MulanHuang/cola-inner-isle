@@ -286,6 +286,7 @@
       <text class="btn-icon">{{aiLoading ? '💭' : '🌙'}}</text>
       <text>{{aiLoading ? '心岛正在倾听…' : '收到一段温柔回声'}}</text>
     </button>
+    <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
   </view>
 
   <!-- 温柔回声内容 -->

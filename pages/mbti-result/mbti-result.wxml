@@ -105,6 +105,7 @@
         <text class="btn-text">开启解读</text>
         <view class="btn-shine"></view>
       </button>
+      <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
     </view>
   </view>
 

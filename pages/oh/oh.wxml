@@ -263,6 +263,7 @@
         </button>
       </view>
       <view class="chat-note">聊天仅作陪伴与启发，不代替专业诊疗</view>
+      <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
     </view>
 
     <!-- 解读结果 -->
@@ -302,6 +303,9 @@
           <view class="result-paragraph" user-select="{{true}}">{{item}}</view>
         </view>
       </view>
+
+      <!-- AI 生成内容提示 -->
+      <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
 
     </view>
 

@@ -173,6 +173,7 @@
     >
       开始洗牌
     </button>
+    <view wx:if="{{phase === 'idle'}}" class="ai-disclaimer">本内容由AI生成，仅供参考</view>
 
   </view> <!-- 未抽牌状态 End -->
 
@@ -244,6 +245,7 @@
       <button class="btn-primary" bindtap="getInterpretation" disabled="{{!question || loading}}">
         {{loading ? '解读中...' : '获取解读'}}
       </button>
+      <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
     </view>
 
     <!-- 小岛解读 -->

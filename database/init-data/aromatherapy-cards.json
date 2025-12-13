@@ -1,0 +1,747 @@
+{
+  "id": 0,
+  "name": "DDR Prime",
+  "nameEN": "DDR Prime",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/DDR Prime.webp"
+}
+{
+  "id": 1,
+  "name": "back",
+  "nameEN": "Back",
+  "theme": "",
+  "keywords": "",
+  "message": "",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/ohCards-back.webp"
+}
+{
+  "id": 2,
+  "name": "丁香",
+  "nameEN": "Clove",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/丁香.webp"
+}
+{
+  "id": 3,
+  "name": "丝柏",
+  "nameEN": "Cypress",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/丝柏.webp"
+}
+{
+  "id": 4,
+  "name": "乳香",
+  "nameEN": "Frankincense",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/乳香.webp"
+}
+{
+  "id": 5,
+  "name": "仕女",
+  "nameEN": "Soft Talk",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/仕女.webp"
+}
+{
+  "id": 6,
+  "name": "佛手柑",
+  "nameEN": "Bergamot",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/佛手柑.webp"
+}
+{
+  "id": 7,
+  "name": "佛手柑薄荷",
+  "nameEN": "Bergamot Mint",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/佛手柑薄荷.webp"
+}
+{
+  "id": 8,
+  "name": "依兰依兰",
+  "nameEN": "Ylang Ylang",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/依兰依兰.webp"
+}
+{
+  "id": 9,
+  "name": "侧柏",
+  "nameEN": "Thuja",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/侧柏.webp"
+}
+{
+  "id": 10,
+  "name": "保卫",
+  "nameEN": "On Guard",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/保卫.webp"
+}
+{
+  "id": 11,
+  "name": "冬青",
+  "nameEN": "Wintergreen",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/冬青.webp"
+}
+{
+  "id": 12,
+  "name": "净化清新",
+  "nameEN": "Purify",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/净化清新.webp"
+}
+{
+  "id": 13,
+  "name": "卡南加",
+  "nameEN": "Cananga",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/卡南加.webp"
+}
+{
+  "id": 14,
+  "name": "古巴香脂",
+  "nameEN": "Copaiba",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/古巴香脂.webp"
+}
+{
+  "id": 15,
+  "name": "圣罗勒",
+  "nameEN": "Holy Basil",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/圣罗勒.webp"
+}
+{
+  "id": 16,
+  "name": "天然防护",
+  "nameEN": "TerraShield",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/天然防护.webp"
+}
+{
+  "id": 17,
+  "name": "天竺葵",
+  "nameEN": "Geranium",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/天竺葵.webp"
+}
+{
+  "id": 18,
+  "name": "姜黄",
+  "nameEN": "Turmeric",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/姜黄.webp"
+}
+{
+  "id": 19,
+  "name": "宽容",
+  "nameEN": "Forgive",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/宽容.webp"
+}
+{
+  "id": 20,
+  "name": "尤加利复方",
+  "nameEN": "Eucalyptus Blend",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/尤加利复方.webp"
+}
+{
+  "id": 21,
+  "name": "山鸡椒",
+  "nameEN": "Litsea",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/山鸡椒.webp"
+}
+{
+  "id": 22,
+  "name": "岩兰草",
+  "nameEN": "Vetiver",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/岩兰草.webp"
+}
+{
+  "id": 23,
+  "name": "平衡情绪",
+  "nameEN": "Balance",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/平衡情绪.webp"
+}
+{
+  "id": 24,
+  "name": "广藿香",
+  "nameEN": "Patchouli",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/广藿香.webp"
+}
+{
+  "id": 25,
+  "name": "德国洋甘菊",
+  "nameEN": "German Chamomile",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/德国洋甘菊.webp"
+}
+{
+  "id": 26,
+  "name": "快乐鼠尾草",
+  "nameEN": "Clary Sage",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/快乐鼠尾草.webp"
+}
+{
+  "id": 27,
+  "name": "扁柏",
+  "nameEN": "Hinoki",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/扁柏.webp"
+}
+{
+  "id": 28,
+  "name": "杜松浆果",
+  "nameEN": "Juniper Berry",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/杜松浆果.webp"
+}
+{
+  "id": 29,
+  "name": "枫香",
+  "nameEN": "Sweetgum",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/枫香.webp"
+}
+{
+  "id": 30,
+  "name": "柑橘清新",
+  "nameEN": "Citrus Bliss",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/柑橘清新.webp"
+}
+{
+  "id": 31,
+  "name": "柚子",
+  "nameEN": "Yuzu",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/柚子.webp"
+}
+{
+  "id": 32,
+  "name": "柠檬",
+  "nameEN": "Lemon",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/柠檬.webp"
+}
+{
+  "id": 33,
+  "name": "柠檬桉",
+  "nameEN": "Lemon Eucalyptus",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/柠檬桉.webp"
+}
+{
+  "id": 34,
+  "name": "柠檬草",
+  "nameEN": "Lemongrass",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/柠檬草.webp"
+}
+{
+  "id": 35,
+  "name": "树兰花",
+  "nameEN": "Champaca",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/树兰花.webp"
+}
+{
+  "id": 36,
+  "name": "桂皮叶",
+  "nameEN": "Cinnamon Leaf",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/桂皮叶.webp"
+}
+{
+  "id": 37,
+  "name": "橘子",
+  "nameEN": "Mandarin",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/橘子.webp"
+}
+{
+  "id": 38,
+  "name": "橙花",
+  "nameEN": "Neroli",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/橙花.webp"
+}
+{
+  "id": 39,
+  "name": "檀香",
+  "nameEN": "Sandalwood",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/檀香.webp"
+}
+{
+  "id": 40,
+  "name": "永久花",
+  "nameEN": "Helichrysum",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/永久花.webp"
+}
+{
+  "id": 41,
+  "name": "没药",
+  "nameEN": "Myrrh",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/没药.webp"
+}
+{
+  "id": 42,
+  "name": "牛至",
+  "nameEN": "Oregano",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/牛至.webp"
+}
+{
+  "id": 43,
+  "name": "玉兰花",
+  "nameEN": "Magnolia",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/玉兰花.webp"
+}
+{
+  "id": 44,
+  "name": "玫瑰",
+  "nameEN": "Rose",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/玫瑰.webp"
+}
+{
+  "id": 45,
+  "name": "玫瑰草",
+  "nameEN": "Palmarosa",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/玫瑰草.webp"
+}
+{
+  "id": 46,
+  "name": "生姜",
+  "nameEN": "Ginger",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/生姜.webp"
+}
+{
+  "id": 47,
+  "name": "百里香",
+  "nameEN": "Thyme",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/百里香.webp"
+}
+{
+  "id": 48,
+  "name": "穗甘松",
+  "nameEN": "Spikenard",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/穗甘松.webp"
+}
+{
+  "id": 49,
+  "name": "红柑橘",
+  "nameEN": "Red Mandarin",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/红柑橘.webp"
+}
+{
+  "id": 50,
+  "name": "绿花白千层",
+  "nameEN": "Niaouli",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/绿花白千层.webp"
+}
+{
+  "id": 51,
+  "name": "绿薄荷",
+  "nameEN": "Spearmint",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/绿薄荷.webp"
+}
+{
+  "id": 52,
+  "name": "罗勒",
+  "nameEN": "Basil",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/罗勒.webp"
+}
+{
+  "id": 53,
+  "name": "罗马洋甘菊",
+  "nameEN": "Roman Chamomile",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/罗马洋甘菊.webp"
+}
+{
+  "id": 54,
+  "name": "肉桂",
+  "nameEN": "Cinnamon Bark",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/肉桂.webp"
+}
+{
+  "id": 55,
+  "name": "自信风采",
+  "nameEN": "Beautiful",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/自信风采.webp"
+}
+{
+  "id": 56,
+  "name": "芫荽",
+  "nameEN": "Coriander",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/芫荽.webp"
+}
+{
+  "id": 57,
+  "name": "芳香调理",
+  "nameEN": "AromaTouch",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/芳香调理.webp"
+}
+{
+  "id": 58,
+  "name": "苦橙叶",
+  "nameEN": "Petitgrain",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/苦橙叶.webp"
+}
+{
+  "id": 59,
+  "name": "茉莉",
+  "nameEN": "Jasmine",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/茉莉.webp"
+}
+{
+  "id": 60,
+  "name": "甜香",
+  "nameEN": "Sweet Aroma",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/甜香.webp"
+}
+{
+  "id": 61,
+  "name": "茶树",
+  "nameEN": "Tea Tree",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/茶树.webp"
+}
+{
+  "id": 62,
+  "name": "简意",
+  "nameEN": "Console",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/简意.webp"
+}
+{
+  "id": 63,
+  "name": "葡萄柚",
+  "nameEN": "Grapefruit",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/葡萄柚.webp"
+}
+{
+  "id": 64,
+  "name": "蓝艾菊",
+  "nameEN": "Blue Tansy",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/蓝艾菊.webp"
+}
+{
+  "id": 65,
+  "name": "薄荷",
+  "nameEN": "Peppermint",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/薄荷.webp"
+}
+{
+  "id": 66,
+  "name": "薰衣草",
+  "nameEN": "Lavender",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/薰衣草.webp"
+}
+{
+  "id": 67,
+  "name": "西伯利亚冷杉",
+  "nameEN": "Siberian Fir",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/西伯利亚冷杉.webp"
+}
+{
+  "id": 68,
+  "name": "西班牙鼠尾草",
+  "nameEN": "Spanish Sage",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/西班牙鼠尾草.webp"
+}
+{
+  "id": 69,
+  "name": "豆蔻",
+  "nameEN": "Cardamom",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/豆蔻.webp"
+}
+{
+  "id": 70,
+  "name": "迷迭香",
+  "nameEN": "Rosemary",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/迷迭香.webp"
+}
+{
+  "id": 71,
+  "name": "道格拉斯冷杉",
+  "nameEN": "Douglas Fir",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/道格拉斯冷杉.webp"
+}
+{
+  "id": 72,
+  "name": "野橙",
+  "nameEN": "Wild Orange",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/野橙.webp"
+}
+{
+  "id": 73,
+  "name": "金桔",
+  "nameEN": "Kumquat",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/金桔.webp"
+}
+{
+  "id": 74,
+  "name": "青柠",
+  "nameEN": "Lime",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/青柠.webp"
+}
+{
+  "id": 75,
+  "name": "青柏",
+  "nameEN": "Arborvitae",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/青柏.webp"
+}
+{
+  "id": 76,
+  "name": "静谧森林",
+  "nameEN": "Midnight Forest",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/静谧森林.webp"
+}
+{
+  "id": 77,
+  "name": "顺畅呼吸",
+  "nameEN": "Easy Air",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/顺畅呼吸.webp"
+}
+{
+  "id": 78,
+  "name": "香菜籽",
+  "nameEN": "Coriander Seed",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/香菜籽.webp"
+}
+{
+  "id": 79,
+  "name": "香蜂草",
+  "nameEN": "Melissa",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/香蜂草.webp"
+}
+{
+  "id": 80,
+  "name": "马郁兰",
+  "nameEN": "Marjoram",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/马郁兰.webp"
+}
+{
+  "id": 81,
+  "name": "黑云杉",
+  "nameEN": "Black Spruce",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/黑云杉.webp"
+}
+{
+  "id": 82,
+  "name": "黑胡椒",
+  "nameEN": "Black Pepper",
+  "theme": "支持觉察 · 回到内在平衡",
+  "keywords": "觉察｜平衡｜支持｜释放｜稳定｜修复",
+  "message": "你正在被温柔地支持着。慢下来，答案会自然浮现。",
+  "fileId": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/aromatheraphy-cards/黑胡椒.webp"
+}

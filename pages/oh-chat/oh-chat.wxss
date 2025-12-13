@@ -298,6 +298,15 @@ page {
   z-index: 100;
 }
 
+/* AI 生成内容提示 */
+.ai-disclaimer {
+  text-align: center;
+  font-size: 20rpx;
+  color: #b3a699;
+  padding: 4rpx 0 0;
+  line-height: 1.4;
+}
+
 /* ===================== */
 /*   底部极简输入栏        */
 /* ===================== */

@@ -100,9 +100,25 @@ Page({
       return;
     }
 
+    // 🖼️ 如果封面是云存储路径，转换为临时URL（解决真机 CSS background-image 问题）
+    let coverUrl = audioData.cover || "";
+    if (coverUrl.startsWith("cloud://")) {
+      try {
+        console.log("[player] 🖼️ 封面转临时URL中...");
+        const res = await wx.cloud.getTempFileURL({ fileList: [coverUrl] });
+        if (res.fileList[0]?.status === 0 && res.fileList[0]?.tempFileURL) {
+          coverUrl = res.fileList[0].tempFileURL;
+          console.log("[player] ✅ 封面转临时URL成功");
+        }
+      } catch (err) {
+        console.warn("[player] ⚠️ 封面转换失败，使用原始路径:", err.message);
+      }
+    }
+
     this.setData({
       audio: {
         ...audioData,
+        cover: coverUrl,
         audioUrl: fileId,
       },
     });

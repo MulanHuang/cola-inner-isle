@@ -1,11 +1,11 @@
 // utils/aiStream.js
 // ============================================================
 // 微信小程序流式 AI 调用通用模块
-// 直连 Vercel 代理：https://api.cola.center/api/openai
+// 直连阿里云代理：https://api.cola.center/api/openai
 // 支持 SSE 流式输出，让用户 0.2 秒内看到字符开始出现
 // ============================================================
 
-const API_URL = "https://innerseed-openai-proxy.vercel.app/api/openai";
+const API_URL = "https://api.cola.center/api/openai";
 
 /**
  * 流式调用 AI 接口

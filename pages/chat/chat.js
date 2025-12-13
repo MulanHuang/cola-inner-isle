@@ -1,13 +1,12 @@
 // pages/chat/chat.js
-// 聊天页，心语 AI 直连 Vercel 代理 https://api.cola.center/api/openai
+// 聊天页，心语 AI 直连阿里云代理 https://api.cola.center/api/openai
 // 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 const recorderManager = wx.getRecorderManager();
 // ⭐ 云数据库实例（用于写入 chatHistory）
 const db = wx.cloud.database();
-// 语音识别 HTTP 接口（优先备案自定义域名，其次 Vercel 域名，最后备用）
+// 语音识别 HTTP 接口（优先备案自定义域名，其次阿里云域名）
 const SPEECH_API_ENDPOINTS = [
   "https://speech.cola.center/api/speech",
-  "https://vercel-openai-proxy-lemon.vercel.app/api/speech",
   "https://api.cola.center/api/speech",
 ];
 

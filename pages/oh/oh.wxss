@@ -923,6 +923,15 @@ page {
   text-align: right;
 }
 
+/* AI 生成内容提示 */
+.ai-disclaimer {
+  text-align: center;
+  font-size: 20rpx;
+  color: #b3a699;
+  padding: 8rpx 0 4rpx;
+  line-height: 1.4;
+}
+
 .tiny-disclaimer {
   margin: 12rpx 0 6rpx;
   text-align: center;

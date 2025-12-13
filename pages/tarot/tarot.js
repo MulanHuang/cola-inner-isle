@@ -10,6 +10,8 @@ const db = wx.cloud.database();
 
 const { callAIStream } = require("../../utils/aiStream.js");
 const { buildProfileContext } = require("../../utils/userProfile.js");
+// 🚀 云存储临时 URL 智能缓存工具
+const { getTempUrlWithCache } = require("../../utils/cloudUrlCache.js");
 
 // ============================================================
 // 动画配置常量 - 易于调整的参数
@@ -563,6 +565,36 @@ Page({
     }
     this.updateSpreadByQuestion();
     this.checkProfileTip();
+
+    // 🖼️ 将卡背图片 cloud:// 转换为临时 URL（解决体验版图片不显示问题）
+    this.convertCardBackUrl();
+  },
+
+  // 🖼️ 将卡背图片的 cloud:// 路径转换为临时 URL（使用智能缓存）
+  async convertCardBackUrl() {
+    const cloudUrl = this.data.cardBackUrl;
+    if (!cloudUrl || !cloudUrl.startsWith("cloud://")) return;
+
+    // 先尝试从 App 预加载缓存获取
+    const app = getApp();
+    const preloaded = app.globalData.preloadedImages?.[cloudUrl];
+    if (preloaded) {
+      console.log("[tarot] ✅ 使用App预加载的卡背URL");
+      this.setData({ cardBackUrl: preloaded });
+      return;
+    }
+
+    try {
+      console.log("[tarot] 🖼️ 转换卡背临时URL...");
+      // 使用智能缓存工具（自动缓存1.5小时）
+      const tempUrl = await getTempUrlWithCache(cloudUrl);
+      if (tempUrl && tempUrl !== cloudUrl) {
+        this.setData({ cardBackUrl: tempUrl });
+        console.log("[tarot] ✅ 卡背临时URL转换成功");
+      }
+    } catch (err) {
+      console.warn("[tarot] ⚠️ 卡背URL转换失败:", err.message);
+    }
   },
 
   // 检查是否需要显示档案完善提示
@@ -853,51 +885,71 @@ Page({
    * @param {Function} onComplete - 音效播放完成后的回调函数
    * 音效约3.5秒，提前1.5秒触发回调以配合动画过渡
    */
-  playShuffleSound(onComplete) {
-    const innerAudioContext = wx.createInnerAudioContext();
-    innerAudioContext.src =
+  async playShuffleSound(onComplete) {
+    const SHUFFLE_SOUND_FILE_ID =
       "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarot/Card shuffle sound effect.mp3";
 
     let hasTriggeredCallback = false;
+    let earlyTriggerTimer = null;
 
-    // 提前1.5秒触发回调，让音效与动画过渡更流畅
-    const earlyTriggerDelay = ANIMATION_CONFIG.shuffle.soundDuration - 1500; // 约2秒后触发
-    const earlyTriggerTimer = setTimeout(() => {
+    // 辅助函数：触发回调（确保只触发一次）
+    const triggerCallback = (source) => {
       if (!hasTriggeredCallback) {
         hasTriggeredCallback = true;
-        console.log("[Tarot] 洗牌音效提前触发回调（音效仍在播放）");
+        console.log(`[Tarot] 洗牌音效回调触发 (${source})`);
         if (typeof onComplete === "function") {
           onComplete();
         }
       }
-    }, Math.max(earlyTriggerDelay, 1500)); // 至少等待1.5秒
+    };
 
-    innerAudioContext.onEnded(() => {
-      console.log("[Tarot] 洗牌音效播放完成");
-      clearTimeout(earlyTriggerTimer);
-      innerAudioContext.destroy();
-      // 如果回调尚未触发，则在音效结束时触发
-      if (!hasTriggeredCallback) {
-        hasTriggeredCallback = true;
-        if (typeof onComplete === "function") {
-          onComplete();
-        }
+    try {
+      // 🔄 获取临时 URL（InnerAudioContext 不支持 cloud:// 协议）
+      console.log("[Tarot] 🔄 获取洗牌音效临时URL...");
+      const res = await wx.cloud.getTempFileURL({
+        fileList: [SHUFFLE_SOUND_FILE_ID],
+      });
+      const fileInfo = res?.fileList?.[0];
+
+      if (fileInfo?.status !== 0 || !fileInfo?.tempFileURL) {
+        console.warn("[Tarot] ⚠️ 获取音效URL失败:", fileInfo?.errMsg);
+        triggerCallback("URL获取失败");
+        return;
       }
-    });
 
-    innerAudioContext.onError((err) => {
-      console.warn("[Tarot] 洗牌音效播放失败", err);
-      clearTimeout(earlyTriggerTimer);
-      innerAudioContext.destroy();
-      if (!hasTriggeredCallback) {
-        hasTriggeredCallback = true;
-        if (typeof onComplete === "function") {
-          onComplete();
-        }
-      }
-    });
+      const audioUrl = encodeURI(fileInfo.tempFileURL);
+      console.log("[Tarot] ✅ 音效临时URL获取成功");
 
-    innerAudioContext.play();
+      // 创建音频上下文并设置 HTTPS URL
+      const innerAudioContext = wx.createInnerAudioContext();
+      innerAudioContext.src = audioUrl;
+
+      // 提前1.5秒触发回调，让音效与动画过渡更流畅
+      const earlyTriggerDelay = ANIMATION_CONFIG.shuffle.soundDuration - 1500; // 约2秒后触发
+      earlyTriggerTimer = setTimeout(() => {
+        triggerCallback("提前触发");
+      }, Math.max(earlyTriggerDelay, 1500)); // 至少等待1.5秒
+
+      innerAudioContext.onEnded(() => {
+        console.log("[Tarot] 洗牌音效播放完成");
+        if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer);
+        innerAudioContext.destroy();
+        triggerCallback("播放结束");
+      });
+
+      innerAudioContext.onError((err) => {
+        console.warn("[Tarot] 洗牌音效播放失败", err);
+        if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer);
+        innerAudioContext.destroy();
+        triggerCallback("播放出错");
+      });
+
+      innerAudioContext.play();
+    } catch (err) {
+      console.error("[Tarot] ❌ 洗牌音效加载异常:", err);
+      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer);
+      triggerCallback("异常捕获");
+    }
   },
 
   // ============================================================

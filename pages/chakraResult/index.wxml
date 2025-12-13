@@ -83,6 +83,7 @@
       <view class="ai-start-title">小岛深度分析</view>
       <view class="ai-start-desc">点击开始，让小可为你解读脉轮能量</view>
       <view class="ai-start-btn">开始分析</view>
+      <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
     </view>
 
     <!-- 加载中状态 -->

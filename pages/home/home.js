@@ -1,6 +1,9 @@
 const app = getApp();
 const db = wx.cloud.database();
 
+// 🚀 云存储临时 URL 智能缓存工具
+const { getTempUrlWithCache } = require("../../utils/cloudUrlCache.js");
+
 // 获取本地日期工具函数
 function formatLocalDate(ts) {
   const d = ts instanceof Date ? ts : new Date(ts);
@@ -39,6 +42,10 @@ const HABIT_NAMES = {
   emotion: "情绪",
 };
 
+// 塔罗卡背面图片 cloud:// 路径
+const TAROT_CARD_BACK_CLOUD_URL =
+  "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsBack/Back 1.webp";
+
 Page({
   data: {
     dailyQuote: {
@@ -49,6 +56,8 @@ Page({
     tarotStatus: "未抽取",
     statusBarHeight: 0,
     navBarHeight: 0,
+    // 🖼️ 塔罗卡背面图片（动态转换为临时 URL）
+    tarotCardBackUrl: TAROT_CARD_BACK_CLOUD_URL,
     // 本周习惯数据：每个习惯7天的状态数组
     weekHabitData: {
       tarot: [false, false, false, false, false, false, false],
@@ -82,6 +91,34 @@ Page({
     this.checkTodayTarot();
     this.loadWeekHabitData();
     this.checkProfileCompletion();
+    // 🖼️ 将塔罗卡背面图片 cloud:// 转换为临时 URL（解决体验版图片不显示问题）
+    this.convertTarotCardBackUrl();
+  },
+
+  // 🖼️ 将塔罗卡背面图片的 cloud:// 路径转换为临时 URL（使用智能缓存）
+  async convertTarotCardBackUrl() {
+    const cloudUrl = this.data.tarotCardBackUrl;
+    if (!cloudUrl || !cloudUrl.startsWith("cloud://")) return;
+
+    // 先尝试从 App 预加载缓存获取
+    const preloaded = app.globalData.preloadedImages?.[cloudUrl];
+    if (preloaded) {
+      console.log("[home] ✅ 使用App预加载的卡背URL");
+      this.setData({ tarotCardBackUrl: preloaded });
+      return;
+    }
+
+    try {
+      console.log("[home] 🖼️ 转换塔罗卡背面临时URL...");
+      // 使用智能缓存工具（自动缓存1.5小时）
+      const tempUrl = await getTempUrlWithCache(cloudUrl);
+      if (tempUrl && tempUrl !== cloudUrl) {
+        this.setData({ tarotCardBackUrl: tempUrl });
+        console.log("[home] ✅ 塔罗卡背面临时URL转换成功");
+      }
+    } catch (err) {
+      console.warn("[home] ⚠️ 塔罗卡背面URL转换失败:", err.message);
+    }
   },
 
   onNavReady(e) {
