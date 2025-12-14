@@ -1,0 +1,144 @@
+<!--pages/aroma-card/aroma-card.wxml-->
+<!-- ============================================================ -->
+<!-- 芳香情绪卡页面 - 情绪觉察与自我探索工具 -->
+<!-- ============================================================ -->
+
+<!-- 自定义导航栏 -->
+<view class="custom-navbar aroma-navbar" style="padding-top: {{statusBarHeight}}px;">
+  <view class="aroma-navbar-content">
+    <view class="aroma-nav-left" bindtap="handleBack">
+      <text class="aroma-back-icon">‹</text>
+    </view>
+    <view class="aroma-nav-center">
+      <image class="navbar-logo" src="/images/logo.svg" mode="aspectFit" />
+      <view class="navbar-title">可乐心岛</view>
+    </view>
+    <view class="aroma-nav-right"></view>
+  </view>
+</view>
+
+<view class="container aroma-container page-with-custom-navbar" style="padding-top: {{navBarHeight + 8}}px;">
+
+  <!-- 顶部区域 -->
+  <view class="header-section">
+    <view class="aroma-title">🌿 芳香情绪卡</view>
+    <view class="aroma-subtitle">透过香气的意象，觉察此刻的内在状态。</view>
+  </view>
+
+  <!-- 引导文案 -->
+  <view class="intro-section" wx:if="{{!selectedCard}}">
+    <view class="intro-text">
+      深呼吸，让自己安静下来。
+    </view>
+    <view class="intro-text">
+      准备好了，就抽一张卡。
+    </view>
+  </view>
+
+  <!-- 未抽卡区域：环形呼吸阵 -->
+  <view class="card-deck-section" wx:if="{{!selectedCard}}">
+    <view class="aroma-hero">
+      <view class="ring-wrapper" bindtap="drawCard">
+        <view class="ring-mat"></view>
+        <view class="ring-glow ring-glow-outer"></view>
+        <view class="ring-glow"></view>
+        <view class="ring-particles"></view>
+        <block wx:for="{{deckLayers}}" wx:key="*this">
+          <image
+            class="ring-card {{index === deckLayers.length - 1 ? 'breathing' : ''}}"
+            src="{{backImage}}"
+            mode="aspectFit"
+            style="transform: rotate({{index * (360 / deckLayers.length)}}deg) translateY(-205rpx) rotate({{-index * (360 / deckLayers.length)}}deg); opacity: {{0.72 + (deckLayers.length > 1 ? index / (deckLayers.length - 1) * 0.26 : 0.98)}}; z-index: {{index}};"
+          />
+        </block>
+        <view class="ring-center">
+          <view class="ring-center-base"></view>
+          <view class="ring-dust"></view>
+        </view>
+      </view>
+      <button
+        class="btn-draw btn-draw-floating ring-button-below"
+        bindtap="drawCard"
+        disabled="{{drawing}}"
+        hover-class="none"
+      >
+        {{drawing ? '抽取中...' : '点击与香气相遇'}}
+      </button>
+      <view class="pre-draw-hint">
+        不需要带着具体问题，只需要带着好奇心。
+      </view>
+    </view>
+  </view>
+
+  <!-- 已抽卡展示区 -->
+  <view class="result-section" id="aromaResultSection" wx:if="{{selectedCard}}">
+
+    <!-- 卡牌展示 -->
+    <view class="card-stage">
+      <view class="card-display">
+        <view
+          class="aroma-card-wrapper {{cardFlipActive ? 'card-flip-animate' : ''}}"
+          bindtap="previewImage"
+          data-url="{{selectedCard.fileId}}"
+        >
+          <image
+            class="card-image"
+            src="{{selectedCard.fileId}}"
+            mode="aspectFit"
+          />
+        </view>
+      </view>
+    </view>
+
+    <!-- 卡牌信息 -->
+    <view class="card-info">
+      <view class="card-name">{{selectedCard.name}}</view>
+      <view class="card-name-en">{{selectedCard.nameEN}}</view>
+      <view class="card-theme">{{selectedCard.theme}}</view>
+      <view class="card-keywords">{{selectedCard.keywords}}</view>
+      <view class="card-message">
+        <block wx:for="{{cardMessageLines}}" wx:key="*this">
+          <view class="card-message-line">「{{item}}」</view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 觉察引导区 -->
+    <view class="reflection-section">
+      <view class="reflection-title">🌱 觉察引导</view>
+      <view class="reflection-intro">
+        如果你想更深入地探索这张卡带给你的感受，可以和 AI 聊聊。
+      </view>
+      <view class="reflection-questions">
+        <view class="question-item" wx:for="{{reflectionQuestions}}" wx:key="index">
+          <view class="question-number">{{index + 1}}</view>
+          <view class="question-text">{{item}}</view>
+        </view>
+      </view>
+      <!-- 深入对话按钮 -->
+      <button class="btn-chat" bindtap="goToAromaChatPage" hover-class="none">
+        🌿 开始深入对话
+      </button>
+      <view class="ai-generated-hint">本内容由AI生成，仅供参考。</view>
+    </view>
+
+    <!-- 重新抽取按钮 -->
+    <button class="btn-reset" bindtap="resetDraw" hover-class="none">
+      重新抽取
+    </button>
+
+    <!-- 合规声明 -->
+    <view class="disclaimer-section">
+      <view class="disclaimer-text">
+        芳香情绪卡是一种情绪觉察与自我探索工具，不构成任何医疗或芳香疗法建议。
+      </view>
+    </view>
+
+  </view>
+
+  <!-- 页面底部提示 -->
+  <view class="page-foot-note">
+    可乐心岛 · 用香气的意象陪你练习觉察
+  </view>
+
+</view>

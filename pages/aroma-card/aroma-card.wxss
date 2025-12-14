@@ -1,0 +1,703 @@
+/* pages/aroma-card/aroma-card.wxss */
+/* ============================================================ */
+/* 芳香情绪卡页面 - 温柔觉察风格                                    */
+/* ============================================================ */
+
+/* CSS 变量 */
+page {
+  --primary-green: #7b9a7d; /* 主色 - 自然绿 */
+  --primary-green-light: #9db99f;
+  --primary-green-dark: #5d7a5f;
+  --accent-gold: #d4b896;
+  --bg-gradient-start: #f6f4f0;
+  --bg-gradient-mid: #f0ede6;
+  --bg-gradient-end: #f5f3ee;
+  --card-bg: #ffffff;
+  --text-primary: #3d4a3d;
+  --text-secondary: #6b7a6b;
+  --text-muted: #a0b0a0;
+  --shadow-card: 0 8rpx 32rpx rgba(0, 0, 0, 0.06);
+  --border-radius: 24rpx;
+}
+
+/* 自定义导航栏 */
+.aroma-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: linear-gradient(
+    180deg,
+    #f6f4f0 0%,
+    rgba(246, 244, 240, 0.96) 100%
+  );
+  box-shadow: 0 2rpx 12rpx rgba(123, 154, 125, 0.1);
+  backdrop-filter: blur(14rpx);
+}
+
+.aroma-navbar-content {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20rpx;
+}
+
+.aroma-nav-left,
+.aroma-nav-right {
+  width: 96rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.aroma-nav-right {
+  justify-content: flex-end;
+}
+
+.aroma-back-icon {
+  font-size: 64rpx;
+  color: #5d7a5f;
+  font-weight: 300;
+  line-height: 1;
+  padding-left: 4rpx;
+}
+
+.aroma-nav-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.navbar-logo {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.navbar-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 容器基础样式 */
+.aroma-container {
+  min-height: 100vh;
+  padding: 30rpx;
+  padding-bottom: calc(60rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  background: linear-gradient(
+    180deg,
+    var(--bg-gradient-start) 0%,
+    var(--bg-gradient-mid) 55%,
+    var(--bg-gradient-end) 100%
+  );
+}
+
+/* 顶部区域 */
+.header-section {
+  text-align: center;
+  margin-top: 12rpx;
+  margin-bottom: 24rpx;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.aroma-title {
+  font-size: 48rpx;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 2rpx;
+  margin-bottom: 8rpx;
+}
+
+.aroma-subtitle {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 引导文案区 */
+.intro-section {
+  text-align: center;
+  margin-bottom: 32rpx;
+  padding: 20rpx;
+}
+
+.intro-text {
+  font-size: 28rpx;
+  color: #6f7c6f;
+  line-height: 2;
+  letter-spacing: 1rpx;
+}
+
+/* 玻璃态浮起壳 */
+.aroma-hero {
+  width: 100%;
+  max-width: 700rpx;
+  margin: 0 auto;
+  padding: 40rpx 40rpx 50rpx;
+  border-radius: 40rpx;
+  background: linear-gradient(180deg, #f4f1eb 0%, #f0ebe3 100%);
+  box-shadow: 0 16rpx 38rpx rgba(123, 154, 125, 0.07);
+  backdrop-filter: blur(12rpx);
+  border: 1rpx solid rgba(123, 154, 125, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-deck-section {
+  display: flex;
+  justify-content: center;
+}
+
+/* 牌堆容器 */
+.deck-wrapper {
+  position: relative;
+  width: 220rpx;
+  height: 260rpx;
+  margin-top: 80rpx;
+  margin-bottom: 40rpx;
+  animation: breathe-slow 4s ease-in-out infinite;
+  transition: transform 0.25s ease;
+}
+
+.deck-wrapper:active {
+  transform: scale(0.98);
+}
+
+@keyframes breathe-slow {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.deck-image {
+  position: absolute;
+  width: 180rpx;
+  height: 240rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.deck-layer.breathing {
+  animation: card-breathe 3s ease-in-out infinite;
+}
+
+@keyframes card-breathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3rpx);
+  }
+}
+
+.deck-glow {
+  position: absolute;
+  width: 200rpx;
+  height: 200rpx;
+  left: 50%;
+  bottom: -20rpx;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    circle,
+    rgba(123, 154, 125, 0.2) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(20rpx);
+}
+
+/* 环形呼吸阵 */
+.ring-wrapper {
+  position: relative;
+  width: 460rpx;
+  height: 460rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20rpx 0 120rpx;
+  animation: breathe-slow 5s ease-in-out infinite,
+    ring-sway 11s ease-in-out infinite;
+}
+
+.ring-mat {
+  position: absolute;
+  width: 380rpx;
+  height: 380rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(145deg, #d7d0c4 0%, #cbbfac 100%);
+  box-shadow: inset 0 8rpx 16rpx rgba(0, 0, 0, 0.06),
+    0 18rpx 36rpx rgba(0, 0, 0, 0.12);
+  opacity: 0.96;
+}
+
+.ring-card {
+  position: absolute;
+  width: 165rpx;
+  height: 220rpx;
+  transform-origin: 50% 300rpx;
+  border: 1rpx solid rgba(54, 72, 54, 0.3);
+  box-shadow: 0 12rpx 26rpx rgba(0, 0, 0, 0.17),
+    0 0 0 2rpx rgba(255, 255, 255, 0.32);
+  filter: brightness(1.08) contrast(1.14) saturate(1.05);
+  transition: transform 0.25s ease;
+}
+
+.ring-card.breathing {
+  animation: card-breathe 4s ease-in-out infinite;
+}
+
+.ring-glow {
+  position: absolute;
+  width: 280rpx;
+  height: 280rpx;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(123, 154, 125, 0.14) 0%,
+    rgba(123, 154, 125, 0.04) 45%,
+    transparent 70%
+  );
+  filter: blur(14rpx);
+}
+
+.ring-glow-outer {
+  width: 360rpx;
+  height: 360rpx;
+  background: radial-gradient(
+    circle,
+    rgba(196, 172, 140, 0.12) 0%,
+    rgba(196, 172, 140, 0.04) 45%,
+    transparent 72%
+  );
+  filter: blur(20rpx);
+  opacity: 0.8;
+}
+
+.ring-particles {
+  position: absolute;
+  width: 320rpx;
+  height: 320rpx;
+  border-radius: 50%;
+  background: radial-gradient(
+      circle at 30% 40%,
+      rgba(212, 184, 150, 0.4),
+      transparent 35%
+    ),
+    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.45), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(212, 184, 150, 0.25), transparent 40%);
+  filter: blur(10rpx);
+  opacity: 0.65;
+  animation: spin-slow 10s linear infinite reverse;
+}
+
+.ring-center {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-center-base {
+  position: absolute;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.85),
+    rgba(123, 154, 125, 0.06) 65%,
+    transparent 80%
+  );
+  filter: blur(8rpx);
+  z-index: 1;
+}
+
+.ring-dust {
+  position: absolute;
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.7),
+    transparent 50%
+  );
+  filter: blur(10rpx);
+  animation: spin-slow 12s linear infinite;
+}
+
+.btn-draw-floating {
+  width: 280rpx;
+  position: relative;
+  z-index: 2;
+  padding-left: 32rpx;
+  padding-right: 32rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6a856c 0%, #4f6850 100%);
+  box-shadow: 0 10rpx 26rpx rgba(79, 104, 80, 0.32),
+    0 0 0 10rpx rgba(255, 255, 255, 0.08),
+    0 -2rpx 8rpx rgba(0, 0, 0, 0.05);
+  animation: button-breathe 4.2s ease-in-out infinite;
+}
+
+.ring-button-below {
+  width: 72%;
+  max-width: 440rpx;
+  margin: 34rpx auto 26rpx;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ring-sway {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes button-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10rpx 26rpx rgba(123, 154, 125, 0.32),
+      0 0 0 10rpx rgba(255, 255, 255, 0.08);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 14rpx 32rpx rgba(123, 154, 125, 0.4),
+      0 0 0 14rpx rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* 抽卡按钮 */
+.btn-draw {
+  width: 80%;
+  max-width: 400rpx;
+  padding: 28rpx 48rpx;
+  background: linear-gradient(
+    135deg,
+    var(--primary-green) 0%,
+    var(--primary-green-light) 100%
+  );
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 50rpx;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(123, 154, 125, 0.3);
+  transition: all 0.3s ease;
+  margin-bottom: 24rpx;
+}
+
+.btn-draw:active {
+  transform: scale(0.96);
+  box-shadow: 0 4rpx 12rpx rgba(123, 154, 125, 0.2);
+}
+
+.btn-draw[disabled] {
+  opacity: 0.6;
+}
+
+.pre-draw-hint {
+  font-size: 24rpx;
+  color: #98a59a;
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 12rpx;
+}
+
+/* 已抽卡展示区 */
+.result-section {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-stage {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 252, 248, 0.9),
+    rgba(246, 244, 240, 0.7)
+  );
+  border-radius: 32rpx;
+  padding: 30rpx 24rpx;
+  border: 1rpx solid rgba(123, 154, 125, 0.12);
+  box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.4),
+    0 12rpx 26rpx rgba(123, 154, 125, 0.08);
+  margin-bottom: 28rpx;
+}
+
+.card-display {
+  display: flex;
+  justify-content: center;
+}
+
+.aroma-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 20rpx;
+  box-shadow: var(--shadow-card);
+  animation: popIn 0.35s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-flip-animate {
+  animation: cardFlip 0.6s ease-out;
+}
+
+@keyframes cardFlip {
+  0% {
+    transform: rotateY(180deg) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.card-image {
+  width: 400rpx;
+  height: 560rpx;
+  border-radius: 16rpx;
+}
+
+/* 卡牌信息区 */
+.card-info {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 32rpx;
+  margin-bottom: 28rpx;
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.card-name {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.card-name-en {
+  font-size: 26rpx;
+  color: var(--text-muted);
+  margin-bottom: 16rpx;
+  font-style: italic;
+}
+
+.card-theme {
+  font-size: 28rpx;
+  color: var(--primary-green);
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+
+.card-keywords {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  margin-bottom: 20rpx;
+  line-height: 1.6;
+}
+
+.card-message {
+  font-size: 30rpx;
+  color: var(--text-primary);
+  line-height: 1.8;
+  padding: 20rpx 16rpx;
+  background: rgba(123, 154, 125, 0.08);
+  border-radius: 16rpx;
+  font-weight: 500;
+}
+
+.card-message-line + .card-message-line {
+  margin-top: 6rpx;
+}
+
+/* 觉察引导区 */
+.reflection-section {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 32rpx;
+  margin-bottom: 28rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.reflection-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16rpx;
+  text-align: center;
+}
+
+.reflection-intro {
+  font-size: 26rpx;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 24rpx;
+  line-height: 1.6;
+}
+
+.reflection-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.question-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  padding: 20rpx;
+  background: rgba(123, 154, 125, 0.06);
+  border-radius: 16rpx;
+}
+
+.question-number {
+  width: 48rpx;
+  height: 48rpx;
+  background: var(--primary-green);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.question-text {
+  font-size: 28rpx;
+  color: var(--text-primary);
+  line-height: 1.7;
+  flex: 1;
+}
+
+/* 深入对话按钮 */
+.btn-chat {
+  width: 100%;
+  padding: 26rpx;
+  background: linear-gradient(135deg, var(--primary-green) 0%, #5a7a5c 100%);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border: none;
+  border-radius: 50rpx;
+  margin-top: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(123, 154, 125, 0.35);
+  transition: all 0.3s ease;
+  letter-spacing: 2rpx;
+}
+
+.btn-chat:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(123, 154, 125, 0.3);
+}
+
+/* AI生成提示 */
+.ai-generated-hint {
+  font-size: 22rpx;
+  color: #b0c0b0;
+  text-align: center;
+  margin-top: 16rpx;
+}
+
+/* 重新抽取按钮 */
+.btn-reset {
+  width: 100%;
+  padding: 24rpx;
+  background: transparent;
+  color: var(--primary-green);
+  font-size: 30rpx;
+  font-weight: 500;
+  border: 2rpx solid var(--primary-green);
+  border-radius: 50rpx;
+  margin-bottom: 24rpx;
+  transition: all 0.3s ease;
+}
+
+.btn-reset:active {
+  background: rgba(123, 154, 125, 0.1);
+}
+
+/* 合规声明 */
+.disclaimer-section {
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.disclaimer-text {
+  font-size: 24rpx;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* 页面底部提示 */
+.page-foot-note {
+  text-align: center;
+  font-size: 24rpx;
+  color: var(--text-muted);
+  padding: 32rpx 0;
+  margin-top: 28rpx;
+}

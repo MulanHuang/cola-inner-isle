@@ -323,6 +323,14 @@ Page({
     });
   },
 
+  // 跳转到芳香情绪卡
+  goToAromaCard() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/aroma-card/aroma-card",
+    });
+  },
+
   // 跳转到MBTI
   goToMBTI() {
     this.triggerTapFeedback();

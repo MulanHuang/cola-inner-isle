@@ -17,7 +17,7 @@
   </view>
 </view>
 
-<view class="container oh-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
+<view class="container oh-container page-with-custom-navbar" style="padding-top: {{navBarHeight + 8}}px;">
 
   <!-- 顶部区域 -->
   <view class="header-section">

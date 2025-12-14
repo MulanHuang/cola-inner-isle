@@ -61,6 +61,24 @@ App({
   },
 
   /**
+   * 🔒 隐私协议授权回调
+   * 当用户触发需要隐私授权的 API 时，微信会自动调用此方法
+   * 保存 resolve 函数，等待用户点击同意按钮后调用
+   */
+  onNeedPrivacyAuthorization(resolve, eventInfo) {
+    console.log("[App] 🔒 触发隐私授权请求:", eventInfo);
+    // 保存 resolve 函数到全局，供隐私弹窗组件调用
+    this.globalData.resolvePrivacyAuthorization = resolve;
+
+    // 获取当前页面实例，触发显示隐私弹窗
+    const pages = getCurrentPages();
+    const currentPage = pages[pages.length - 1];
+    if (currentPage && currentPage.setData) {
+      currentPage.setData({ showPrivacyPopup: true });
+    }
+  },
+
+  /**
    * 🚀 预加载关键图片（使用智能缓存）
    * 在 App 启动时预加载塔罗牌和 OH 卡的背面图片，
    * 转换为临时 URL 并缓存，确保用户进入相关页面时能立即看到卡背

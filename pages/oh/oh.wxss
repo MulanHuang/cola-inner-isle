@@ -92,6 +92,7 @@ page {
 /* 顶部区域 */
 .header-section {
   text-align: center;
+  margin-top: 12rpx;
   margin-bottom: 32rpx;
   animation: fadeInDown 0.6s ease-out;
 }

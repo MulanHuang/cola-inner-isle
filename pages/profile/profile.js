@@ -51,6 +51,7 @@ Page({
     navBarHeight: 0,
     tarotCollection: "tarotDraws",
     userZodiac: null, // 用户星座信息
+    showPrivacyPopup: false, // 隐私协议弹窗显示状态
   },
 
   onLoad() {
@@ -510,8 +511,190 @@ Page({
   // ==================== 头像昵称填写能力（新API） ====================
 
   /**
+   * 显示头像选择操作表
+   * 提供"使用微信头像"和"从相册选择"两个选项
+   */
+  /**
+   * 显示头像选择操作表
+   * 提供"从相册选择"和"拍照"两个选项
+   */
+  showAvatarActionSheet() {
+    const that = this;
+    // 先检查隐私协议授权
+    that.requirePrivacyAuthorize(() => {
+      wx.showActionSheet({
+        itemList: ["从相册选择", "拍照"],
+        success(res) {
+          if (res.tapIndex === 0) {
+            that.chooseAvatarFromSource("album");
+          } else if (res.tapIndex === 1) {
+            that.chooseAvatarFromSource("camera");
+          }
+        },
+        fail(err) {
+          if (err.errMsg && err.errMsg.includes("cancel")) return;
+          console.warn("[profile] 操作表显示失败", err);
+        },
+      });
+    });
+  },
+
+  /**
+   * 检查并请求隐私协议授权
+   * @param {Function} callback - 授权成功后的回调
+   */
+  requirePrivacyAuthorize(callback) {
+    // 保存回调函数，供同意后调用
+    this._privacyCallback = callback;
+
+    if (wx.requirePrivacyAuthorize) {
+      wx.requirePrivacyAuthorize({
+        success: () => {
+          console.log("[profile] 隐私协议已授权");
+          callback && callback();
+        },
+        fail: (err) => {
+          console.warn("[profile] 隐私协议授权失败", err);
+          // 授权失败时，弹窗会由 app.js 的 onNeedPrivacyAuthorization 触发
+        },
+      });
+    } else {
+      // 旧版本不支持隐私协议，直接执行
+      callback && callback();
+    }
+  },
+
+  /**
+   * 打开隐私协议页面
+   */
+  openPrivacyContract() {
+    wx.openPrivacyContract({
+      success: () => {
+        console.log("[profile] 打开隐私协议成功");
+      },
+      fail: (err) => {
+        console.error("[profile] 打开隐私协议失败", err);
+        wx.showToast({
+          title: "打开隐私协议失败",
+          icon: "none",
+        });
+      },
+    });
+  },
+
+  /**
+   * 用户同意隐私协议
+   */
+  handleAgreePrivacy() {
+    console.log("[profile] 用户同意隐私协议");
+    this.setData({ showPrivacyPopup: false });
+
+    // 调用 app.js 中保存的 resolve 函数
+    const app = getApp();
+    if (app.globalData.resolvePrivacyAuthorization) {
+      app.globalData.resolvePrivacyAuthorization({
+        buttonId: "agree-btn",
+        event: "agree",
+      });
+      app.globalData.resolvePrivacyAuthorization = null;
+    }
+
+    // 执行之前保存的回调
+    if (this._privacyCallback) {
+      this._privacyCallback();
+      this._privacyCallback = null;
+    }
+  },
+
+  /**
+   * 用户拒绝隐私协议
+   */
+  handleDisagreePrivacy() {
+    console.log("[profile] 用户拒绝隐私协议");
+    this.setData({ showPrivacyPopup: false });
+
+    // 调用 app.js 中保存的 resolve 函数
+    const app = getApp();
+    if (app.globalData.resolvePrivacyAuthorization) {
+      app.globalData.resolvePrivacyAuthorization({
+        event: "disagree",
+      });
+      app.globalData.resolvePrivacyAuthorization = null;
+    }
+
+    wx.showToast({
+      title: "需要同意隐私协议才能使用此功能",
+      icon: "none",
+    });
+  },
+
+  /**
+   * 阻止弹窗背景滚动
+   */
+  preventTouchMove() {
+    return false;
+  },
+
+  /**
+   * 从指定来源选择头像
+   * @param {string} source - 来源：'album' 或 'camera'
+   */
+  chooseAvatarFromSource(source) {
+    const that = this;
+    wx.chooseImage({
+      count: 1,
+      sourceType: [source],
+      sizeType: ["compressed"],
+      success(res) {
+        console.log("[profile] chooseImage 成功", res);
+        const filePath = res.tempFilePaths && res.tempFilePaths[0];
+        if (!filePath) {
+          console.warn("[profile] 未获取到图片路径");
+          return;
+        }
+
+        // 先更新本地显示
+        that.updateLocalUserInfo({
+          ...that.data.userInfo,
+          avatarUrl: filePath,
+        });
+
+        // 上传到云存储并保存到数据库
+        that.uploadAndSaveAvatar(filePath);
+      },
+      fail(err) {
+        console.error("[profile] chooseImage 失败", err);
+        if (err.errMsg && err.errMsg.includes("cancel")) return;
+        // 如果是隐私协议问题，给出更明确的提示
+        if (err.errno === 112) {
+          wx.showModal({
+            title: "权限未配置",
+            content:
+              "相册权限尚未在小程序后台声明，请联系开发者在「用户隐私保护指引」中添加「选中的照片或视频」权限。",
+            showCancel: false,
+            confirmText: "我知道了",
+          });
+          return;
+        }
+        // errno 104 表示用户拒绝了隐私协议
+        if (err.errno === 104) {
+          wx.showToast({
+            title: "需要同意隐私协议",
+            icon: "none",
+          });
+          return;
+        }
+        wx.showToast({
+          title: source === "album" ? "选择图片失败" : "拍照失败",
+          icon: "none",
+        });
+      },
+    });
+  },
+
+  /**
    * 选择头像回调（微信新API：open-type="chooseAvatar"）
-   * 用户从相册、拍照或微信头像中选择后触发
+   * 用户从相册、拍照或微信头像中选择后触发（备用方法）
    */
   async onChooseAvatar(e) {
     const { avatarUrl } = e.detail;

@@ -13,13 +13,11 @@
     <view class="hero-wave wave-one"></view>
     <view class="hero-wave wave-two"></view>
     <view class="hero-body">
-      <!-- 头像选择按钮：使用微信头像昵称填写能力 -->
-      <button class="avatar-shell avatar-btn"
-              open-type="chooseAvatar"
-              bindchooseavatar="onChooseAvatar">
+      <!-- 头像选择按钮：点击显示选择菜单 -->
+      <view class="avatar-shell avatar-btn" bindtap="showAvatarActionSheet">
         <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
         <view class="avatar-edit-hint">换</view>
-      </button>
+      </view>
       <view class="hero-text">
         <view class="hero-name-row">
           <!-- 昵称输入框：type=nickname 会显示微信昵称键盘 -->
@@ -131,3 +129,18 @@
 
 <!-- 全局悬浮音乐控制按钮 -->
 <audio-float />
+
+<!-- 隐私协议授权弹窗 -->
+<view class="privacy-popup-mask" wx:if="{{showPrivacyPopup}}" catchtouchmove="preventTouchMove">
+  <view class="privacy-popup">
+    <view class="privacy-popup-title">隐私保护提示</view>
+    <view class="privacy-popup-content">
+      <text>为了更好地为您提供服务，我们需要获取您的相关权限。请阅读并同意</text>
+      <text class="privacy-link" bindtap="openPrivacyContract">《用户隐私保护指引》</text>
+    </view>
+    <view class="privacy-popup-buttons">
+      <button class="privacy-btn privacy-btn-cancel" bindtap="handleDisagreePrivacy">拒绝</button>
+      <button class="privacy-btn privacy-btn-confirm" id="agree-btn" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="handleAgreePrivacy">同意</button>
+    </view>
+  </view>
+</view>

@@ -131,6 +131,7 @@
     </view>
     <view class="explore-items">
       <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToOhCard">OH卡</view>
+      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToAromaCard">🌿 芳香情绪卡</view>
       <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToEmotion">
         <image class="explore-tag-icon" src="/assets/icons/heart-outline.svg" mode="aspectFit" />
         <text>情绪记录</text>
@@ -139,7 +140,6 @@
       <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToChakraTest">脉轮测试</view>
       <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToMBTI">MBTI</view>
       <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToZodiac">星座</view>
-      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToInnerChild">内在小孩</view>
     </view>
   </view>
 </view>
