@@ -1,0 +1,97 @@
+<!--pages/explore/week-plan/detail/detail.wxml-->
+<view class="container detail-container">
+  <!-- 顶部导航 -->
+  <view class="header-bar">
+    <view class="back-btn" bindtap="goBack">
+      <view class="back-icon"></view>
+    </view>
+    <view class="header-title">记录详情</view>
+    <view class="header-placeholder"></view>
+  </view>
+
+  <block wx:if="{{hasData}}">
+    <!-- 顶部提示 -->
+    <view class="hint-card">
+      <text class="hint-text">这是当时的你留下的记录。</text>
+    </view>
+
+    <!-- 顶部信息栏 -->
+    <view class="top-info-bar">
+      <text class="top-info-text">{{record.year}} ｜ 周计划 ｜ {{record.month}}月 · 第{{record.weekOfMonth}}周</text>
+    </view>
+
+    <!-- 纸质手账主体 -->
+    <view class="notebook-wrapper">
+      <!-- 主内容区 - 左右分栏 -->
+      <view class="main-content">
+        <!-- 左侧栏 - 周任务分解 -->
+        <view class="left-column">
+          <view class="section-header task-header">
+            <text class="section-title">周任务分解</text>
+          </view>
+          
+          <!-- 按天分组的任务列表 -->
+          <view wx:for="{{displayWeekDays}}" wx:key="index" class="day-task-group">
+            <view class="day-label" style="background: {{item.color}};">
+              <text class="day-label-text">{{item.label}}</text>
+            </view>
+            <view class="day-tasks">
+              <view wx:if="{{item.tasks.length === 0}}" class="no-task">
+                <text class="no-task-text">-</text>
+              </view>
+              <view wx:for="{{item.tasks}}" wx:for-item="task" wx:for-index="taskIndex" wx:key="taskIndex" class="task-row">
+                <view class="task-dot" style="background: {{item.dotColor}};"></view>
+                <text class="task-text">{{task}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 右侧栏 -->
+        <view class="right-column">
+          <!-- 关键事件 -->
+          <view class="key-events-section">
+            <view class="section-header-right">
+              <text class="section-title-right">关键事件</text>
+            </view>
+            <view class="key-events-list">
+              <view wx:if="{{record.keyEvents.length === 0}}" class="no-content">
+                <text class="no-content-text">暂无记录</text>
+              </view>
+              <view wx:for="{{record.keyEvents}}" wx:key="index" class="key-event-item">
+                <text class="key-event-text">{{item.text}}</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 上周复盘 -->
+          <view class="review-section">
+            <view class="section-header-right">
+              <text class="section-title-right">上周复盘</text>
+            </view>
+            <view class="text-content">
+              <text class="content-text">{{record.lastWeekReview || '暂无记录'}}</text>
+            </view>
+          </view>
+
+          <!-- 本周待提升 -->
+          <view class="improve-section">
+            <view class="section-header-right">
+              <text class="section-title-right">本周待提升</text>
+            </view>
+            <view class="text-content">
+              <text class="content-text">{{record.weekImprovement || '暂无记录'}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 无数据状态 -->
+  <view wx:else class="empty-state">
+    <text class="empty-icon">📭</text>
+    <text class="empty-text">这一周没有留下记录</text>
+  </view>
+</view>
+

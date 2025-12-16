@@ -7,11 +7,11 @@
 
 const db = wx.cloud.database();
 
-// ✅ OH卡解读改为前端直连 Vercel 代理（流式输出）
+// 引入公共工具模块
 const { callAIStream } = require("../../utils/aiStream.js");
 const { buildProfileContext } = require("../../utils/userProfile.js");
-// 🚀 云存储临时 URL 智能缓存工具
 const { getTempUrlWithCache } = require("../../utils/cloudUrlCache.js");
+const { setNavBarHeight } = require("../../utils/common.js");
 
 // 解析 AI 返回的六段式内容
 function parseAIResponse(content) {
@@ -152,7 +152,7 @@ Page({
   // ============================================================
 
   onLoad() {
-    this.setNavBarHeight();
+    this.initNavBarHeight();
     // 初始化时重置状态（不保留输入内容）
     this.resetState(false);
     // 🖼️ 将卡背图片 cloud:// 转换为临时 URL（解决体验版图片不显示问题）
@@ -205,14 +205,9 @@ Page({
     }
   },
 
-  setNavBarHeight() {
-    const systemInfo = wx.getSystemInfoSync();
-    const statusBarHeight = systemInfo.statusBarHeight || 0;
-    const navBarHeight = statusBarHeight + 44;
-    this.setData({
-      statusBarHeight,
-      navBarHeight,
-    });
+  // 设置导航栏高度（使用公共模块）
+  initNavBarHeight() {
+    setNavBarHeight(this);
   },
 
   /**

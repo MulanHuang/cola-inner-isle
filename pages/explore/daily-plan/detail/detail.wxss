@@ -1,0 +1,372 @@
+/* pages/explore/daily-plan/detail/detail.wxss */
+.detail-container {
+  padding: 0 24rpx 60rpx;
+  background: linear-gradient(180deg, #ede6de 0%, #e6dcd1 60%, #e0d3c7 100%);
+  min-height: 100vh;
+}
+
+/* 顶部导航 */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22rpx 0 18rpx;
+  margin-top: 120rpx;
+  padding-top: calc(env(safe-area-inset-top, 44px) + 6rpx);
+  background: #ede6de;
+  z-index: 20;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(8rpx);
+}
+
+.back-btn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(139, 115, 133, 0.1);
+}
+
+.back-icon {
+  width: 26rpx;
+  height: 26rpx;
+  border-left: 4rpx solid #2e2a29;
+  border-bottom: 4rpx solid #2e2a29;
+  transform: rotate(45deg);
+}
+
+.header-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #4a3a4a;
+}
+
+.header-placeholder {
+  width: 60rpx;
+}
+
+/* 提示卡片 */
+.hint-card {
+  text-align: center;
+  padding: 16rpx 0;
+}
+
+.hint-text {
+  font-size: 24rpx;
+  color: #8b7385;
+  font-style: italic;
+}
+
+/* ========== 纸质手账主体 ========== */
+.notebook-wrapper {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.94),
+    rgba(250, 245, 241, 0.96)
+  );
+  border-radius: 12rpx;
+  padding: 0;
+  margin-bottom: 120rpx;
+  box-shadow: 0 10rpx 30rpx rgba(90, 70, 80, 0.16);
+  border: 1rpx solid rgba(150, 130, 140, 0.15);
+}
+
+/* 日期栏 */
+.date-bar {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #d8c8d0, #d5c4cc);
+  padding: 16rpx 20rpx;
+}
+
+.date-label {
+  font-size: 26rpx;
+  color: #5a4a5a;
+  font-weight: 600;
+  letter-spacing: 8rpx;
+}
+
+.date-value {
+  flex: 1;
+  font-size: 26rpx;
+  color: #4a3a4a;
+  margin-left: 20rpx;
+}
+
+/* 主内容区 */
+.main-content {
+  display: flex;
+  flex-direction: row;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(250, 245, 241, 0.8),
+    rgba(250, 245, 241, 0.8) 80rpx,
+    rgba(240, 230, 230, 0.14) 80rpx,
+    rgba(240, 230, 230, 0.14) 82rpx
+  );
+}
+
+/* 左侧栏 */
+.left-column {
+  width: 240rpx;
+  flex-shrink: 0;
+  border-right: 1rpx solid #d8d0d4;
+}
+
+/* 右侧栏 */
+.right-column {
+  flex: 1;
+}
+
+/* ========== 模块通用样式 ========== */
+.module {
+  padding: 16rpx;
+}
+
+.module-header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 12rpx;
+}
+
+.module-header.highlight {
+  background: #ddd0d8;
+  margin: 0 -16rpx 12rpx -16rpx;
+  padding: 8rpx 16rpx;
+}
+
+.module-title-cn {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #5a4a5a;
+}
+
+.module-title-en {
+  font-size: 18rpx;
+  color: #8a7a8a;
+  margin-left: 6rpx;
+}
+
+/* ========== 健康模块 ========== */
+.health-module {
+  border-bottom: 1rpx solid #d8d0d4;
+}
+
+.health-row {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 0;
+}
+
+.health-label {
+  font-size: 22rpx;
+  color: #5a4a5a;
+  width: 70rpx;
+}
+
+.health-value {
+  flex: 1;
+  font-size: 22rpx;
+  color: #4a3a4a;
+  border-bottom: 1rpx solid #c8c0c4;
+  padding: 4rpx 8rpx;
+  min-width: 60rpx;
+  text-align: center;
+}
+
+.health-unit {
+  font-size: 18rpx;
+  color: #8a7a8a;
+  margin-left: 8rpx;
+}
+
+/* ========== 时间布局模块 ========== */
+.timeline-module {
+  padding: 0;
+}
+
+.timeline-header {
+  background: #c8b0c0;
+  padding: 8rpx 16rpx;
+  text-align: center;
+}
+
+.timeline-title {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #5a4a5a;
+}
+
+.timeline-list {
+  padding: 8rpx 16rpx;
+}
+
+.timeline-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 6rpx 0;
+  border-bottom: 1rpx solid #d0c0c8;
+}
+
+.timeline-hour {
+  width: 140rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #6a5a6a;
+  flex-shrink: 0;
+}
+
+.timeline-value {
+  flex: 1;
+  font-size: 20rpx;
+  color: #4a3a4a;
+  line-height: 1.5;
+}
+
+/* ========== 列表模块 ========== */
+.list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.list-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 6rpx 0;
+  border-bottom: 1rpx solid #d0c0c8;
+}
+
+.list-checkbox {
+  width: 28rpx;
+  height: 28rpx;
+  border: 2rpx solid #c8b8c0;
+  border-radius: 4rpx;
+  margin-right: 12rpx;
+  margin-top: 2rpx;
+  flex-shrink: 0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-checkbox.checked {
+  background: #a08090;
+  border-color: #a08090;
+}
+
+.check-icon {
+  font-size: 20rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+.list-text-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.list-text {
+  font-size: 24rpx;
+  color: #4a3a4a;
+  line-height: 1.5;
+}
+
+.list-text.completed {
+  color: #a0909a;
+}
+
+.strikethrough-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2rpx;
+  background: #a08090;
+}
+
+/* ========== 心得模块 ========== */
+.insight-module {
+  border-top: 1rpx solid #d8d0d4;
+}
+
+.insight-lines {
+  padding: 8rpx 0;
+}
+
+.insight-text {
+  font-size: 24rpx;
+  color: #4a3a4a;
+  line-height: 1.8;
+}
+
+/* ========== 总结模块 ========== */
+.summary-module {
+  background: #dcd0d7;
+  border-top: 1rpx solid #c8b8c0;
+}
+
+.module-header-full {
+  display: flex;
+  align-items: baseline;
+  padding: 12rpx 16rpx;
+}
+
+.summary-area {
+  padding: 12rpx 16rpx 20rpx;
+}
+
+.summary-text {
+  font-size: 24rpx;
+  color: #4a3a4a;
+  line-height: 1.8;
+}
+
+/* ========== 操作区域 ========== */
+.action-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 20rpx 24rpx calc(env(safe-area-inset-bottom, 0rpx) + 20rpx);
+  background: linear-gradient(180deg, rgba(232, 224, 216, 0) 0%, #e8e0d8 30%);
+}
+
+.generate-btn {
+  display: inline-block;
+  padding: 20rpx 60rpx;
+  background: linear-gradient(135deg, #c8a8b8, #b898a8);
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 500;
+  border-radius: 999rpx;
+  box-shadow: 0 4rpx 16rpx rgba(139, 115, 133, 0.25);
+}
+
+.generate-btn:active {
+  transform: scale(0.98);
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+}

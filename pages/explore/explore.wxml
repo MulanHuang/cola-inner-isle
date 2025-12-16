@@ -84,5 +84,35 @@
       </view>
       <view class="explore-arrow">→</view>
     </view>
+
+    <!-- 每日计划 -->
+    <view class="explore-item" bindtap="goToDailyPlan">
+      <view class="explore-icon">📖</view>
+      <view class="explore-content">
+        <view class="explore-name">每日计划</view>
+        <view class="explore-desc">为今天留下些什么</view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+
+    <!-- 周计划表 -->
+    <view class="explore-item" bindtap="goToWeekPlan">
+      <view class="explore-icon">📅</view>
+      <view class="explore-content">
+        <view class="explore-name">周计划表</view>
+        <view class="explore-desc">规划你的一周</view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
+
+    <!-- 月度记录 -->
+    <view class="explore-item" bindtap="goToMonthlyPlan">
+      <view class="explore-icon">📓</view>
+      <view class="explore-content">
+        <view class="explore-name">月度记录</view>
+        <view class="explore-desc">温和记录每一天的痕迹</view>
+      </view>
+      <view class="explore-arrow">→</view>
+    </view>
   </view>
 </view>

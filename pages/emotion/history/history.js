@@ -1,11 +1,23 @@
 // pages/emotion/history/history.js
 const db = wx.cloud.database();
 
+// 配置常量
+const CONFIG = {
+  MAX_RECORDS: 200, // 最大存储/查询记录数
+  INITIAL_DISPLAY: 5, // 初始显示条数
+  LOAD_MORE_COUNT: 15, // 每次加载更多条数
+};
+
 Page({
   data: {
-    emotions: [],
+    allEmotions: [], // 所有加载的记录
+    emotions: [], // 当前显示的记录
+    displayCount: CONFIG.INITIAL_DISPLAY, // 当前显示数量
     totalCount: 0,
     recentDays: 0,
+    hasMore: false, // 是否有更多记录可加载
+    isLoadingMore: false, // 是否正在加载更多
+    isDeleting: false, // 是否正在删除
     // 标签映射表（与 emotion.js 保持一致）
     tagMap: {
       work: { name: "工作", icon: "💼" },
@@ -57,52 +69,77 @@ Page({
       .filter(Boolean);
   },
 
-  // 加载情绪历史（改进版：支持本地存储降级）
+  // 加载情绪历史（改进版：合并云数据库和本地存储，支持分页显示）
   async loadEmotionHistory() {
     wx.showLoading({ title: "加载中..." });
 
     try {
-      let emotions = [];
+      let cloudEmotions = [];
+      let localEmotions = [];
 
-      // 尝试从云数据库加载
+      // 1. 尝试从云数据库加载（最多200条）
       try {
         const res = await db
           .collection("emotions")
           .orderBy("createTime", "desc")
-          .limit(100)
+          .limit(CONFIG.MAX_RECORDS)
           .get();
 
-        emotions = res.data.map((item) => ({
+        cloudEmotions = res.data.map((item) => ({
           ...item,
+          source: "cloud",
           timeStr: this.formatTime(item.createTime),
-          // 转换标签 ID 为显示对象
           tagsDisplay: this.convertTagsToDisplay(item.tags),
         }));
 
-        console.log("✅ 从云数据库加载历史记录成功", emotions.length, "条");
-        console.log("✅ 标签数据已转换", emotions[0]?.tagsDisplay);
-      } catch (cloudErr) {
-        console.warn(
-          "⚠️ 云数据库加载失败，使用本地存储",
-          cloudErr.errMsg || cloudErr
+        console.log(
+          "✅ 从云数据库加载历史记录成功",
+          cloudEmotions.length,
+          "条"
         );
-
-        // 降级方案：从本地存储加载
-        const localEmotions = wx.getStorageSync("localEmotions") || [];
-        emotions = localEmotions.map((item) => ({
-          ...item,
-          timeStr: this.formatTime(item.createTime),
-          // 转换标签 ID 为显示对象
-          tagsDisplay: this.convertTagsToDisplay(item.tags),
-        }));
-
-        console.log("✅ 从本地存储加载历史记录", emotions.length, "条");
-        console.log("✅ 标签数据已转换", emotions[0]?.tagsDisplay);
+      } catch (cloudErr) {
+        console.warn("⚠️ 云数据库加载失败", cloudErr.errMsg || cloudErr);
       }
 
+      // 2. 同时从本地存储加载
+      const localData = wx.getStorageSync("localEmotions") || [];
+      localEmotions = localData.map((item, index) => ({
+        ...item,
+        source: "local",
+        _id: item._id || `local_legacy_${index}`,
+        timeStr: this.formatTime(item.createTime),
+        tagsDisplay: this.convertTagsToDisplay(item.tags),
+      }));
+
+      console.log("✅ 从本地存储加载历史记录", localEmotions.length, "条");
+
+      // 3. 合并数据（去重：本地数据可能与云数据重复，以云数据为准）
+      const cloudTimes = new Set(cloudEmotions.map((e) => e.createTime));
+      const uniqueLocalEmotions = localEmotions.filter(
+        (e) => !cloudTimes.has(e.createTime)
+      );
+
+      // 4. 合并并按时间排序，限制最多200条
+      let allEmotions = [...cloudEmotions, ...uniqueLocalEmotions].sort(
+        (a, b) => new Date(b.createTime) - new Date(a.createTime)
+      );
+
+      if (allEmotions.length > CONFIG.MAX_RECORDS) {
+        allEmotions = allEmotions.slice(0, CONFIG.MAX_RECORDS);
+      }
+
+      console.log("✅ 合并后总记录数", allEmotions.length, "条");
+
+      // 5. 分页显示：初始只显示前 N 条
+      const displayCount = Math.min(CONFIG.INITIAL_DISPLAY, allEmotions.length);
+      const displayEmotions = allEmotions.slice(0, displayCount);
+
       this.setData({
-        emotions,
-        totalCount: emotions.length,
+        allEmotions: allEmotions,
+        emotions: displayEmotions,
+        displayCount: displayCount,
+        totalCount: allEmotions.length,
+        hasMore: allEmotions.length > displayCount,
       });
 
       wx.hideLoading();
@@ -116,10 +153,34 @@ Page({
     }
   },
 
-  // 计算统计数据（改进版：支持本地存储降级）
+  // 加载更多记录
+  loadMore() {
+    if (!this.data.hasMore || this.data.isLoadingMore) return;
+
+    this.setData({ isLoadingMore: true });
+
+    const { allEmotions, displayCount } = this.data;
+    const newDisplayCount = Math.min(
+      displayCount + CONFIG.LOAD_MORE_COUNT,
+      allEmotions.length
+    );
+    const newDisplayEmotions = allEmotions.slice(0, newDisplayCount);
+
+    setTimeout(() => {
+      this.setData({
+        emotions: newDisplayEmotions,
+        displayCount: newDisplayCount,
+        hasMore: newDisplayCount < allEmotions.length,
+        isLoadingMore: false,
+      });
+    }, 300); // 轻微延迟，提升加载体验
+  },
+
+  // 计算统计数据（改进版：合并云数据库和本地存储）
   async calculateStats() {
     try {
-      let emotionData = [];
+      let cloudData = [];
+      let localData = [];
 
       // 尝试从云数据库加载
       try {
@@ -127,11 +188,22 @@ Page({
           .collection("emotions")
           .orderBy("createTime", "desc")
           .get();
-        emotionData = res.data;
+        cloudData = res.data;
       } catch (cloudErr) {
-        // 降级方案：从本地存储加载
-        emotionData = wx.getStorageSync("localEmotions") || [];
+        console.warn("⚠️ 统计：云数据库加载失败", cloudErr.errMsg || cloudErr);
       }
+
+      // 从本地存储加载
+      localData = wx.getStorageSync("localEmotions") || [];
+
+      // 合并数据（使用 createTime 去重）
+      const cloudTimes = new Set(
+        cloudData.map((e) => new Date(e.createTime).toISOString())
+      );
+      const uniqueLocal = localData.filter(
+        (e) => !cloudTimes.has(new Date(e.createTime).toISOString())
+      );
+      const emotionData = [...cloudData, ...uniqueLocal];
 
       // 计算连续记录天数
       let recentDays = 0;
@@ -192,6 +264,86 @@ Page({
       return `昨天 ${hour}:${minute}`;
     } else {
       return `${month}-${day} ${hour}:${minute}`;
+    }
+  },
+
+  // 确认删除记录
+  confirmDelete(e) {
+    const { id, source, index } = e.currentTarget.dataset;
+
+    wx.showModal({
+      title: "确认删除",
+      content: "删除后无法恢复，确定要删除这条记录吗？",
+      confirmText: "删除",
+      confirmColor: "#ff6b6b",
+      cancelText: "取消",
+      success: (res) => {
+        if (res.confirm) {
+          this.deleteRecord(id, source, index);
+        }
+      },
+    });
+  },
+
+  // 执行删除记录
+  async deleteRecord(id, source, index) {
+    if (this.data.isDeleting) return;
+
+    this.setData({ isDeleting: true });
+    wx.showLoading({ title: "删除中...", mask: true });
+
+    try {
+      // 根据数据来源决定删除方式
+      if (source === "cloud") {
+        // 从云数据库删除
+        try {
+          await db.collection("emotions").doc(id).remove();
+          console.log("✅ 从云数据库删除成功", id);
+        } catch (cloudErr) {
+          console.error("❌ 云数据库删除失败", cloudErr);
+          throw new Error("云数据库删除失败");
+        }
+      } else {
+        // 从本地存储删除
+        const localEmotions = wx.getStorageSync("localEmotions") || [];
+        const newLocalEmotions = localEmotions.filter(
+          (item) => item._id !== id
+        );
+        wx.setStorageSync("localEmotions", newLocalEmotions);
+        console.log("✅ 从本地存储删除成功", id);
+      }
+
+      // 更新页面数据
+      const { allEmotions, displayCount } = this.data;
+      const newAllEmotions = allEmotions.filter((item) => item._id !== id);
+      const newDisplayCount = Math.min(displayCount, newAllEmotions.length);
+      const newDisplayEmotions = newAllEmotions.slice(0, newDisplayCount);
+
+      this.setData({
+        allEmotions: newAllEmotions,
+        emotions: newDisplayEmotions,
+        displayCount: newDisplayCount,
+        totalCount: newAllEmotions.length,
+        hasMore: newDisplayCount < newAllEmotions.length,
+        isDeleting: false,
+      });
+
+      // 重新计算统计数据
+      this.calculateStats();
+
+      wx.hideLoading();
+      wx.showToast({
+        title: "已删除 🗑️",
+        icon: "success",
+      });
+    } catch (err) {
+      console.error("❌ 删除记录失败", err);
+      this.setData({ isDeleting: false });
+      wx.hideLoading();
+      wx.showToast({
+        title: "删除失败，请重试",
+        icon: "none",
+      });
     }
   },
 });

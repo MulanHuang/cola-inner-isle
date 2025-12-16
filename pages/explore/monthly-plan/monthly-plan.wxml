@@ -1,0 +1,247 @@
+<!--pages/explore/monthly-plan/monthly-plan.wxml-->
+<view class="container monthly-plan-container">
+  <!-- 顶部操作 -->
+  <view class="header-bar">
+    <view class="icon-btn" bindtap="goBack">‹</view>
+    <view class="icon-btn" bindtap="viewHistory">📅</view>
+  </view>
+
+  <!-- 大月份标题区 -->
+  <view class="month-hero">
+    <view class="hero-month-num">{{currentMonth < 10 ? '0' + currentMonth : currentMonth}}</view>
+    <view class="hero-meta">
+      <view class="hero-year-row">
+        <text class="hero-year">{{currentYear}}</text>
+        <text class="hero-month-en">{{monthNameEn}}</text>
+      </view>
+      <text class="plan-label">Monthly Plan</text>
+      <view class="hero-nav">
+        <view class="nav-btn nav-outline" bindtap="prevMonth">‹</view>
+        <view class="nav-btn nav-outline" bindtap="nextMonth">›</view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="main-scroll">
+    <!-- 本月任务区块 -->
+    <view class="section-block tasks-section">
+      <view class="section-head">
+        <view class="section-title">本月任务</view>
+        <view class="section-caption">优先级和截止日清晰排布，双栏表格风格</view>
+      </view>
+      <view class="tasks-table framed">
+        <view class="tasks-body task-list-panel">
+          <view wx:for="{{tasks}}" wx:key="id" class="task-row todo-style">
+            <view class="list-checkbox {{item.completed ? 'checked' : ''}}" catchtap="toggleTaskComplete" data-index="{{index}}">
+              <text wx:if="{{item.completed}}" class="check-icon">✓</text>
+            </view>
+            <view class="task-content" bindtap="onTaskTap" data-index="{{index}}">
+              <view class="task-title {{item.completed ? 'completed' : ''}}">{{item.title || '未命名任务'}}</view>
+              <view class="task-meta">
+                <text wx:if="{{item.priorityLabel}}" class="meta-priority {{item.priority}}">{{item.priorityLabel}}</text>
+                <text wx:if="{{item.deadline}}" class="meta-deadline">{{item.deadline}}</text>
+              </view>
+              <view wx:if="{{item.completed}}" class="strikethrough-line"></view>
+            </view>
+            <view class="task-delete" catchtap="removeTask" data-index="{{index}}">×</view>
+          </view>
+          <view class="add-row" bindtap="onAddTask">+ 添加任务</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 截止时间标注（简洁日历） -->
+    <view class="section-block calendar-section">
+      <view class="section-head">
+        <view class="section-title">截止时间标注</view>
+        <view class="section-caption">用图标与颜色标出本月记忆点</view>
+      </view>
+      <view class="calendar-wrapper">
+        <view class="calendar-frame">
+          <!-- 星期表头 -->
+          <view class="weekdays-row">
+            <text wx:for="{{weekDaysWithIcon}}" wx:key="index" class="weekday">
+              <text class="weekday-text">{{item.name}}</text>
+            </text>
+          </view>
+          <!-- 日期格网格 -->
+          <view class="calendar-grid">
+            <view wx:for="{{calendarDays}}"
+                  wx:key="index"
+                  class="calendar-cell {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isToday ? 'is-today' : ''}} {{item.hasContent ? 'has-content' : ''}} {{item.hasDailyRecord ? 'has-daily-record' : ''}}"
+                  bindtap="onCellContentTap"
+                  data-date-str="{{item.dateStr}}"
+                  data-index="{{index}}">
+              <view class="cell-date-row">
+                <text class="cell-date-num">{{item.day}}</text>
+                <!-- 每日记录存在标记（柔和小圆点） -->
+                <view wx:if="{{item.hasDailyRecord}}" class="daily-record-dot"></view>
+              </view>
+              <view wx:if="{{item.contentPreview && item.contentPreview.length}}" class="cell-notes">
+                <text wx:for="{{item.contentPreview}}"
+                      wx:key="idx"
+                      class="cell-note-line">{{item}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="calendar-bottom-bar"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 本月复盘入口 -->
+    <view class="section-block review-section" bindtap="goToReview">
+      <view class="review-main">
+        <text class="review-title">本月复盘</text>
+        <!-- 本月每日记录数量提示（联动功能） -->
+        <text wx:if="{{monthDailyCount > 0}}" class="review-hint-text">这个月，你记录了 {{monthDailyCount}} 天</text>
+      </view>
+      <text class="review-arrow">→</text>
+    </view>
+
+    <!-- 本月周记录入口（联动功能） -->
+    <view wx:if="{{monthWeekRecords.length > 0}}" class="section-block week-link-section" bindtap="showMonthWeekSheet">
+      <view class="week-link-main">
+        <text class="week-link-title">查看本月的周记录</text>
+        <text class="week-link-count">{{monthWeekRecords.length}} 周</text>
+      </view>
+      <text class="week-link-arrow">→</text>
+    </view>
+
+    <!-- 🧭 AI 成长教练模块（必须在复盘模块下方） -->
+    <view class="section-block ai-coach-section">
+      <view class="ai-coach-header">
+        <text class="ai-coach-title">🧭 和成长教练一起看这个月</text>
+      </view>
+      <view class="ai-coach-desc">
+        <text class="ai-coach-desc-line">当时间拉长，</text>
+        <text class="ai-coach-desc-line">有些模式会慢慢浮现。</text>
+      </view>
+      <button class="ai-coach-btn" bindtap="triggerMonthlyAICoach" disabled="{{aiCoachLoading}}">
+        <text wx:if="{{!aiCoachLoading}}">换一个角度看看这个月</text>
+        <text wx:else>正在整理思绪...</text>
+      </button>
+      <view class="ai-coach-tip">AI生成，仅供参考</view>
+
+      <!-- AI 教练输出卡片（可折叠） -->
+      <view wx:if="{{aiCoachResponse}}" class="ai-coach-result">
+        <view class="ai-result-header" bindtap="toggleAICoachResult">
+          <text class="ai-result-label">🌿 成长教练的视角</text>
+          <text class="ai-result-toggle">{{aiCoachResultExpanded ? '收起' : '展开'}}</text>
+        </view>
+        <view class="ai-result-content {{aiCoachResultExpanded ? 'expanded' : 'collapsed'}}">
+          <text class="ai-result-text">{{aiCoachResponse}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部留白 -->
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- 本月周记录列表弹层（联动功能） -->
+  <view class="week-sheet {{showMonthWeekSheet ? 'show' : ''}}" catchtouchmove="preventTouchMove">
+    <view class="week-sheet-mask" bindtap="hideMonthWeekSheet"></view>
+    <view class="week-sheet-content">
+      <view class="week-sheet-header">
+        <text class="week-sheet-title">本月的周记录</text>
+        <view class="week-sheet-close" bindtap="hideMonthWeekSheet">×</view>
+      </view>
+      <scroll-view class="week-sheet-list" scroll-y>
+        <view wx:for="{{monthWeekRecords}}" wx:key="weekKey" class="week-item" bindtap="goToWeekDetail" data-week-key="{{item.weekKey}}" data-year="{{item.year}}" data-week="{{item.weekOfYear}}">
+          <text class="week-item-title">{{item.displayTitle}}</text>
+          <text class="week-item-preview">{{item.preview}}</text>
+          <text class="week-item-arrow">›</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 日期记录编辑弹层 -->
+  <view class="edit-sheet {{showEditSheet ? 'show' : ''}}" catchtouchmove="preventTouchMove">
+    <view class="sheet-mask" bindtap="closeEditSheet"></view>
+    <view class="sheet-content">
+      <view class="sheet-header">
+        <text class="sheet-date">{{editingDateDisplay}}</text>
+        <view class="sheet-close" bindtap="closeEditSheet">×</view>
+      </view>
+      <!-- 每日记录回看入口（联动功能） -->
+      <view wx:if="{{editingDateHasDailyRecord}}" class="daily-link-hint" bindtap="goToDailyPlan">
+        <text class="daily-link-text">这一天，你写过一条每日记录</text>
+        <text class="daily-link-arrow">›</text>
+      </view>
+      <view class="sheet-body">
+        <view class="todo-sheet">
+          <view class="todo-list">
+            <view wx:for="{{editingTodos}}" wx:key="index" class="todo-row">
+              <view class="todo-checkbox {{item.completed ? 'checked' : ''}}"
+                    bindtap="toggleTodoItem"
+                    data-index="{{index}}">
+                <text wx:if="{{item.completed}}" class="check-icon">✓</text>
+              </view>
+              <view class="todo-input-wrap">
+                <textarea class="todo-input {{item.completed ? 'completed' : ''}}"
+                          placeholder="{{index === 0 && editingTodos.length === 1 ? '记录这一天...' : '写点什么'}}"
+                          placeholder-class="todo-placeholder"
+                          value="{{item.text}}"
+                          bindinput="onTodoItemInput"
+                          data-index="{{index}}"
+                          auto-height
+                          maxlength="-1" />
+                <view wx:if="{{item.completed}}" class="strikethrough-line"></view>
+              </view>
+              <view wx:if="{{editingTodos.length > 1}}" class="todo-delete" bindtap="removeTodoItem" data-index="{{index}}">×</view>
+            </view>
+          </view>
+          <view class="todo-add" bindtap="addTodoItem">+ 添加</view>
+        </view>
+      </view>
+      <view class="sheet-footer">
+        <button class="btn-confirm" bindtap="confirmEdit">完成</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 任务编辑弹层 -->
+  <view class="edit-sheet {{showTaskSheet ? 'show' : ''}}" catchtouchmove="preventTouchMove">
+    <view class="sheet-mask" bindtap="closeTaskSheet"></view>
+    <view class="sheet-content task-sheet">
+      <view class="sheet-header">
+        <text class="sheet-date">{{editingTaskIndex >= 0 ? '编辑任务' : '添加任务'}}</text>
+        <view class="sheet-close" bindtap="closeTaskSheet">×</view>
+      </view>
+      <view class="sheet-body task-form">
+        <view class="form-item">
+          <text class="form-label">事项</text>
+          <textarea class="form-input task-title-input"
+                    placeholder="任务内容"
+                    placeholder-class="form-placeholder"
+                    value="{{editingTask.title}}"
+                    auto-height
+                    bindinput="onTaskTitleInput"></textarea>
+        </view>
+        <view class="form-item">
+          <text class="form-label">优先级</text>
+          <view class="priority-options">
+            <view class="priority-opt {{editingTask.priority === 'high' ? 'active' : ''}}"
+                  data-priority="high" bindtap="onPrioritySelect">高</view>
+            <view class="priority-opt {{editingTask.priority === 'medium' ? 'active' : ''}}"
+                  data-priority="medium" bindtap="onPrioritySelect">中</view>
+            <view class="priority-opt {{editingTask.priority === 'low' ? 'active' : ''}}"
+                  data-priority="low" bindtap="onPrioritySelect">低</view>
+          </view>
+        </view>
+        <view class="form-item">
+          <text class="form-label">截止日期</text>
+          <picker mode="date" value="{{editingTask.deadline}}" bindchange="onDeadlineChange">
+            <view class="form-input picker-value">{{editingTask.deadline || '选择日期'}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="sheet-footer task-footer">
+        <button wx:if="{{editingTaskIndex >= 0}}" class="btn-delete" bindtap="deleteTask">删除</button>
+        <button class="btn-confirm" bindtap="confirmTask">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

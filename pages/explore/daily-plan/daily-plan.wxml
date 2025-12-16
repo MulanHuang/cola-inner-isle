@@ -1,0 +1,201 @@
+<!--pages/explore/daily-plan/daily-plan.wxml-->
+<view class="container daily-plan-container">
+  <!-- 顶部导航 -->
+  <view class="header-bar">
+    <view class="back-btn" bindtap="goBack">
+      <view class="back-icon"></view>
+    </view>
+    <view class="header-title">每日计划</view>
+    <view class="history-btn" bindtap="viewHistory">
+      <text class="history-icon">📅</text>
+    </view>
+  </view>
+
+  <!-- 纸质手账主体 -->
+  <view class="notebook-wrapper">
+    <!-- 日期栏 -->
+    <view class="date-bar">
+      <view class="date-label">日 期</view>
+      <view class="date-value">{{todayDateDisplay}}</view>
+    </view>
+
+    <!-- 主内容区 - 左右分栏 -->
+    <view class="main-content">
+      <!-- 左侧栏 -->
+      <view class="left-column">
+        <!-- 健康 / Health plan -->
+        <view class="module health-module">
+          <view class="module-header">
+            <text class="module-title-cn">健康</text>
+            <text class="module-title-en">/ Health plan</text>
+          </view>
+          <view class="health-row">
+            <text class="health-label">运动：</text>
+            <input class="health-input"
+                   placeholder=""
+                   value="{{health.exercise}}"
+                   bindinput="onHealthInput"
+                   data-field="exercise" />
+            <text class="health-unit">分钟</text>
+          </view>
+          <view class="health-row">
+            <text class="health-label">饮水：</text>
+            <input class="health-input"
+                   placeholder=""
+                   value="{{health.water}}"
+                   bindinput="onHealthInput"
+                   data-field="water" />
+            <text class="health-unit">毫升</text>
+          </view>
+          <view class="health-row">
+            <text class="health-label">睡眠：</text>
+            <input class="health-input"
+                   placeholder=""
+                   value="{{health.sleep}}"
+                   bindinput="onHealthInput"
+                   data-field="sleep" />
+            <text class="health-unit">小时</text>
+          </view>
+        </view>
+
+        <!-- 时间布局 -->
+        <view class="module timeline-module">
+          <view class="timeline-header">
+            <text class="timeline-title">时间布局</text>
+          </view>
+          <view class="timeline-list">
+            <view wx:for="{{timeSlots}}" wx:key="index" class="timeline-row">
+              <text class="timeline-hour">{{item.time}}</text>
+              <textarea class="timeline-input"
+                        placeholder=""
+                        value="{{item.plan}}"
+                        bindinput="onTimeSlotInput"
+                        data-index="{{index}}"
+                        auto-height
+                        maxlength="-1" />
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 右侧栏 -->
+      <view class="right-column">
+        <!-- 待办事项 / To Do List -->
+        <view class="module todo-module">
+          <view class="module-header">
+            <text class="module-title-cn">待办事项</text>
+            <text class="module-title-en">/ To Do List</text>
+          </view>
+          <view class="list-items">
+            <view wx:for="{{todoList}}" wx:key="index" class="list-row">
+              <view class="list-checkbox {{item.completed ? 'checked' : ''}}"
+                    bindtap="toggleTodoComplete"
+                    data-index="{{index}}">
+                <text wx:if="{{item.completed}}" class="check-icon">✓</text>
+              </view>
+              <view class="list-input-wrapper">
+                <textarea class="list-input {{item.completed ? 'completed' : ''}}"
+                          placeholder="{{index === 0 && todoList.length === 1 ? '写下来就已经很好了' : ''}}"
+                          placeholder-class="input-placeholder"
+                          value="{{item.text}}"
+                          bindinput="onTodoInput"
+                          data-index="{{index}}"
+                          auto-height
+                          maxlength="-1" />
+                <view wx:if="{{item.completed}}" class="strikethrough-line"></view>
+              </view>
+              <view wx:if="{{todoList.length > 1}}" class="remove-btn" bindtap="removeTodo" data-index="{{index}}">×</view>
+            </view>
+          </view>
+          <view class="add-row" bindtap="addTodo">+ 添加</view>
+        </view>
+
+        <!-- 重要事项 / Important List -->
+        <view class="module important-module">
+          <view class="module-header highlight">
+            <text class="module-title-cn">重要事项</text>
+            <text class="module-title-en">/ Important List</text>
+          </view>
+          <view class="list-items">
+            <view wx:for="{{importantList}}" wx:key="index" class="list-row">
+              <view class="list-checkbox {{item.completed ? 'checked' : ''}}"
+                    bindtap="toggleImportantComplete"
+                    data-index="{{index}}">
+                <text wx:if="{{item.completed}}" class="check-icon">✓</text>
+              </view>
+              <view class="list-input-wrapper">
+                <textarea class="list-input {{item.completed ? 'completed' : ''}}"
+                          placeholder="{{index === 0 && importantList.length === 1 ? '哪怕只有一件' : ''}}"
+                          placeholder-class="input-placeholder"
+                          value="{{item.text}}"
+                          bindinput="onImportantInput"
+                          data-index="{{index}}"
+                          auto-height
+                          maxlength="-1" />
+                <view wx:if="{{item.completed}}" class="strikethrough-line"></view>
+              </view>
+              <view wx:if="{{importantList.length > 1}}" class="remove-btn" bindtap="removeImportant" data-index="{{index}}">×</view>
+            </view>
+          </view>
+          <view class="add-row" bindtap="addImportant">+ 添加</view>
+        </view>
+
+        <!-- 心得 / Acquaintance -->
+        <view class="module insight-module">
+          <view class="module-header highlight">
+            <text class="module-title-cn">心得</text>
+            <text class="module-title-en">/ Acquaintance</text>
+          </view>
+          <view class="insight-lines">
+            <textarea class="insight-textarea"
+                      placeholder="今天的你，是什么状态？"
+                      placeholder-class="input-placeholder"
+                      value="{{insight}}"
+                      bindinput="onInsightInput"
+                      maxlength="-1"
+                      auto-height />
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 总结 / Summary -->
+    <view class="module summary-module">
+      <view class="module-header-full">
+        <text class="module-title-cn">总结</text>
+        <text class="module-title-en">/ Summary</text>
+      </view>
+      <view class="summary-area">
+        <textarea class="summary-textarea"
+                  placeholder="无论如何，这都是你的一天。"
+                  placeholder-class="input-placeholder"
+                  value="{{summary}}"
+                  bindinput="onSummaryInput"
+                  maxlength="-1"
+                  auto-height />
+      </view>
+    </view>
+
+    <!-- 视角切换入口（联动功能） -->
+    <view class="perspective-links">
+      <view class="perspective-item" bindtap="goToWeekPlan">
+        <text class="perspective-label">看看这一周</text>
+        <text class="perspective-arrow">›</text>
+      </view>
+      <view class="perspective-item" bindtap="goToMonthPlan">
+        <text class="perspective-label">看看这个月</text>
+        <text class="perspective-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作区 -->
+  <view class="action-bar">
+    <button class="btn-save" bindtap="saveRecord">保存</button>
+    <view class="history-entry" bindtap="goToHistory">
+      <text class="history-icon">📅</text>
+      <text class="history-text">历史记录</text>
+    </view>
+  </view>
+
+</view>

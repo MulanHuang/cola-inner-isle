@@ -1,0 +1,198 @@
+/* pages/explore/daily-plan/history/history.wxss */
+.history-container {
+  padding: 0 24rpx 40rpx;
+  background: linear-gradient(180deg, #ede6de 0%, #e6dcd1 60%, #e0d3c7 100%);
+  min-height: 100vh;
+}
+
+/* 顶部导航 */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22rpx 0 18rpx;
+  position: sticky;
+  top: 0;
+  margin-top: 120rpx;
+  padding-top: calc(env(safe-area-inset-top, 44px) + 6rpx);
+  background: #ede6de;
+  z-index: 20;
+  backdrop-filter: blur(8rpx);
+}
+
+.back-btn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(139, 115, 85, 0.08);
+}
+
+.back-icon {
+  width: 26rpx;
+  height: 26rpx;
+  border-left: 4rpx solid #2e2a29;
+  border-bottom: 4rpx solid #2e2a29;
+  transform: rotate(45deg);
+}
+
+.header-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.header-placeholder {
+  width: 60rpx;
+}
+
+/* 引导文案 */
+.guide-text {
+  text-align: center;
+  padding: 32rpx 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.guide-text text {
+  font-size: 30rpx;
+  color: #6f5b5a;
+  line-height: 1.6;
+}
+
+/* 月份导航 */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32rpx;
+  margin-bottom: 28rpx;
+}
+
+.nav-btn {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(139, 115, 85, 0.08);
+  font-size: 36rpx;
+  color: #8b7355;
+}
+
+.nav-btn:active {
+  background: rgba(139, 115, 85, 0.15);
+}
+
+.month-display {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #4a3a4a;
+  min-width: 200rpx;
+  text-align: center;
+}
+
+/* 日历卡片 */
+.calendar-card {
+  background: linear-gradient(180deg, #ffffff, #fbf7f3);
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 8rpx 22rpx rgba(90, 70, 80, 0.12);
+  border: 1rpx solid rgba(140, 120, 120, 0.1);
+}
+
+/* 星期表头 */
+.weekdays-row {
+  display: flex;
+  margin-bottom: 16rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 1rpx solid #f0ebe4;
+}
+
+.weekday {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  font-weight: 500;
+}
+
+/* 日期网格 */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4rpx;
+}
+
+.day-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 0;
+  min-height: 80rpx;
+  border-radius: 12rpx;
+  transition: all 0.2s ease;
+}
+
+.day-cell:active {
+  background: #f5f2ed;
+}
+
+.day-num {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.day-cell.is-today .day-num {
+  color: #8b7355;
+  font-weight: 600;
+}
+
+.day-cell.selected {
+  background: #f5f1e8;
+  box-shadow: 0 6rpx 16rpx rgba(150, 130, 110, 0.12);
+}
+
+/* 记录小圆点 */
+.record-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c8a27e, #b88c6a);
+  opacity: 0.8;
+}
+
+/* 图例 */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 32rpx;
+  margin-top: 24rpx;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.legend-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+}
+
+.legend-dot.has-record {
+  background: #c8a27e;
+}
+
+.legend-text {
+  font-size: 22rpx;
+  color: #999;
+}

@@ -72,9 +72,39 @@
   color: #333333;
 }
 
+.record-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
 .record-time {
   font-size: 24rpx;
   color: #999999;
+}
+
+/* 删除按钮 */
+.delete-btn {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 107, 107, 0.1);
+  transition: all 0.2s ease;
+}
+
+.delete-btn:active {
+  background: rgba(255, 107, 107, 0.3);
+  transform: scale(0.95);
+}
+
+.delete-icon {
+  font-size: 32rpx;
+  color: #ff6b6b;
+  font-weight: 300;
+  line-height: 1;
 }
 
 /* 能量指数 */
@@ -283,6 +313,58 @@
 }
 
 .empty-hint {
+  font-size: 24rpx;
+  color: #cccccc;
+}
+
+/* 加载更多 */
+.load-more-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 0 20rpx;
+}
+
+.load-more-btn {
+  width: 280rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #8b7355;
+  background: #ffffff;
+  border: 2rpx solid #d4c5b5;
+  border-radius: 36rpx;
+  transition: all 0.2s ease;
+}
+
+.load-more-btn:active {
+  background: #f5f1e8;
+  transform: scale(0.98);
+}
+
+.load-more-btn.loading {
+  color: #999999;
+  border-color: #e0e0e0;
+}
+
+.load-more-btn[disabled] {
+  opacity: 0.6;
+}
+
+.load-more-hint {
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: #bbbbbb;
+}
+
+/* 已加载全部 */
+.all-loaded {
+  text-align: center;
+  padding: 40rpx 0 20rpx;
+}
+
+.all-loaded-text {
   font-size: 24rpx;
   color: #cccccc;
 }

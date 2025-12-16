@@ -49,9 +49,7 @@
       <view class="habit-title-section">
         <view class="habit-title">探索工具 · 每日练习</view>
       </view>
-      <view class="habit-arrow" hover-class="habit-arrow-hover">
-        <image class="habit-arrow-icon" src="/assets/icons/chevron-right.svg" mode="aspectFit" />
-      </view>
+      <view class="habit-arrow" hover-class="habit-arrow-hover">→</view>
     </view>
 
     <!-- 打卡点阵区域 -->
@@ -123,24 +121,45 @@
     <view class="habit-encourage-text">坚持是一件了不起的事 ✨</view>
   </view>
 
-  <!-- 自我探索入口 -->
-  <view class="card explore-card">
-    <view class="explore-header">
-      <view class="explore-title">🌱 自我探索</view>
-      <view class="explore-arrow pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToExplore">→</view>
+  <!-- 更多探索 / 自我探索工具宫格 -->
+  <view class="card discovery-card">
+    <view class="discovery-header">
+      <view class="discovery-title">🌱 自我探索</view>
+      <view class="discovery-arrow pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToExplore">→</view>
     </view>
-    <view class="explore-items">
-      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToOhCard">OH卡</view>
-      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToAromaCard">🌿 芳香情绪卡</view>
-      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToEmotion">
-        <image class="explore-tag-icon" src="/assets/icons/heart-outline.svg" mode="aspectFit" />
-        <text>情绪记录</text>
-      </view>
-      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToDreamGrid">梦想九宫格</view>
-      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToChakraTest">脉轮测试</view>
-      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToMBTI">MBTI</view>
-      <view class="explore-tag pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToZodiac">星座</view>
-    </view>
+    <view class="discovery-subtitle">认识更真实的自己，核心工具与计划入口</view>
+
+    <swiper
+      class="tool-swiper"
+      indicator-dots="true"
+      indicator-color="rgba(0,0,0,0.1)"
+      indicator-active-color="#c69a68"
+      circular="false"
+    >
+      <swiper-item wx:for="{{toolPages}}" wx:key="index">
+        <view class="tool-grid">
+          <view
+            wx:for="{{item}}"
+            wx:key="key"
+            class="tool-item pressable"
+            hover-class="pressable-active"
+            hover-stay-time="60"
+            data-key="{{item.key}}"
+            catchtap="handleToolTap"
+          >
+            <view
+              class="tool-icon"
+              style="background: linear-gradient(135deg, {{item.bgStart}} 0%, {{item.bgEnd}} 100%);"
+            >
+              <text class="tool-icon-emoji">{{item.icon}}</text>
+              <view wx:if="{{item.badge}}" class="tool-badge">{{item.badge}}</view>
+            </view>
+            <view class="tool-label">{{item.title}}</view>
+            <view class="tool-desc">{{item.desc}}</view>
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
   </view>
 </view>
 

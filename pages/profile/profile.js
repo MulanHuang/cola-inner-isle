@@ -2,6 +2,7 @@
 const db = wx.cloud.database();
 const _ = db.command;
 const { getUserProfile } = require("../../utils/userProfile");
+const { setNavBarHeight } = require("../../utils/common");
 
 Page({
   data: {
@@ -55,7 +56,7 @@ Page({
   },
 
   onLoad() {
-    this.setNavBarHeight();
+    this.initNavBarHeight();
     this.loadUserFromCache();
     this.loadUserInfo();
     this.loadStats();
@@ -67,8 +68,10 @@ Page({
 
   // 页面显示时：高亮“我的”tab + 刷新信息与统计
   onShow() {
+    console.log("[profile] onShow triggered");
     if (typeof this.getTabBar === "function" && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 3 });
+      console.log("[profile] Setting tabBar selected to 3, show to true");
+      this.getTabBar().setData({ selected: 3, show: true });
     }
     this.loadUserInfo();
     this.loadStats();
@@ -91,14 +94,8 @@ Page({
   },
 
   // 设置导航栏高度
-  setNavBarHeight() {
-    const systemInfo = wx.getSystemInfoSync();
-    const statusBarHeight = systemInfo.statusBarHeight || 0;
-    const navBarHeight = statusBarHeight + 44; // 44px 是导航栏内容高度
-    this.setData({
-      statusBarHeight,
-      navBarHeight,
-    });
+  initNavBarHeight() {
+    setNavBarHeight(this);
   },
 
   // 加载用户星座信息
@@ -795,79 +792,6 @@ Page({
     this.setData({
       "userInfo.name": name,
     });
-  },
-
-  // [已废弃] 旧版上传头像方法，保留作为备用
-  // 新版请使用 onChooseAvatar + uploadAndSaveAvatar
-  async uploadAvatar() {
-    try {
-      const chooseRes = await wx.chooseImage({
-        count: 1,
-        sizeType: ["compressed"],
-      });
-      const filePath = chooseRes.tempFilePaths?.[0];
-      if (!filePath) return;
-
-      wx.showLoading({ title: "上传中..." });
-      let avatarUrl = filePath;
-
-      try {
-        const uploadRes = await wx.cloud.uploadFile({
-          cloudPath: `avatars/${Date.now()}-${Math.floor(
-            Math.random() * 1e6
-          )}.png`,
-          filePath,
-        });
-        avatarUrl = uploadRes.fileID || filePath;
-      } catch (err) {
-        console.warn("云上传失败，使用本地临时路径", err);
-      }
-
-      try {
-        const { res: userRes, collectionName } =
-          await this.getUserDocWithFallback();
-        if (userRes.data && userRes.data.length > 0) {
-          await db
-            .collection(collectionName)
-            .doc(userRes.data[0]._id)
-            .update({
-              data: {
-                avatarUrl,
-                updateTime: db.serverDate(),
-              },
-            });
-          this.updateLocalUserInfo({ ...userRes.data[0], avatarUrl });
-        } else {
-          const addRes = await db.collection(collectionName).add({
-            data: {
-              name: this.data.userInfo.name || "",
-              avatarUrl,
-              createTime: db.serverDate(),
-              updateTime: db.serverDate(),
-            },
-          });
-          this.updateLocalUserInfo({
-            _id: addRes._id,
-            name: this.data.userInfo.name,
-            avatarUrl,
-          });
-        }
-      } catch (err) {
-        console.error("保存头像失败", err);
-        this.updateLocalUserInfo({
-          ...this.data.userInfo,
-          avatarUrl,
-        });
-      } finally {
-        wx.hideLoading();
-      }
-
-      wx.showToast({ title: "头像已更新", icon: "success" });
-    } catch (err) {
-      if (err && err.errMsg && err.errMsg.includes("cancel")) return;
-      console.error("选择头像失败", err);
-      wx.showToast({ title: "更换失败，请重试", icon: "none" });
-    }
   },
 
   // 编辑个人资料

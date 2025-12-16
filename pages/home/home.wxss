@@ -2,7 +2,8 @@
 .home-container {
   min-height: 100vh;
   padding: 24rpx;
-  padding-bottom: 150rpx; /* 为底部导航栏留出空间 */
+  padding-top: 32rpx; /* 顶部增加更多间距，让第一个卡片有更清晰的边界 */
+  padding-bottom: 180rpx; /* 为底部导航栏留出更多空间，让最后一个卡片完整显示 */
   box-sizing: border-box;
 }
 
@@ -32,6 +33,8 @@
   box-shadow: 0 10rpx 30rpx rgba(139, 115, 85, 0.08),
     inset 0 1rpx 0 rgba(255, 255, 255, 0.6),
     inset 0 -2rpx 6rpx rgba(161, 136, 111, 0.08);
+  margin-top: 40rpx; /* 增加顶部间距，和顶部 logo 区域分隔更明显 */
+  margin-bottom: 28rpx; /* 增加底部间距 */
 }
 .quote-card::before {
   content: "";
@@ -133,6 +136,7 @@
   box-shadow: 0 12rpx 32rpx rgba(139, 115, 85, 0.12),
     inset 0 1rpx 0 rgba(255, 255, 255, 0.55),
     inset 0 -2rpx 6rpx rgba(161, 136, 111, 0.09);
+  margin-bottom: 28rpx; /* 与其他卡片保持一致的间距 */
 }
 
 .tarot-card::before {
@@ -408,6 +412,70 @@
   margin-top: 4rpx;
 }
 
+/* ===================== */
+/*   人生规划与记录卡片    */
+/* ===================== */
+
+.planning-card {
+  background: linear-gradient(
+    135deg,
+    #f5f1e8 0%,
+    #e8f0e8 45%,
+    #e0ebe0 70%,
+    #f5f1e8 100%
+  );
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 24rpx;
+  border: 1rpx solid rgba(139, 180, 139, 0.24);
+  box-shadow: 0 0 0 5rpx rgba(139, 180, 139, 0.1),
+    0 10rpx 20rpx rgba(100, 140, 100, 0.08),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2rpx 6rpx rgba(100, 140, 100, 0.06);
+  margin-top: 28rpx;
+  margin-bottom: 8rpx;
+  padding: 32rpx;
+}
+
+.planning-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.planning-card-left {
+  flex: 1;
+}
+
+.planning-card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  letter-spacing: 0.5rpx;
+  margin-bottom: 8rpx;
+}
+
+.planning-card-subtitle {
+  font-size: 26rpx;
+  color: #8b7355;
+  letter-spacing: 0.3rpx;
+}
+
+.planning-card-arrow {
+  font-size: 36rpx;
+  color: #8b7355;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.planning-card:active .planning-card-arrow {
+  transform: translateX(4rpx);
+}
+
 /* 自我探索 - 优化版 */
 .explore-card {
   background: linear-gradient(
@@ -431,6 +499,8 @@
     0 10rpx 20rpx rgba(132, 104, 160, 0.08),
     inset 0 1rpx 0 rgba(255, 255, 255, 0.55),
     inset 0 -2rpx 6rpx rgba(120, 90, 150, 0.06);
+  margin-top: 28rpx; /* 增加顶部间距 */
+  margin-bottom: 32rpx; /* 增加底部间距，让卡片在上推时有更清晰的边界 */
 }
 
 .explore-card::before {
@@ -547,12 +617,130 @@
   margin-right: 8rpx;
 }
 
+/* 自我探索宫格（参考占星工具区样式） */
+.discovery-card {
+  background: #f9f5ef;
+  border-radius: 24rpx;
+  border: 1rpx solid rgba(200, 162, 126, 0.16);
+  box-shadow: 0 6rpx 18rpx rgba(139, 115, 85, 0.08);
+  padding: 20rpx 20rpx 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.discovery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6rpx;
+}
+
+.discovery-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.discovery-arrow {
+  font-size: 28rpx;
+  color: #8c6f40;
+  padding: 10rpx 14rpx;
+  border-radius: 999rpx;
+  border: 1rpx solid rgba(200, 162, 126, 0.25);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4rpx 12rpx rgba(139, 115, 85, 0.1);
+}
+
+.discovery-subtitle {
+  font-size: 20rpx;
+  color: #8b7355;
+  margin-bottom: 14rpx;
+}
+
+.tool-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16rpx 0;
+  padding: 6rpx 0 12rpx;
+}
+
+.tool-item {
+  width: 20%;
+  min-width: 130rpx;
+  max-width: 140rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rpx 6rpx 8rpx;
+}
+
+.tool-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.tool-icon-emoji {
+  font-size: 42rpx;
+}
+
+.tool-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  padding: 4rpx 10rpx;
+  background: #ff6f61;
+  color: #fff;
+  font-size: 16rpx;
+  border-radius: 999rpx;
+  box-shadow: 0 4rpx 10rpx rgba(255, 111, 97, 0.35);
+}
+
+.tool-label {
+  margin-top: 6rpx;
+  font-size: 20rpx;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+  white-space: normal;
+  word-break: keep-all;
+  line-height: 1.3;
+  max-width: 100%;
+}
+
+.tool-desc {
+  font-size: 16rpx;
+  color: #a08a73;
+  margin-top: 2rpx;
+  text-align: center;
+  line-height: 1.3;
+  white-space: normal;
+  word-break: keep-all;
+  max-width: 100%;
+}
+
+.tool-swiper {
+  height: 380rpx;
+}
+
+.tool-swiper swiper-item {
+  display: flex;
+  justify-content: center;
+}
+
 /* 探索工具·每日练习 - Mini打卡日历模块 (精简版) */
 .habit-card {
   background: #f9f5ef;
   border-radius: 20rpx;
   padding: 20rpx 24rpx 16rpx;
-  margin: 16rpx 0;
+  margin-top: 0;
+  margin-bottom: 28rpx; /* 与其他卡片保持一致的间距 */
   box-shadow: 0 3rpx 12rpx rgba(139, 115, 85, 0.06),
     0 1rpx 4rpx rgba(0, 0, 0, 0.03);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -586,28 +774,21 @@
 }
 
 .habit-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48rpx;
-  height: 48rpx;
-  background: rgba(255, 255, 255, 0.82);
-  border-radius: 50%;
+  font-size: 30rpx;
+  color: #8c6f40;
   transition: all 0.25s ease;
+  padding: 12rpx 16rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff7ec 0%, #f1e8ff 100%);
   border: 1rpx solid rgba(200, 162, 126, 0.25);
-  box-shadow: 0 6rpx 14rpx rgba(139, 115, 85, 0.12);
-}
-
-.habit-arrow-icon {
-  width: 22rpx;
-  height: 22rpx;
-  opacity: 0.8;
+  box-shadow: 0 6rpx 14rpx rgba(139, 115, 85, 0.12),
+    0 0 0 6rpx rgba(255, 255, 255, 0.42);
 }
 
 .habit-arrow-hover,
 .habit-card:active .habit-arrow {
   transform: translateX(3rpx);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 4rpx 10rpx rgba(139, 115, 85, 0.16);
 }
 /* 打卡点阵区域 */

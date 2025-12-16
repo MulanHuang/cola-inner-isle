@@ -1,88 +1,50 @@
 <!--pages/emotion/emotion.wxml-->
 <view class="container emotion-container">
-  <!-- 顶部温柔 Hero -->
+  <!-- 顶部精简 Hero -->
   <view class="hero-card">
-    <view class="hero-bg"></view>
     <view class="hero-content">
-      <view class="hero-tag">今日心灵日记</view>
-      <view class="hero-subtitle">留一点安静的时间，和自己待一会儿</view>
-      <view class="hero-quote">
-        <view class="quote-icon">💝</view>
-        <view class="quote-text">{{emotionQuote.content}}</view>
-        <view class="quote-author" wx:if="{{emotionQuote.author}}">— {{emotionQuote.author}}</view>
-        <view class="quote-refresh" bindtap="refreshEmotionQuote">
-          <text class="refresh-icon">✨</text>
-          <text class="refresh-text">换一句温暖</text>
-        </view>
+      <view class="quote-text">{{emotionQuote.content}}</view>
+      <view class="quote-author" wx:if="{{emotionQuote.author}}">— {{emotionQuote.author}}</view>
+      <view class="quote-refresh" bindtap="refreshEmotionQuote">
+        <text class="refresh-icon">↻</text>
       </view>
     </view>
   </view>
 
-  <!-- 当下状态 -->
-  <view class="status-row">
-    <view class="status-pill emotion-pill {{!selectedEmotion ? 'pill-empty' : ''}}">
-      <view class="pill-icon-wrap"><text class="pill-icon">🎈</text></view>
-      <view class="pill-text">
-        <text class="pill-main">{{selectedEmotionName ? '已选：' + selectedEmotionIcon + ' ' + selectedEmotionName : '选择今天的心情'}}</text>
-        <text class="pill-sub" wx:if="{{selectedEmotionName}}">心情已记录</text>
-        <!-- <text class="pill-sub" wx:else>轻点选择心情</text> -->
-      </view>
-    </view>
-    <view class="status-pill energy-pill">
-      <view class="pill-icon-wrap"><text class="pill-icon">⚡</text></view>
-      <view class="pill-text">
-        <text class="pill-main">{{energyLevel > 0 ? ('能量 ' + energyLevel + '/5') : '等待你轻点星星'}}</text>
-        <text class="pill-sub" wx:if="{{energyLevel > 0}}">可随时调整能量</text>
-        <!-- <text class="pill-sub" wx:else>轻点星星标记</text> -->
-      </view>
-    </view>
-    <view class="status-pill badge-pill">
-      <view class="pill-icon-wrap"><text class="pill-icon">🎯</text></view>
-      <view class="pill-text">
-        <text class="pill-main">完成度 {{completionScore}}/{{completionTotal}}</text>
-        <text class="pill-sub" wx:if="{{completionScore >= completionTotal}}">今日清单已完成</text>
-        <!-- <text class="pill-sub" wx:else>填满这些小任务</text> -->
-      </view>
-    </view>
+  <!-- 进度指示器 -->
+  <view class="progress-bar">
+    <view class="progress-fill" style="width: {{completionScore / completionTotal * 100}}%"></view>
+    <view class="progress-text">{{completionScore}}/{{completionTotal}}</view>
   </view>
-
-  <view class="block-label">情绪 · 能量</view>
 
   <!-- 情绪选择 -->
   <view class="section emotion-select-section">
-    <view class="section-title">
-      <text class="title-icon">🎈</text>
-      <text>此刻的你，感觉如何？</text>
-    </view>
-    <view class="section-subtitle">轻轻点一下，说出你的感受</view>
+    <view class="section-title">此刻感受如何？</view>
     <view class="emotion-grid">
       <view
-        wx:for="{{emotions}}"
+        wx:for="{{showAllEmotions ? emotions : emotions.slice(0, 6)}}"
         wx:key="id"
         class="emotion-item {{selectedEmotion === item.id ? 'selected' : ''}}"
         bindtap="selectEmotion"
         data-id="{{item.id}}">
-        <view class="emotion-check" wx:if="{{selectedEmotion === item.id}}">✓</view>
         <view class="emotion-icon">{{item.icon}}</view>
         <view class="emotion-name">{{item.name}}</view>
-        <view class="emotion-highlight" wx:if="{{selectedEmotion === item.id}}"></view>
       </view>
+    </view>
+    <view class="show-more-emotions" bindtap="toggleAllEmotions" wx:if="{{emotions.length > 6}}">
+      <text>{{showAllEmotions ? '收起' : '更多情绪'}}</text>
+      <text class="arrow">{{showAllEmotions ? '↑' : '↓'}}</text>
     </view>
   </view>
 
-  <!-- 情绪温柔反馈 -->
+  <!-- 情绪反馈 -->
   <view wx:if="{{emotionFeedback}}" class="emotion-feedback">
-    <view class="feedback-icon">🌟</view>
     <view class="feedback-text">{{emotionFeedback}}</view>
   </view>
 
   <!-- 今日能量指数 -->
   <view class="section energy-section">
-    <view class="section-title">
-      <text class="title-icon">⚡</text>
-      <text>今日能量指数</text>
-    </view>
-    <view class="section-subtitle">轻点星星，感受今天的能量状态</view>
+    <view class="section-title">今日能量</view>
     <view class="energy-stars">
       <view
         wx:for="{{[1,2,3,4,5]}}"
@@ -93,173 +55,131 @@
         <text class="star-icon">{{energyLevel >= item ? '⭐' : '☆'}}</text>
       </view>
     </view>
-    <view class="energy-hint">
-      <text wx:if="{{energyLevel === 0}}">还没有评估哦</text>
-      <text wx:elif="{{energyLevel === 1}}">今天有点累，需要好好休息 🌙</text>
-      <text wx:elif="{{energyLevel === 2}}">能量不太足，慢慢来就好 🌱</text>
-      <text wx:elif="{{energyLevel === 3}}">状态还不错，继续保持 ☀️</text>
-      <text wx:elif="{{energyLevel === 4}}">能量满满，真棒！✨</text>
-      <text wx:elif="{{energyLevel === 5}}">超级充沛，今天太棒了！🌟</text>
+    <view class="energy-hint" wx:if="{{energyLevel > 0}}">
+      <text wx:if="{{energyLevel === 1}}">需要好好休息</text>
+      <text wx:elif="{{energyLevel === 2}}">慢慢来就好</text>
+      <text wx:elif="{{energyLevel === 3}}">状态不错</text>
+      <text wx:elif="{{energyLevel === 4}}">能量满满</text>
+      <text wx:elif="{{energyLevel === 5}}">超级充沛</text>
     </view>
   </view>
 
-  <!-- 今日感恩小事 -->
-  <view class="block-label">感恩 · 成就</view>
-  <view class="section gratitude-section">
-    <view class="section-title">
-      <text class="title-icon">🙏</text>
-      <text>今日感恩小事</text>
+  <!-- 今日亮点 (Tab 切换: 感恩/成就) -->
+  <view class="section highlights-section">
+    <view class="section-title">今日亮点</view>
+    <view class="tab-bar">
+      <view class="tab {{highlightTab === 'gratitude' ? 'active' : ''}}" bindtap="switchHighlightTab" data-tab="gratitude">感恩</view>
+      <view class="tab {{highlightTab === 'success' ? 'active' : ''}}" bindtap="switchHighlightTab" data-tab="success">成就</view>
     </view>
-    <view class="section-subtitle">轻点模板，开始记录温暖瞬间</view>
 
-    <!-- 快速模板按钮 -->
-    <scroll-view scroll-x="true" class="template-scroll" show-scrollbar="{{false}}">
-      <view class="template-buttons">
+    <!-- 感恩内容 -->
+    <view class="tab-content" wx:if="{{highlightTab === 'gratitude'}}">
+      <scroll-view scroll-x="true" class="template-scroll" show-scrollbar="{{false}}">
+        <view class="template-buttons">
+          <view
+            wx:for="{{gratitudeTemplates}}"
+            wx:key="id"
+            class="template-btn-small"
+            bindtap="insertGratitudeTemplate"
+            data-text="{{item.text}}"
+            hover-class="template-btn-hover">
+            <text class="template-icon-small">{{item.icon}}</text>
+            <text class="template-label-small">{{item.label}}</text>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="input-list">
         <view
-          wx:for="{{gratitudeTemplates}}"
-          wx:key="id"
-          class="template-btn-small {{currentFocusedGratitudeIndex >= 0 ? 'active' : ''}}"
-          bindtap="insertGratitudeTemplate"
-          data-text="{{item.text}}"
-          hover-class="template-btn-hover"
-          hover-stay-time="100">
-          <text class="template-icon-small">{{item.icon}}</text>
-          <text class="template-label-small">{{item.label}}</text>
-        </view>
-      </view>
-    </scroll-view>
-
-    <!-- 3个感恩输入框 -->
-    <view class="input-list">
-      <view
-        wx:for="{{gratitudeItems}}"
-        wx:key="index"
-        wx:if="{{index === 0 || (index === 1 && showMoreGratitude) || (index === 2 && (showThirdGratitude || item))}}"
-        class="input-item {{gratitudeFocusStates[index] ? 'focused' : ''}}">
-        <view class="item-number {{gratitudeFocusStates[index] ? 'focused' : ''}}">
-          {{index + 1}}
-        </view>
-        <view class="item-content">
-          <textarea
-            class="item-textarea"
-            placeholder="{{index === 0 ? '今天我感激的是…' : index === 1 ? '让我微笑的瞬间…' : '温暖我的人或事…'}}"
-            placeholder-class="input-placeholder"
-            value="{{item}}"
-            focus="{{gratitudeFocusStates[index]}}"
-            cursor="{{gratitudeCursorPositions[index]}}"
-            bindinput="onGratitudeInput"
-            bindfocus="onGratitudeFocus"
-            bindblur="onGratitudeBlur"
-            data-index="{{index}}"
-            maxlength="{{maxTextLength}}"
-            auto-height="{{true}}"
-            adjust-position="{{true}}"
-            show-confirm-bar="{{false}}"
-          />
-          <view class="char-count floating {{item.length >= maxTextLength - 10 ? 'warning' : ''}}" wx:if="{{item.length > 0 || gratitudeFocusStates[index]}}">
-            <text class="char-hint">写1-2句话就好</text>
-            <text class="char-number">{{item.length}}/{{maxTextLength}}</text>
+          wx:for="{{gratitudeItems}}"
+          wx:key="index"
+          wx:if="{{index === 0 || (index === 1 && showMoreGratitude) || (index === 2 && (showThirdGratitude || item))}}"
+          class="input-item {{gratitudeFocusStates[index] ? 'focused' : ''}}">
+          <view class="item-number">{{index + 1}}</view>
+          <view class="item-content">
+            <textarea
+              class="item-textarea"
+              placeholder="{{index === 0 ? '今天我感激的是…' : index === 1 ? '让我微笑的瞬间…' : '温暖我的人或事…'}}"
+              placeholder-class="input-placeholder"
+              value="{{item}}"
+              bindinput="onGratitudeInput"
+              bindfocus="onGratitudeFocus"
+              bindblur="onGratitudeBlur"
+              data-index="{{index}}"
+              maxlength="{{maxTextLength}}"
+              auto-height="{{true}}"
+            />
           </view>
         </view>
       </view>
-    </view>
-    <view class="list-toggle" bindtap="toggleGratitudeList" wx:if="{{!showThirdGratitude && !gratitudeItems[2]}}">
-      <text class="toggle-icon">＋</text>
-      <text>再写一条</text>
-    </view>
-  </view>
-
-  <!-- 今日小成就 -->
-  <view class="section success-section">
-    <view class="section-title">
-      <text class="title-icon">🌟</text>
-      <text>今日小成就</text>
-    </view>
-    <view class="section-subtitle">轻点模板，记录你的进步与坚持</view>
-
-    <!-- 快速模板按钮 -->
-    <scroll-view scroll-x="true" class="template-scroll" show-scrollbar="{{false}}">
-      <view class="template-buttons">
-        <view
-          wx:for="{{successTemplates}}"
-          wx:key="id"
-          class="template-btn-small {{currentFocusedSuccessIndex >= 0 ? 'active' : ''}}"
-          bindtap="insertSuccessTemplate"
-          data-text="{{item.text}}"
-          hover-class="template-btn-hover"
-          hover-stay-time="100">
-          <text class="template-icon-small">{{item.icon}}</text>
-          <text class="template-label-small">{{item.label}}</text>
-        </view>
+      <view class="list-toggle" bindtap="toggleGratitudeList" wx:if="{{!showThirdGratitude && !gratitudeItems[2]}}">
+        <text>+ 添加更多</text>
       </view>
-    </scroll-view>
+    </view>
 
-    <!-- 3个成功输入框 -->
-    <view class="input-list">
-      <view
-        wx:for="{{successItems}}"
-        wx:key="index"
-        wx:if="{{index === 0 || (index === 1 && showMoreSuccess) || (index === 2 && (showThirdSuccess || item))}}"
-        class="input-item {{successFocusStates[index] ? 'focused' : ''}}">
-        <view class="item-number {{successFocusStates[index] ? 'focused' : ''}}">
-          {{index + 1}}
+    <!-- 成就内容 -->
+    <view class="tab-content" wx:if="{{highlightTab === 'success'}}">
+      <scroll-view scroll-x="true" class="template-scroll" show-scrollbar="{{false}}">
+        <view class="template-buttons">
+          <view
+            wx:for="{{successTemplates}}"
+            wx:key="id"
+            class="template-btn-small"
+            bindtap="insertSuccessTemplate"
+            data-text="{{item.text}}"
+            hover-class="template-btn-hover">
+            <text class="template-icon-small">{{item.icon}}</text>
+            <text class="template-label-small">{{item.label}}</text>
+          </view>
         </view>
-        <view class="item-content">
-          <textarea
-            class="item-textarea"
-            placeholder="{{index === 0 ? '我做得好的事…' : index === 1 ? '我坚持的一件事…' : '我进步的地方…'}}"
-            placeholder-class="input-placeholder"
-            value="{{item}}"
-            focus="{{successFocusStates[index]}}"
-            cursor="{{successCursorPositions[index]}}"
-            bindinput="onSuccessInput"
-            bindfocus="onSuccessFocus"
-            bindblur="onSuccessBlur"
-            data-index="{{index}}"
-            maxlength="{{maxTextLength}}"
-            auto-height="{{true}}"
-            adjust-position="{{true}}"
-            show-confirm-bar="{{false}}"
-          />
-          <view class="char-count floating {{item.length >= maxTextLength - 10 ? 'warning' : ''}}" wx:if="{{item.length > 0 || successFocusStates[index]}}">
-            <text class="char-hint">写1-2句话就好</text>
-            <text class="char-number">{{item.length}}/{{maxTextLength}}</text>
+      </scroll-view>
+
+      <view class="input-list">
+        <view
+          wx:for="{{successItems}}"
+          wx:key="index"
+          wx:if="{{index === 0 || (index === 1 && showMoreSuccess) || (index === 2 && (showThirdSuccess || item))}}"
+          class="input-item {{successFocusStates[index] ? 'focused' : ''}}">
+          <view class="item-number">{{index + 1}}</view>
+          <view class="item-content">
+            <textarea
+              class="item-textarea"
+              placeholder="{{index === 0 ? '我做得好的事…' : index === 1 ? '我坚持的一件事…' : '我进步的地方…'}}"
+              placeholder-class="input-placeholder"
+              value="{{item}}"
+              bindinput="onSuccessInput"
+              bindfocus="onSuccessFocus"
+              bindblur="onSuccessBlur"
+              data-index="{{index}}"
+              maxlength="{{maxTextLength}}"
+              auto-height="{{true}}"
+            />
           </view>
         </view>
       </view>
-    </view>
-    <view class="list-toggle" bindtap="toggleSuccessList" wx:if="{{!showThirdSuccess && !successItems[2]}}">
-      <text class="toggle-icon">＋</text>
-      <text>再写一条</text>
+      <view class="list-toggle" bindtap="toggleSuccessList" wx:if="{{!showThirdSuccess && !successItems[2]}}">
+        <text>+ 添加更多</text>
+      </view>
     </view>
   </view>
 
   <!-- 自由输入区 -->
-  <view class="block-label">自由记录</view>
   <view class="section free-text-section">
-    <view class="section-title">
-      <text class="title-icon">✍️</text>
-      <text>还想说些什么吗？</text>
-    </view>
-    <view class="section-subtitle">自由记录此刻的心情和想法</view>
+    <view class="section-title">自由记录</view>
     <textarea
       class="emotion-textarea"
-      placeholder="今天的心情、想法、或是想对自己说的话…&#10;&#10;比如：今天虽然有点累，但完成了一件重要的事，为自己骄傲 💪"
+      placeholder="还有什么想说的..."
       value="{{description}}"
       bindinput="onDescriptionInput"
       maxlength="500"
       placeholder-class="textarea-placeholder"
     ></textarea>
-    <view class="char-count">{{description.length}}/500</view>
+    <view class="char-count" wx:if="{{description.length > 0}}">{{description.length}}/500</view>
   </view>
 
   <!-- 标签选择 -->
   <view class="section tags-section">
-    <view class="section-title">
-      <text class="title-icon">🏷️</text>
-      <text>为这一刻添加标签</text>
-    </view>
-    <view class="section-subtitle">可选，帮你更好地回顾</view>
+    <view class="section-title">添加标签</view>
     <view class="tag-list">
       <view
         wx:for="{{tags}}"
@@ -267,57 +187,41 @@
         class="tag-item {{selectedTags.includes(item.id) ? 'selected' : ''}}"
         catchtap="toggleTag"
         data-id="{{item.id}}"
-        hover-class="tag-item-hover"
-        hover-stay-time="100">
+        hover-class="tag-item-hover">
         <text class="tag-icon">{{item.icon}}</text>
         <text class="tag-name">{{item.name}}</text>
       </view>
     </view>
   </view>
 
-  <!-- 温柔回声按钮 -->
-  <view class="gentle-response-section">
-    <view class="response-hint">需要一段温柔的回声吗？</view>
-    <button
-      class="btn-gentle-response"
-      bindtap="getAIReflection"
-      disabled="{{(!selectedEmotion && !description) || aiLoading}}"
-    >
-      <text class="btn-icon">{{aiLoading ? '💭' : '🌙'}}</text>
-      <text>{{aiLoading ? '心岛正在倾听…' : '收到一段温柔回声'}}</text>
-    </button>
-    <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
+  <!-- AI 温柔回声 (简化为可折叠区域) -->
+  <view class="section ai-section-collapsed" wx:if="{{!aiReply && !aiLoading}}">
+    <view class="ai-trigger" bindtap="getAIReflection" wx:if="{{selectedEmotion || description}}">
+      <text class="ai-trigger-icon">🌙</text>
+      <text class="ai-trigger-text">获取温柔回声</text>
+    </view>
+    <view class="ai-disclaimer" wx:if="{{selectedEmotion || description}}">AI生成，仅供参考</view>
   </view>
 
-  <!-- 温柔回声内容 -->
-    <view wx:if="{{aiReply || aiLoading}}" class="section ai-section">
-      <view class="ai-header">
-        <view class="ai-avatar">🌙</view>
-        <view class="ai-title">来自心岛的温柔回声</view>
-      </view>
-    <view wx:if="{{aiLoading && !aiReply}}" class="ai-skeleton">
-      <view class="skeleton-line line-1"></view>
-      <view class="skeleton-line line-2"></view>
-      <view class="skeleton-line line-3"></view>
+  <!-- AI 回复内容 -->
+  <view wx:if="{{aiReply || aiLoading}}" class="section ai-section">
+    <view class="ai-header">
+      <view class="ai-title">温柔回声</view>
+      <view class="ai-reask" bindtap="getAIReflection">↻</view>
     </view>
-    <view wx:if="{{aiLoading && !aiReply}}" class="ai-loading-text">正在倾听...</view>
-    <view wx:if="{{aiReply}}" class="ai-content fade-in">{{aiReply}}</view>
-    <view class="ai-footer">
-      <text class="ai-footer-icon">💝</text>
-      <text class="ai-footer-text">你被温柔地看见了</text>
-      <button class="ai-reask-btn" size="mini" plain bindtap="getAIReflection">再次询问</button>
+    <view wx:if="{{aiLoading && !aiReply}}" class="ai-loading">
+      <view class="loading-dot"></view>
+      <view class="loading-dot"></view>
+      <view class="loading-dot"></view>
     </view>
+    <view wx:if="{{aiReply}}" class="ai-content">{{aiReply}}</view>
   </view>
 
   <!-- 底部操作条 -->
   <view class="action-bar">
-    <button class="btn-secondary" bindtap="viewHistory">
-      <text class="btn-icon">📖</text>
-      <text>历史</text>
-    </button>
-    <button class="btn-primary btn-save {{!selectedEmotion ? 'btn-save-disabled' : ''}}" bindtap="saveEmotion" disabled="{{!selectedEmotion}}">
-      <text class="btn-icon">💝</text>
-      <text>{{selectedEmotion ? '保存' : '先选情绪'}}</text>
+    <button class="btn-secondary" bindtap="viewHistory">历史</button>
+    <button class="btn-primary btn-save" bindtap="saveEmotion" disabled="{{!selectedEmotion}}">
+      {{selectedEmotion ? '保存记录' : '请先选择情绪'}}
     </button>
   </view>
 </view>

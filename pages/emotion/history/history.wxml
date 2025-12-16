@@ -16,13 +16,24 @@
   <!-- 情绪列表 -->
   <view class="emotion-list">
     <view wx:for="{{emotions}}" wx:key="_id" class="emotion-record">
-      <!-- 头部：情绪 + 时间 -->
+      <!-- 头部：情绪 + 时间 + 删除按钮 -->
       <view class="record-header">
         <view class="record-emotion">
           <text class="emotion-icon">{{item.emotionIcon}}</text>
           <text class="emotion-name">{{item.emotionName}}</text>
         </view>
-        <view class="record-time">{{item.timeStr}}</view>
+        <view class="record-header-right">
+          <view class="record-time">{{item.timeStr}}</view>
+          <view
+            class="delete-btn"
+            catchtap="confirmDelete"
+            data-id="{{item._id}}"
+            data-source="{{item.source}}"
+            data-index="{{index}}"
+          >
+            <text class="delete-icon">×</text>
+          </view>
+        </view>
       </view>
 
       <!-- 能量指数 -->
@@ -83,6 +94,26 @@
           </view>
         </view>
       </view>
+    </view>
+
+    <!-- 加载更多按钮 -->
+    <view wx:if="{{hasMore}}" class="load-more-container">
+      <button
+        class="load-more-btn {{isLoadingMore ? 'loading' : ''}}"
+        bindtap="loadMore"
+        disabled="{{isLoadingMore}}"
+      >
+        <text wx:if="{{!isLoadingMore}}">加载更多</text>
+        <text wx:else>加载中...</text>
+      </button>
+      <view class="load-more-hint">
+        已显示 {{displayCount}} / {{totalCount}} 条
+      </view>
+    </view>
+
+    <!-- 已加载全部提示 -->
+    <view wx:if="{{!hasMore && emotions.length > 0}}" class="all-loaded">
+      <text class="all-loaded-text">— 已显示全部 {{totalCount}} 条记录 —</text>
     </view>
 
     <!-- 空状态 -->

@@ -83,4 +83,25 @@ Page({
       url: "/pages/dreamGrid/dreamGrid",
     });
   },
+
+  // 跳转到每日计划
+  goToDailyPlan() {
+    wx.navigateTo({
+      url: "/pages/explore/daily-plan/daily-plan",
+    });
+  },
+
+  // 跳转到周计划表
+  goToWeekPlan() {
+    wx.navigateTo({
+      url: "/pages/explore/week-plan/week-plan",
+    });
+  },
+
+  // 跳转到月度记录
+  goToMonthlyPlan() {
+    wx.navigateTo({
+      url: "/pages/explore/monthly-plan/monthly-plan",
+    });
+  },
 });

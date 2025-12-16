@@ -1,0 +1,61 @@
+<!--pages/explore/monthly-plan/history/history.wxml-->
+<view class="container history-container">
+  <!-- 顶部导航 -->
+  <view class="header-bar">
+    <view class="back-btn" bindtap="goBack">
+      <view class="back-icon"></view>
+    </view>
+    <view class="header-title">历史记录</view>
+    <view class="header-placeholder"></view>
+  </view>
+
+  <!-- 顶部引导文案 -->
+  <view class="guide-text">
+    <text>你记录下的每一个月，</text>
+    <text>都是时光的痕迹。</text>
+  </view>
+
+  <!-- 年份切换 -->
+  <view class="year-nav">
+    <view class="nav-btn" bindtap="prevYear">
+      <text>‹</text>
+    </view>
+    <view class="year-display">{{currentYear}}年</view>
+    <view class="nav-btn" bindtap="nextYear">
+      <text>›</text>
+    </view>
+  </view>
+
+  <!-- 月份列表 -->
+  <view class="month-list">
+    <view wx:for="{{months}}" 
+          wx:key="index" 
+          class="month-card {{item.hasRecord ? 'has-record' : ''}} {{item.isCurrentMonth ? 'is-current' : ''}}"
+          bindtap="onMonthTap"
+          data-month="{{item.month}}"
+          data-has-record="{{item.hasRecord}}">
+      <view class="month-card-header">
+        <text class="month-num">{{item.month}}月</text>
+        <view wx:if="{{item.hasRecord}}" class="record-indicator">
+          <view class="record-dot"></view>
+          <text class="record-count">{{item.recordCount}}条记录</text>
+        </view>
+        <text wx:if="{{item.isCurrentMonth}}" class="current-tag">本月</text>
+      </view>
+      <view wx:if="{{item.hasRecord}}" class="month-card-preview">
+        <text class="preview-text">{{item.preview}}</text>
+      </view>
+      <view wx:else class="month-card-empty">
+        <text class="empty-text">暂无记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{!hasAnyRecord}}" class="empty-state">
+    <text class="empty-icon">📓</text>
+    <text class="empty-title">还没有记录</text>
+    <text class="empty-desc">去记录你的第一个月吧</text>
+  </view>
+</view>
+

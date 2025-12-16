@@ -41,9 +41,8 @@
         </navigator>
       </view>
     </view>
-    <view class="tarot-subtitle">先写下你的问题，小岛会自动挑选合适的牌阵并高亮指引</view>
     <!-- 合规提示 -->
-    <view class="compliance-tip">塔罗内容仅作为象征反思工具，不提供任何预测或占卜指导</view>
+    <view class="compliance-tip">仅供自我反思，非占卜预测</view>
 
     <!-- 流程步骤指示器 -->
     <view class="flow-steps">
@@ -54,7 +53,7 @@
 
     <!-- 问题输入区域 (仅在 idle 阶段可编辑，紧凑版) -->
     <view class="question-section question-section-compact" wx:if="{{phase === 'idle'}}">
-      <view class="section-title">💭 你想问什么？</view>
+      <view class="section-title">💭</view>
       <scroll-view class="template-scroll" scroll-x="true">
         <view
           class="template-chip"
@@ -117,8 +116,8 @@
             <image class="shuffle-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
           </view>
         </view>
-        <view class="shuffle-text">
-          {{phase === 'idle' ? '🃏 准备好你的问题，开始洗牌' : (shuffleFadeOut ? '✨ 牌阵展开中...' : '✨ 正在洗牌...')}}
+        <view class="shuffle-text" wx:if="{{phase !== 'idle'}}">
+          {{shuffleFadeOut ? '✨ 牌阵展开中...' : '✨ 正在洗牌...'}}
         </view>
       </view>
     </view>
@@ -173,7 +172,7 @@
     >
       开始洗牌
     </button>
-    <view wx:if="{{phase === 'idle'}}" class="ai-disclaimer">本内容由AI生成，仅供参考</view>
+    <view wx:if="{{phase === 'idle'}}" class="ai-disclaimer">AI生成 · 仅供参考</view>
 
   </view> <!-- 未抽牌状态 End -->
 
@@ -245,7 +244,7 @@
       <button class="btn-primary" bindtap="getInterpretation" disabled="{{!question || loading}}">
         {{loading ? '解读中...' : '获取解读'}}
       </button>
-      <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
+      <view class="ai-disclaimer">AI生成 · 仅供参考</view>
     </view>
 
     <!-- 小岛解读 -->

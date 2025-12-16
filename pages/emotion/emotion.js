@@ -157,6 +157,10 @@ Page({
     showThirdSuccess: false,
     completionScore: 0,
     completionTotal: 5,
+    // 新增：Tab 切换和情绪展示控制
+    highlightTab: "gratitude", // 'gratitude' 或 'success'
+    showAllEmotions: false, // 是否显示全部情绪
+    showAISection: false, // 是否展开 AI 回复区域
   },
 
   onLoad() {
@@ -221,6 +225,22 @@ Page({
       energyLevel: parseInt(level),
     });
     this.updateCompletion();
+  },
+
+  // 切换感恩/成就 Tab
+  switchHighlightTab(e) {
+    const tab = e.currentTarget.dataset.tab;
+    this.setData({ highlightTab: tab });
+  },
+
+  // 切换显示全部情绪
+  toggleAllEmotions() {
+    this.setData({ showAllEmotions: !this.data.showAllEmotions });
+  },
+
+  // 切换 AI 区域展开/收起
+  toggleAISection() {
+    this.setData({ showAISection: !this.data.showAISection });
   },
 
   // 感恩输入框获得焦点
@@ -512,8 +532,13 @@ Page({
 
   // 更新完成度徽章
   updateCompletion() {
-    const { selectedEmotion, energyLevel, gratitudeItems, successItems, description } =
-      this.data;
+    const {
+      selectedEmotion,
+      energyLevel,
+      gratitudeItems,
+      successItems,
+      description,
+    } = this.data;
     let score = 0;
     if (selectedEmotion) score += 1;
     if (energyLevel > 0) score += 1;
@@ -639,15 +664,20 @@ Page({
 
         // 降级方案：保存到本地存储
         const localEmotions = wx.getStorageSync("localEmotions") || [];
-        localEmotions.unshift(emotionData); // 添加到数组开头
+        // 为本地存储的数据生成唯一 ID（避免 wx:key 问题）
+        const localData = {
+          ...emotionData,
+          _id: `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        };
+        localEmotions.unshift(localData); // 添加到数组开头
 
-        // 只保留最近100条记录
-        if (localEmotions.length > 100) {
-          localEmotions.length = 100;
+        // 只保留最近200条记录
+        if (localEmotions.length > 200) {
+          localEmotions.length = 200;
         }
 
         wx.setStorageSync("localEmotions", localEmotions);
-        console.log("✅ 情绪记录已保存到本地存储");
+        console.log("✅ 情绪记录已保存到本地存储", localData._id);
       }
 
       wx.hideLoading();

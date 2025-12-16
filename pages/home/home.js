@@ -1,8 +1,9 @@
 const app = getApp();
 const db = wx.cloud.database();
 
-// 🚀 云存储临时 URL 智能缓存工具
+// 引入公共工具模块
 const { getTempUrlWithCache } = require("../../utils/cloudUrlCache.js");
+const { setNavBarHeight } = require("../../utils/common.js");
 
 // 获取本地日期工具函数
 function formatLocalDate(ts) {
@@ -46,6 +47,22 @@ const HABIT_NAMES = {
 const TAROT_CARD_BACK_CLOUD_URL =
   "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsBack/Back 1.webp";
 
+// 自我探索宫格分页：第一页 2 行 x 5 列（指定顺序），其余放到第二页
+const TOOL_PAGE1_KEYS = [
+  // 第一排
+  "tarot",
+  "oh",
+  "aroma",
+  "mbti",
+  "chakra",
+  // 第二排
+  "emotion",
+  "dreamGrid",
+  "dailyPlan",
+  "weekPlan",
+  "monthlyPlan",
+];
+
 Page({
   data: {
     dailyQuote: {
@@ -64,6 +81,125 @@ Page({
       meditation: [false, false, false, false, false, false, false],
       emotion: [false, false, false, false, false, false, false],
     },
+    // 本周完成统计摘要
+    habitSummaries: {
+      tarot: 0,
+      meditation: 0,
+      emotion: 0,
+    },
+    // 分页后的工具列表
+    toolPages: [],
+    // 自我探索工具列表（宫格展示）
+    toolList: [
+      {
+        key: "tarot",
+        title: "塔罗牌",
+        desc: "每日抽牌",
+        icon: "🔮",
+        badge: "HOT",
+        bgStart: "#f8c2e5",
+        bgEnd: "#c99bff",
+      },
+      {
+        key: "oh",
+        title: "OH卡解读",
+        desc: "探索潜意识",
+        icon: "🃏",
+        badge: "",
+        bgStart: "#ffd8c2",
+        bgEnd: "#f5a880",
+      },
+      {
+        key: "aroma",
+        title: "芳香情绪卡",
+        desc: "香气建议",
+        icon: "🌿",
+        badge: "",
+        bgStart: "#dff5e1",
+        bgEnd: "#a5d6a7",
+      },
+      {
+        key: "emotion",
+        title: "情绪记录",
+        desc: "心情打卡",
+        icon: "💗",
+        badge: "",
+        bgStart: "#ffe7f1",
+        bgEnd: "#fcb2c2",
+      },
+      {
+        key: "mbti",
+        title: "MBTI",
+        desc: "人格测评",
+        icon: "🧠",
+        badge: "",
+        bgStart: "#d8f3ff",
+        bgEnd: "#92d1ff",
+      },
+      {
+        key: "zodiac",
+        title: "星座档案",
+        desc: "探索特质",
+        icon: "⭐",
+        badge: "",
+        bgStart: "#ffedc2",
+        bgEnd: "#ffc970",
+      },
+      {
+        key: "innerChild",
+        title: "内在小孩",
+        desc: "疗愈自己",
+        icon: "🧸",
+        badge: "NEW",
+        bgStart: "#ffe0c2",
+        bgEnd: "#ffb680",
+      },
+      {
+        key: "chakra",
+        title: "脉轮测试",
+        desc: "能量平衡",
+        icon: "🌈",
+        badge: "",
+        bgStart: "#c9f0e5",
+        bgEnd: "#88d4c1",
+      },
+      {
+        key: "dreamGrid",
+        title: "梦想九宫格",
+        desc: "行动计划",
+        icon: "🧭",
+        badge: "",
+        bgStart: "#e5e4ff",
+        bgEnd: "#b3b2ff",
+      },
+      {
+        key: "dailyPlan",
+        title: "每日计划",
+        desc: "当日清单",
+        icon: "🗒️",
+        badge: "",
+        bgStart: "#fce8ff",
+        bgEnd: "#e5c7ff",
+      },
+      {
+        key: "weekPlan",
+        title: "周计划表",
+        desc: "安排一周",
+        icon: "📅",
+        badge: "",
+        bgStart: "#e3f2ff",
+        bgEnd: "#b9dcff",
+      },
+      {
+        key: "monthlyPlan",
+        title: "月度记录",
+        desc: "复盘与记录",
+        icon: "🗓️",
+        badge: "",
+        bgStart: "#e9f6e5",
+        bgEnd: "#bfe3b4",
+      },
+    ],
     // 本周日期数组（用于日历点击）
     weekDates: [],
     // 今天是本周的第几天（0=周一，6=周日）
@@ -86,10 +222,11 @@ Page({
   },
 
   onLoad() {
-    this.setNavBarHeight();
+    this.initNavBarHeight();
     this.loadDailyQuote();
     this.checkTodayTarot();
     this.loadWeekHabitData();
+    this.buildToolPages();
     this.checkProfileCompletion();
     // 🖼️ 将塔罗卡背面图片 cloud:// 转换为临时 URL（解决体验版图片不显示问题）
     this.convertTarotCardBackUrl();
@@ -131,24 +268,20 @@ Page({
     }
   },
 
-  // 设置导航栏高度
-  setNavBarHeight() {
-    const systemInfo = wx.getSystemInfoSync();
-    const statusBarHeight = systemInfo.statusBarHeight || 0;
-    const navBarHeight = statusBarHeight + 44; // 44px 是导航栏内容高度
-    this.setData({
-      statusBarHeight,
-      navBarHeight,
-    });
+  // 设置导航栏高度（使用公共模块）
+  initNavBarHeight() {
+    setNavBarHeight(this);
   },
 
   onShow() {
+    console.log("[home] onShow triggered");
     this.checkTodayTarot();
     this.loadWeekHabitData();
 
-    // ✅ 这里新增：同步 tabBar 选中首页
+    // ✅ 同步 tabBar 选中首页，并确保 tabBar 显示
     if (typeof this.getTabBar === "function" && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 0 });
+      console.log("[home] Setting tabBar selected to 0, show to true");
+      this.getTabBar().setData({ selected: 0, show: true });
     }
   },
 
@@ -191,12 +324,20 @@ Page({
         const todayStr = formatLocalDate(now);
         const todayWeekIndex = weekDates.indexOf(todayStr);
 
+        // 统计每个习惯的完成天数
+        const habitSummaries = {};
+        HABIT_KEYS.forEach((habitKey) => {
+          const arr = weekHabitData[habitKey] || [];
+          habitSummaries[habitKey] = arr.filter(Boolean).length;
+        });
+
         this.setData({
           weekHabitData,
           weekDates,
           todayWeekIndex: todayWeekIndex >= 0 ? todayWeekIndex : 0,
           calendarDailyData: dailyData,
           calendarHabitRecords: habitRecords,
+          habitSummaries,
         });
         console.log("[home] 本周习惯数据已加载", weekHabitData, weekDates);
       }
@@ -347,6 +488,77 @@ Page({
     });
   },
 
+  // 统一处理自我探索工具点击
+  handleToolTap(e) {
+    const key = e.currentTarget.dataset.key;
+    this.triggerTapFeedback();
+    switch (key) {
+      case "tarot":
+        return this.goToTarot();
+      case "oh":
+        return this.goToOhCard();
+      case "aroma":
+        return this.goToAromaCard();
+      case "emotion":
+        return this.goToEmotion();
+      case "mbti":
+        return this.goToMBTI();
+      case "zodiac":
+        return this.goToZodiac();
+      case "innerChild":
+        return this.goToInnerChild();
+      case "chakra":
+        return this.goToChakraTest();
+      case "dreamGrid":
+        return this.goToDreamGrid();
+      case "dailyPlan":
+        return this.goToDailyPlan();
+      case "weekPlan":
+        return this.goToWeekPlan();
+      case "monthlyPlan":
+        return this.goToMonthlyPlan();
+      default:
+        return;
+    }
+  },
+
+  // 独立计划入口
+  goToDailyPlan() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/explore/daily-plan/daily-plan",
+    });
+  },
+
+  goToWeekPlan() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/explore/week-plan/week-plan",
+    });
+  },
+
+  goToMonthlyPlan() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/explore/monthly-plan/monthly-plan",
+    });
+  },
+
+  // 构建工具分页数据
+  buildToolPages() {
+    const map = {};
+    (this.data.toolList || []).forEach((item) => {
+      map[item.key] = item;
+    });
+
+    const page1 = TOOL_PAGE1_KEYS.map((k) => map[k]).filter(Boolean);
+    const used = new Set(TOOL_PAGE1_KEYS);
+    const page2 = (this.data.toolList || []).filter((i) => !used.has(i.key));
+    this.setData({
+      toolPages: [page1, page2],
+    });
+  },
+
   // 跳转到内在小孩
   goToInnerChild() {
     this.triggerTapFeedback();
@@ -368,6 +580,14 @@ Page({
     this.triggerTapFeedback();
     wx.navigateTo({
       url: "/pages/dreamGrid/dreamGrid",
+    });
+  },
+
+  // 跳转到人生规划与记录
+  goToPlanning() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/planning/planning",
     });
   },
 

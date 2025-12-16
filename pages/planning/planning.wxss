@@ -1,0 +1,109 @@
+/* pages/planning/planning.wxss */
+
+/* ===================== */
+/*        基础样式        */
+/* ===================== */
+
+page {
+  background: #f5f1e8;
+}
+
+.planning-container {
+  padding: 0 32rpx 40rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ===================== */
+/*         头部          */
+/* ===================== */
+
+.header {
+  text-align: center;
+  padding: 40rpx 20rpx;
+}
+
+.header-title {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.header-subtitle {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* ===================== */
+/*       功能列表        */
+/* ===================== */
+
+.planning-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+/* 功能项目卡片 */
+.planning-item {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(139, 115, 85, 0.08);
+  transition: all 0.3s ease;
+}
+
+.planning-item:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(139, 115, 85, 0.12);
+}
+
+/* 图标 */
+.planning-icon {
+  font-size: 56rpx;
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff9f0 0%, #f5f1e8 100%);
+  border-radius: 20rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+/* 内容区域 */
+.planning-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.planning-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.planning-desc {
+  font-size: 26rpx;
+  color: #999999;
+  line-height: 1.4;
+}
+
+/* 箭头 */
+.planning-arrow {
+  font-size: 36rpx;
+  color: #8b7355;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.planning-item:active .planning-arrow {
+  transform: translateX(4rpx);
+}
+

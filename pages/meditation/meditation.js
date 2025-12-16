@@ -1,8 +1,9 @@
 // pages/meditation/meditation.js
 const db = wx.cloud.database();
 
-// 🚀 云存储临时 URL 智能缓存工具
+// 引入公共工具模块
 const { getTempUrlsWithCache } = require("../../utils/cloudUrlCache.js");
+const { setNavBarHeight } = require("../../utils/common.js");
 
 // ============ 智能播放量系统配置 ============
 const PLAY_CONFIG = {
@@ -23,19 +24,18 @@ const PLAY_CONFIG = {
 // 热门内容ID列表（根据实际数据调整）
 const HOT_CONTENT_IDS = ["sleep", "emotion", "relax"];
 const MEDIUM_CONTENT_IDS = ["spiritual", "awareness", "innerchild"];
-const NICHE_CONTENT_IDS = ["affirmation", "manifestation", "chakra"];
 
 Page({
   data: {
     categories: [
-      { id: "emotion", name: "情绪疗愈", icon: "💖" },
-      { id: "spiritual", name: "灵性提升", icon: "✨" },
-      { id: "sleep", name: "睡眠", icon: "🌙" },
+      { id: "emotion", name: "情绪舒缓", icon: "💖" },
+      { id: "spiritual", name: "心灵成长", icon: "✨" },
+      { id: "sleep", name: "助眠引导", icon: "🌙" },
       { id: "awareness", name: "自我觉察", icon: "🔍" },
-      { id: "innerchild", name: "内在小孩", icon: "👶" },
-      { id: "relax", name: "身体放松", icon: "🌊" },
-      { id: "affirmation", name: "肯定语", icon: "💫" },
-      { id: "manifestation", name: "显化", icon: "🌟" },
+      { id: "innerchild", name: "内心关怀", icon: "👶" },
+      { id: "relax", name: "身体舒展", icon: "🌊" },
+      { id: "affirmation", name: "正念练习", icon: "💫" },
+      { id: "manifestation", name: "目标专注", icon: "🌟" },
     ],
     currentCategory: "emotion",
     audioList: [],
@@ -50,33 +50,58 @@ Page({
     ],
     statusBarHeight: 0,
     navBarHeight: 0,
+    // 封面层状态
+    showCover: true,
   },
 
   // 页面加载
   onLoad() {
-    this.setNavBarHeight();
+    this.initNavBarHeight();
     this.loadAudioList();
+  },
+
+  // 点击「开始进入」按钮，隐藏封面层
+  enterMeditation() {
+    // 触感反馈
+    wx.vibrateShort({
+      type: "light",
+    });
+
+    this.setData({
+      showCover: false,
+    });
   },
 
   // 页面显示
   onShow() {
-    // 设置 tabBar 高亮为冥想（索引 2）
+    console.log("[meditation] onShow triggered");
+    // 设置 tabBar 高亮为冥想（索引 2），并确保显示
     if (typeof this.getTabBar === "function" && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 2 });
+      console.log("[meditation] Setting tabBar selected to 2, show to true");
+      this.getTabBar().setData({ selected: 2, show: true });
     }
 
     // 刷新音频列表
     this.loadAudioList();
   },
 
-  // 设置导航栏高度
-  setNavBarHeight() {
-    const systemInfo = wx.getSystemInfoSync();
-    const statusBarHeight = systemInfo.statusBarHeight || 0;
-    const navBarHeight = statusBarHeight + 44;
-    this.setData({
-      statusBarHeight,
-      navBarHeight,
+  // 设置导航栏高度（使用公共模块）
+  initNavBarHeight() {
+    setNavBarHeight(this);
+  },
+
+  // 返回首页
+  handleBack() {
+    console.log("[meditation] handleBack triggered");
+    // 使用 reLaunch 跳转到首页（适用于自定义 tabBar）
+    wx.reLaunch({
+      url: "/pages/home/home",
+      success: () => {
+        console.log("[meditation] reLaunch success");
+      },
+      fail: (err) => {
+        console.error("[meditation] reLaunch failed:", err);
+      },
     });
   },
 

@@ -1,0 +1,47 @@
+<!--pages/explore/week-plan/history/history.wxml-->
+<view class="container history-container">
+  <!-- 顶部导航 -->
+  <view class="header-bar">
+    <view class="back-btn" bindtap="goBack">
+      <view class="back-icon"></view>
+    </view>
+    <view class="header-title">历史记录</view>
+    <view class="header-placeholder"></view>
+  </view>
+
+  <!-- 顶部引导文案 -->
+  <view class="guide-text">
+    <text>你走过的每一周，</text>
+    <text>都已经在这里。</text>
+  </view>
+
+  <!-- 年份切换 -->
+  <view class="year-nav">
+    <view class="nav-btn" bindtap="prevYear">
+      <text>‹</text>
+    </view>
+    <view class="year-display">{{currentYear}}年</view>
+    <view class="nav-btn" bindtap="nextYear">
+      <text>›</text>
+    </view>
+  </view>
+
+  <!-- 周列表 -->
+  <view class="week-list">
+    <view wx:if="{{weekList.length === 0}}" class="empty-hint">
+      <text class="empty-text">这一年还没有留下周计划</text>
+    </view>
+    <view wx:for="{{weekList}}" 
+          wx:key="weekKey" 
+          class="week-item"
+          bindtap="onWeekTap"
+          data-week-key="{{item.weekKey}}">
+      <view class="week-info">
+        <text class="week-title">{{item.month}}月 · 第{{item.weekOfMonth}}周</text>
+        <text class="week-range">{{item.weekRangeDisplay}}</text>
+      </view>
+      <view class="week-arrow">→</view>
+    </view>
+  </view>
+</view>
+

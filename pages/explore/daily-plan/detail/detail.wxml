@@ -1,0 +1,143 @@
+<!--pages/explore/daily-plan/detail/detail.wxml-->
+<view class="container detail-container">
+  <!-- 顶部导航 -->
+  <view class="header-bar">
+    <view class="back-btn" bindtap="goBack">
+      <view class="back-icon"></view>
+    </view>
+    <view class="header-title">记录详情</view>
+    <view class="header-placeholder"></view>
+  </view>
+
+  <block wx:if="{{hasData}}">
+    <!-- 顶部提示 -->
+    <view class="hint-card">
+      <text class="hint-text">这是当时的你留下的记录。</text>
+    </view>
+
+    <!-- 纸质手账主体（与编辑页面一致） -->
+    <view class="notebook-wrapper">
+      <!-- 日期栏 -->
+      <view class="date-bar">
+        <view class="date-label">日 期</view>
+        <view class="date-value">{{dateDisplay}}</view>
+      </view>
+
+      <!-- 主内容区 - 左右分栏 -->
+      <view class="main-content">
+        <!-- 左侧栏 -->
+        <view class="left-column">
+          <!-- 健康 / Health plan -->
+          <view class="module health-module">
+            <view class="module-header">
+              <text class="module-title-cn">健康</text>
+              <text class="module-title-en">/ Health plan</text>
+            </view>
+            <view class="health-row">
+              <text class="health-label">运动：</text>
+              <text class="health-value">{{record.health.exercise || '___'}}</text>
+              <text class="health-unit">分钟</text>
+            </view>
+            <view class="health-row">
+              <text class="health-label">饮水：</text>
+              <text class="health-value">{{record.health.water || '___'}}</text>
+              <text class="health-unit">毫升</text>
+            </view>
+            <view class="health-row">
+              <text class="health-label">睡眠：</text>
+              <text class="health-value">{{record.health.sleep || '___'}}</text>
+              <text class="health-unit">小时</text>
+            </view>
+          </view>
+
+          <!-- 时间布局 -->
+          <view class="module timeline-module">
+            <view class="timeline-header">
+              <text class="timeline-title">时间布局</text>
+            </view>
+            <view class="timeline-list">
+              <view wx:for="{{allTimeSlots}}" wx:key="index" class="timeline-row">
+                <text class="timeline-hour">{{item.time}}</text>
+                <text class="timeline-value">{{item.plan || ''}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 右侧栏 -->
+        <view class="right-column">
+          <!-- 待办事项 / To Do List -->
+          <view class="module todo-module">
+            <view class="module-header">
+              <text class="module-title-cn">待办事项</text>
+              <text class="module-title-en">/ To Do List</text>
+            </view>
+            <view class="list-items">
+              <view wx:for="{{todoList}}" wx:key="index" class="list-row">
+                <view class="list-checkbox {{item.completed ? 'checked' : ''}}">
+                  <text wx:if="{{item.completed}}" class="check-icon">✓</text>
+                </view>
+                <view class="list-text-wrapper">
+                  <text class="list-text {{item.completed ? 'completed' : ''}}">{{item.text}}</text>
+                  <view wx:if="{{item.completed}}" class="strikethrough-line"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 重要事项 / Important List -->
+          <view class="module important-module">
+            <view class="module-header highlight">
+              <text class="module-title-cn">重要事项</text>
+              <text class="module-title-en">/ Important List</text>
+            </view>
+            <view class="list-items">
+              <view wx:for="{{importantList}}" wx:key="index" class="list-row">
+                <view class="list-checkbox {{item.completed ? 'checked' : ''}}">
+                  <text wx:if="{{item.completed}}" class="check-icon">✓</text>
+                </view>
+                <view class="list-text-wrapper">
+                  <text class="list-text {{item.completed ? 'completed' : ''}}">{{item.text}}</text>
+                  <view wx:if="{{item.completed}}" class="strikethrough-line"></view>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 心得 / Acquaintance -->
+          <view class="module insight-module">
+            <view class="module-header highlight">
+              <text class="module-title-cn">心得</text>
+              <text class="module-title-en">/ Acquaintance</text>
+            </view>
+            <view class="insight-lines">
+              <text class="insight-text">{{record.insight || ''}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 总结 / Summary -->
+      <view class="module summary-module">
+        <view class="module-header-full">
+          <text class="module-title-cn">总结</text>
+          <text class="module-title-en">/ Summary</text>
+        </view>
+        <view class="summary-area">
+          <text class="summary-text">{{record.summary || ''}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 生成图片按钮 -->
+    <view class="action-area">
+      <view class="generate-btn" bindtap="generateImage">生成一张记录图片</view>
+    </view>
+  </block>
+
+  <!-- 无数据状态 -->
+  <view wx:else class="empty-state">
+    <text class="empty-icon">📭</text>
+    <text class="empty-text">这一天没有留下记录</text>
+  </view>
+</view>

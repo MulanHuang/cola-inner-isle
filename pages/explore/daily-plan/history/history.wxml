@@ -1,0 +1,58 @@
+<!--pages/explore/daily-plan/history/history.wxml-->
+<view class="container history-container">
+  <!-- 顶部导航 -->
+  <view class="header-bar">
+    <view class="back-btn" bindtap="goBack">
+      <view class="back-icon"></view>
+    </view>
+    <view class="header-title">历史记录</view>
+    <view class="header-placeholder"></view>
+  </view>
+
+  <!-- 顶部引导文案 -->
+  <view class="guide-text">
+    <text>你走过的每一天，</text>
+    <text>都已经在这里。</text>
+  </view>
+
+  <!-- 月份切换 -->
+  <view class="month-nav">
+    <view class="nav-btn" bindtap="prevMonth">
+      <text>‹</text>
+    </view>
+    <view class="month-display">{{currentMonthDisplay}}</view>
+    <view class="nav-btn" bindtap="nextMonth">
+      <text>›</text>
+    </view>
+  </view>
+
+  <!-- 日历 -->
+  <view class="calendar-card">
+    <!-- 星期表头 -->
+    <view class="weekdays-row">
+      <text wx:for="{{weekDays}}" wx:key="*this" class="weekday">{{item}}</text>
+    </view>
+
+    <!-- 日期网格 -->
+    <view class="days-grid">
+      <view wx:for="{{days}}" 
+            wx:key="index" 
+            class="day-cell {{item.hasRecord ? 'has-record' : ''}} {{item.isToday ? 'is-today' : ''}} {{selectedDate === item.dateStr ? 'selected' : ''}}"
+            bindtap="onDayTap"
+            data-date-str="{{item.dateStr}}"
+            data-has-record="{{item.hasRecord}}">
+        <text wx:if="{{item.day}}" class="day-num">{{item.day}}</text>
+        <!-- 有记录显示柔和小圆点 -->
+        <view wx:if="{{item.hasRecord}}" class="record-dot"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 图例说明 -->
+  <view class="legend">
+    <view class="legend-item">
+      <view class="legend-dot has-record"></view>
+      <text class="legend-text">有记录</text>
+    </view>
+  </view>
+</view>

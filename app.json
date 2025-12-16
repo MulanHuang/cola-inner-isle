@@ -24,11 +24,20 @@
     "pages/tarot/tarot",
     "pages/tarot/history/history",
     "pages/dreamGrid/dreamGrid",
+    "pages/planning/planning",
     "pages/habitCalendar/habitCalendar",
     "pages/oh/oh",
     "pages/oh-chat/oh-chat",
     "pages/aroma-card/aroma-card",
-    "pages/aroma-chat/aroma-chat"
+    "pages/aroma-chat/aroma-chat",
+    "pages/explore/daily-plan/daily-plan",
+    "pages/explore/daily-plan/history/history",
+    "pages/explore/daily-plan/detail/detail",
+    "pages/explore/week-plan/week-plan",
+    "pages/explore/week-plan/history/history",
+    "pages/explore/week-plan/detail/detail",
+    "pages/explore/monthly-plan/monthly-plan",
+    "pages/explore/monthly-plan/history/history"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -59,7 +68,7 @@
       },
       {
         "pagePath": "pages/meditation/meditation",
-        "text": "冥想",
+        "text": "放松",
         "iconPath": "images/tab/meditation.png",
         "selectedIconPath": "images/tab/meditation-active.png"
       },

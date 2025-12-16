@@ -262,9 +262,9 @@ Page({
           });
         }
       } else {
-        console.error("[player] ❌ 未找到音频数据");
+        console.error("[player] ❌ 未找到数据");
         wx.showToast({
-          title: "未找到音频",
+          title: "未找到内容",
           icon: "none",
         });
       }
@@ -416,7 +416,7 @@ Page({
       console.warn("[player] ⚠️ 读取缓存失败:", cacheErr.message);
     }
 
-    wx.showLoading({ title: "加载音频..." });
+    wx.showLoading({ title: "加载中..." });
     this.setData({ isPreparing: true });
 
     try {
@@ -508,16 +508,16 @@ Page({
     const safeUrl = this.data.tempAudioUrl;
     if (!safeUrl) {
       console.error("[player] ❌ 临时URL为空，无法播放");
-      wx.showToast({ title: "音频未准备好", icon: "none" });
+      wx.showToast({ title: "内容未准备好", icon: "none" });
       return;
     }
 
     // iOS 真机必须先设置 title，否则可能无法播放
-    const audioTitle = this.data.audio.title || "冥想音频";
+    const audioTitle = this.data.audio.title || "放松引导";
     audioManager.title = audioTitle;
     console.log("[player] - title:", audioTitle);
 
-    audioManager.epname = "可乐心岛冥想";
+    audioManager.epname = "可乐心岛";
     audioManager.singer = "可乐心岛";
     audioManager.coverImgUrl = this.data.audio.cover || "";
     audioManager.playbackRate = this.data.speed;
@@ -578,7 +578,7 @@ Page({
       this.prepareAndPlay(this.data.audio.audioUrl);
     } else {
       console.error("[player] ❌ 没有可用的音频源");
-      wx.showToast({ title: "音频加载失败", icon: "none" });
+      wx.showToast({ title: "内容加载失败", icon: "none" });
     }
   },
 
@@ -601,7 +601,7 @@ Page({
   onProgressChange(e) {
     const value = e.detail.value;
     if (!this.data.duration) {
-      wx.showToast({ title: "音频尚未加载完毕", icon: "none" });
+      wx.showToast({ title: "内容尚未加载完毕", icon: "none" });
       return;
     }
     const newTime = (value / 100) * this.data.duration;
@@ -690,7 +690,7 @@ Page({
               this.loadAudioInfo();
             } else {
               wx.showToast({
-                title: "无法重新加载，缺少音频信息",
+                title: "无法重新加载，缺少信息",
                 icon: "none",
                 duration: 2000,
               });
@@ -798,7 +798,7 @@ Page({
   onEndOfTrackTap() {
     const remaining = this.data.duration - this.data.currentTime;
     if (remaining <= 0) {
-      wx.showToast({ title: "音频即将结束", icon: "none" });
+      wx.showToast({ title: "引导即将结束", icon: "none" });
       return;
     }
 
@@ -944,9 +944,9 @@ Page({
           createTime: db.serverDate(),
         },
       });
-      console.log("[player] ✅ 冥想播放历史已写入云端", historyItem);
+      console.log("[player] ✅ 练习记录已写入云端", historyItem);
     } catch (err) {
-      console.error("[player] ❌ 冥想播放历史写入云端失败", err);
+      console.error("[player] ❌ 练习记录写入云端失败", err);
       this.saveHistoryLocally(historyItem);
       console.log("[player] 已回退到本地存储保存播放历史");
     }

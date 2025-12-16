@@ -19,7 +19,7 @@ Component({
       },
       {
         pagePath: "/pages/meditation/meditation",
-        label: "冥想",
+        label: "练习",
         iconPath: "/assets/tabbar/meditation-outline.svg",
         selectedIconPath: "/assets/tabbar/meditation-filled.svg",
       },
@@ -40,21 +40,58 @@ Component({
     onSwitchTab(e) {
       const { path, index } = e.currentTarget.dataset;
 
-      // 避免重复跳转
+      console.log(
+        "[tabBar] onSwitchTab triggered, path:",
+        path,
+        "index:",
+        index
+      );
+
+      // 获取当前页面栈
       const pages = getCurrentPages();
-      if (pages.length > 0) {
-        const currentUrl = "/" + pages[pages.length - 1].route;
-        if (currentUrl === path) return;
+      const currentUrl =
+        pages.length > 0 ? "/" + pages[pages.length - 1].route : "";
+
+      console.log(
+        "[tabBar] currentUrl:",
+        currentUrl,
+        "pages.length:",
+        pages.length
+      );
+
+      // 只有当前确实在目标 tabBar 页面（不是子页面）且页面栈只有一层时才跳过
+      if (currentUrl === path && pages.length === 1) {
+        console.log("[tabBar] Already on target page, skip");
+        return;
       }
 
       // 更新选中状态
       this.setData({ selected: index });
 
-      // 执行跳转
-      wx.switchTab({ url: path });
-
-      // 轻触震动反馈（仅在成功切换时触发）
-      wx.vibrateShort({ type: "light" });
+      // 执行跳转 - 使用 switchTab
+      wx.switchTab({
+        url: path,
+        success: () => {
+          console.log("[tabBar] switchTab success to:", path);
+          // 轻触震动反馈
+          wx.vibrateShort({ type: "light" });
+        },
+        fail: (err) => {
+          console.error("[tabBar] switchTab failed:", err);
+          // switchTab 失败时，尝试使用 reLaunch
+          console.log("[tabBar] Fallback to reLaunch");
+          wx.reLaunch({
+            url: path,
+            success: () => {
+              console.log("[tabBar] reLaunch success to:", path);
+              wx.vibrateShort({ type: "light" });
+            },
+            fail: (err2) => {
+              console.error("[tabBar] reLaunch also failed:", err2);
+            },
+          });
+        },
+      });
     },
   },
 });

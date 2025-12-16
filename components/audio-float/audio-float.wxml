@@ -14,12 +14,12 @@
       <view class="music-note {{playing ? 'playing' : ''}}">♪</view>
     </view>
 
-    <!-- 音频信息 -->
+    <!-- 引导信息 -->
     <view class="audio-info">
       <text class="audio-title">{{title}}</text>
       <view class="status-bar">
         <view class="status-dot {{playing ? 'playing' : ''}}"></view>
-        <text class="status-text">{{playing ? '正在播放' : '已暂停'}}</text>
+        <text class="status-text">{{playing ? '引导中' : '已停止'}}</text>
       </view>
     </view>
 

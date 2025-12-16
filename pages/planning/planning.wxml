@@ -1,0 +1,51 @@
+<!--pages/planning/planning.wxml-->
+<view class="container planning-container">
+  <view class="header">
+    <view class="header-title">🌿 人生规划与记录</view>
+    <view class="header-subtitle">从方向，到行动，到回顾</view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="planning-list">
+    <!-- 人生梦想九宫格 -->
+    <view class="planning-item" bindtap="goToDreamGrid">
+      <view class="planning-icon">🌟</view>
+      <view class="planning-content">
+        <view class="planning-name">人生梦想九宫格</view>
+        <view class="planning-desc">看见你真正想走向哪里</view>
+      </view>
+      <view class="planning-arrow">→</view>
+    </view>
+
+    <!-- 每日计划 -->
+    <view class="planning-item" bindtap="goToDailyPlan">
+      <view class="planning-icon">📖</view>
+      <view class="planning-content">
+        <view class="planning-name">每日计划</view>
+        <view class="planning-desc">为今天留下些什么</view>
+      </view>
+      <view class="planning-arrow">→</view>
+    </view>
+
+    <!-- 周计划表 -->
+    <view class="planning-item" bindtap="goToWeekPlan">
+      <view class="planning-icon">📅</view>
+      <view class="planning-content">
+        <view class="planning-name">周计划表</view>
+        <view class="planning-desc">规划正在发生的一周</view>
+      </view>
+      <view class="planning-arrow">→</view>
+    </view>
+
+    <!-- 月度记录 -->
+    <view class="planning-item" bindtap="goToMonthlyPlan">
+      <view class="planning-icon">📓</view>
+      <view class="planning-content">
+        <view class="planning-name">月度记录</view>
+        <view class="planning-desc">温柔记录走过的痕迹</view>
+      </view>
+      <view class="planning-arrow">→</view>
+    </view>
+  </view>
+</view>
+
