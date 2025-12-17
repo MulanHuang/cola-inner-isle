@@ -5,13 +5,8 @@
 <view class="home-container page-with-custom-navbar" style="padding-top: {{navBarHeight}}px;">
   <!-- 今日一句 -->
   <view class="card quote-card">
-    <view class="quote-icon">✨</view>
-    <text class="quote-text" user-select="{{true}}">{{dailyQuote.content}}</text>
+    <text class="quote-text" user-select="{{true}}" bindtap="refreshQuote">{{dailyQuote.content}}</text>
     <text class="quote-author" wx:if="{{dailyQuote.author}}" user-select="{{true}}">— {{dailyQuote.author}}</text>
-    <view class="quote-refresh pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="refreshQuote">
-      <image class="refresh-icon" src="/assets/icons/refresh-outline.svg" mode="aspectFit" />
-      <text class="refresh-text">换一句</text>
-    </view>
   </view>
 
   <!-- 每日塔罗牌 -->
@@ -35,7 +30,6 @@
         <image class="tarot-card-front" src="{{todayTarot.image}}" mode="aspectFit"></image>
         <view class="tarot-name">{{todayTarot.name}}</view>
         <view class="tarot-actions">
-          <view class="tarot-hint">已抽取，点此重新抽取或查看</view>
           <button class="tarot-redo-btn" size="mini" catchtap="redoTarot" hover-class="tarot-redo-hover" hover-stay-time="60">重新抽取</button>
         </view>
       </view>
@@ -44,14 +38,6 @@
 
   <!-- 探索工具·每日练习 Mini 打卡日历 -->
   <view class="habit-card pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToHabitCalendar">
-    <!-- 顶部标题行 -->
-    <view class="habit-header">
-      <view class="habit-title-section">
-        <view class="habit-title">探索工具 · 每日练习</view>
-      </view>
-      <view class="habit-arrow" hover-class="habit-arrow-hover">→</view>
-    </view>
-
     <!-- 打卡点阵区域 -->
     <view class="habit-grid">
       <!-- 星期表头行 -->
@@ -117,18 +103,15 @@
       </view>
     </view>
 
-    <!-- 底部坚持提示文案 -->
-    <view class="habit-encourage-text">坚持是一件了不起的事 ✨</view>
+    <!-- 底部坚持提示文案 + 入口箭头 -->
+    <view class="habit-footer">
+      <view class="habit-encourage-text">坚持是一件了不起的事 ✨</view>
+      <view class="habit-arrow" hover-class="habit-arrow-hover">→</view>
+    </view>
   </view>
 
   <!-- 更多探索 / 自我探索工具宫格 -->
   <view class="card discovery-card">
-    <view class="discovery-header">
-      <view class="discovery-title">🌱 自我探索</view>
-      <view class="discovery-arrow pressable" hover-class="pressable-active" hover-stay-time="80" bindtap="goToExplore">→</view>
-    </view>
-    <view class="discovery-subtitle">认识更真实的自己，核心工具与计划入口</view>
-
     <swiper
       class="tool-swiper"
       indicator-dots="true"
@@ -155,7 +138,6 @@
               <view wx:if="{{item.badge}}" class="tool-badge">{{item.badge}}</view>
             </view>
             <view class="tool-label">{{item.title}}</view>
-            <view class="tool-desc">{{item.desc}}</view>
           </view>
         </view>
       </swiper-item>

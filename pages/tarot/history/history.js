@@ -81,6 +81,7 @@ Page({
           cardId: item.cardId,
           cardName: item.cardName || "未知牌",
           cardImage: item.cardImage || "",
+          isReversed: !!item.isReversed,
           question: item.question || "",
           interpretation: item.interpretation || "",
           actionPlan: cleanedPlans.join(" / "),

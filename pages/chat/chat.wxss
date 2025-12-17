@@ -1187,12 +1187,25 @@ page {
   border-radius: 24rpx;
   padding: 26rpx 32rpx;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
   color: #5a4a3a;
   font-size: 28rpx;
   box-shadow: 0 6rpx 14rpx rgba(0, 0, 0, 0.06);
   animation: popIn 0.45s cubic-bezier(0.25, 0.8, 0.3, 1) forwards;
   opacity: 0;
   transform: translateY(20rpx) scale(0.96);
+}
+
+.welcome-action-icon {
+  font-size: 30rpx;
+  line-height: 1;
+}
+
+.welcome-action-text {
+  display: inline-block;
 }
 
 .action-1 {

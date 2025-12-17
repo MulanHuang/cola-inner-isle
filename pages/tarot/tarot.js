@@ -6,16 +6,60 @@
 // ============================================================
 
 const db = wx.cloud.database();
+// ✅ 塔罗解读改为前端直连 Vercel 代理（流式输出）
+
 const { callAIStream } = require("../../utils/aiStream.js");
 const { buildProfileContext } = require("../../utils/userProfile.js");
+// 🚀 云存储临时 URL 智能缓存工具
 const { getTempUrlWithCache } = require("../../utils/cloudUrlCache.js");
-const { setNavBarHeight } = require("../../utils/common.js");
-const {
-  guideQuestions,
-  spreads,
-  defaultSpread,
-  defaultCardBackUrl,
-} = require("./tarotConfig.js");
+
+// 逆位出现概率（0-1）
+const REVERSED_RATE = 0.3;
+
+// ============================================================
+// 手势交互配置 - Card Flow on Fixed Ring (优化版 - 流畅滑动)
+// ============================================================
+const GESTURE_CONFIG = {
+  // 缩放配置
+  zoom: {
+    minScale: 0.6, // 最小缩放比例
+    maxScale: 2.0, // 最大缩放比例
+    defaultScale: 1.0, // 默认缩放比例
+    resetDuration: 300, // 缩放重置动画时长 (ms)
+    holdDuration: 2000, // 🆕 放大后保持时间 (ms)，让用户有时间选牌
+    autoResetEnabled: true, // 🆕 是否自动重置缩放（放大后自动恢复）
+  },
+  // 卡牌流动配置 - 🔥 优化滑动流畅度
+  cardFlow: {
+    sensitivity: 0.8, // 🔥 提高滑动灵敏度：1px 移动 = 0.8 度旋转（原0.5，更灵敏）
+    snapEnabled: true, // 是否启用松手吸附
+    snapDuration: 200, // 🔥 缩短吸附动画时长 (ms)，更快响应（原250）
+    // 惯性滑动配置 - 🔥 优化惯性体验
+    inertia: {
+      enabled: true, // 是否启用惯性滑动
+      friction: 0.96, // 🔥 提高摩擦系数（原0.92），惯性更持久丝滑
+      minVelocity: 0.3, // 🔥 降低最小速度阈值（原0.5），更容易触发惯性
+      maxVelocity: 50, // 🔥 提高最大速度限制（原30），允许更快滑动
+    },
+  },
+  // 触摸判定配置（🆕 增强防误触）
+  touch: {
+    tapThreshold: 12, // 🔥 适当降低点击阈值 (px)，更精准区分点击和滑动（原15）
+    tapTimeThreshold: 200, // 🔥 适当缩短点击时间阈值 (ms)，响应更快（原250）
+    doubleTapInterval: 300, // 双击间隔 (ms)，用于区分单击和双击
+  },
+  // 触感反馈配置 - 🔥 优化触感体验
+  haptic: {
+    enabled: true, // 是否启用触感反馈
+    slideInterval: 100, // 🔥 增加滑动振动间隔 (ms)，减少过度振动（原80）
+    slideThreshold: 20, // 🔥 增加触发振动的滑动距离阈值 (px)，减少干扰（原15）
+  },
+  // 音效配置
+  sound: {
+    enabled: true, // 是否启用滑动音效
+    slideInterval: 150, // 🔥 增加音效间隔 (ms)，避免过于频繁（原120）
+  },
+};
 
 // ============================================================
 // 动画配置常量 - 易于调整的参数
@@ -28,15 +72,15 @@ const ANIMATION_CONFIG = {
     cardCount: 8, // 洗牌显示的牌数量
   },
   // 扇形铺开 (视觉展示用，实际抽牌从数据库78张牌随机)
-  // 经典扇形布局: 牌从底部中心点向上展开
+  // 完整圆环布局: 牌围绕中心点形成 360 度圆环
   spread: {
-    totalCards: 22, // 视觉展示牌数 (22张大阿卡纳)
-    angleRange: [-55, 55], // 扇形角度范围 (度) - 110度的扇形
-    pivotDistance: 350, // 旋转中心点距离牌底部的距离 (rpx)
-    cardWidth: 60, // 牌宽度 (rpx)
-    cardHeight: 96, // 牌高度 (rpx)
-    duration: 800, // 铺开动画时长 (ms)
-    staggerDelay: 25, // 每张牌延迟 (ms)
+    totalCards: 78, // 完整塔罗牌组 (78张)
+    angleRange: [-175, 175], // 扇形角度范围 (度) - 350度圆环，留小缝隙避免首尾重叠
+    pivotDistance: 260, // 旋转中心点距离牌底部的距离 (rpx) - 稍微缩小形成更紧凑的圆
+    cardWidth: 32, // 牌宽度 (rpx) - 再缩小以适应完整圆环
+    cardHeight: 52, // 牌高度 (rpx) - 保持比例
+    duration: 1500, // 铺开动画时长 (ms) - 完整圆环需要更长时间
+    staggerDelay: 10, // 每张牌延迟 (ms) - 缩短以保持总时长合理
   },
   // 选中牌飞出
   flyOut: {
@@ -177,107 +221,113 @@ function parseInterpretation(text) {
 
 /**
  * 根据不同牌阵生成专属专业框架（结构化输出）
+ * 🔥 已优化：强调对用户问题的深度回应
  */
 function buildPromptBySpread(spread, cardsInfo, question) {
   const spreadName = spread.name;
 
-  // 通用输出格式说明
+  // 🔥 优化后的通用输出格式 - 强调问题关联
   const outputFormat = `
+【重要】你必须首先深入理解用户问题背后的真正关切和情绪需求，然后在每个解读部分都直接回应这个核心诉求。
+
 请严格按照以下格式输出，使用【】包裹标题，每个部分独立成段：
 
-【整体主题】
-2-3句话概括解读核心
+【问题核心】
+用3-5句话点明用户问题背后真正的关切是什么（情感需求、内心恐惧、渴望等）
 
 【牌面解析】
-分析抽到的塔罗牌的象征意义，每一张塔罗牌用2-3句话阐述
+分析每张牌的象征意义，【必须】将每张牌的含义与用户的问题直接关联，说明这张牌如何回应用户的困惑
+
+【针对你的问题】
+直接、具体地回应用户提出的问题，给出塔罗视角下的洞察（6-8句，这是最重要的部分）
 
 【深层洞察】
-揭示牌面之间的关联与深层含义（3-4句）
+揭示用户可能未意识到的内在模式或潜意识需求（5-7句）
 
 【行动建议】
-提供1-2条具体可执行的建议`;
+提供1-2条与用户问题直接相关的、具体可执行的行动建议`;
+
+  // 🔥 问题分析引导 - 帮助 AI 更好理解问题
+  const questionAnalysis = `
+用户问题: "${question}"
+
+请先在心中分析：
+1. 用户真正想知道什么？（表面问题 vs 深层需求）
+2. 这个问题反映了用户怎样的情绪状态？（焦虑、迷茫、期待、恐惧等）
+3. 用户需要什么样的回应？（确认、方向、安慰、推动等）`;
 
   switch (spreadName) {
     case "Yes or No":
-      return `请以塔罗象征学与心理分析方式解读此单张牌。
+      return `请以塔罗象征学与心理分析方式解读此单张牌，重点回应用户的是非选择困惑。
 ${outputFormat}
 
 抽取的牌:
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
 
     case "得与失":
-      return `请从塔罗象征与心理动力角度分析 "得到 vs 付出"。
+      return `请从塔罗象征与心理动力角度分析 "得到 vs 付出"，帮助用户看清选择的代价与收获。
 ${outputFormat}
 
 抽取的牌:
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
 
     case "时间之流":
     case "圣三角牌阵":
-      return `请以 "过去 -> 现在 -> 趋势" 的方式进行心理分析。
+      return `请以 "过去 -> 现在 -> 趋势" 的时间线分析，帮助用户理解当前处境的来龙去脉，以及如何应对。
 ${outputFormat}
 
 抽取的牌:
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
 
     case "自我探索":
-      return `请从塔罗象征与心理结构角度解析此四位置牌阵。
+      return `请从塔罗象征与心理结构角度解析此四位置牌阵，帮助用户深入了解自己的内在状态。
 ${outputFormat}
 
 抽取的牌:
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
 
     case "身心灵牌阵":
-      return `请从能量平衡与整体结构分析此五位置牌阵。
+      return `请从身体、情绪、精神三个层面分析用户的整体状态，找出失衡之处并给出平衡建议。
 ${outputFormat}
 
 抽取的牌:
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
 
     case "荣格原型":
-      return `请以荣格心理结构 (自我, 阴影, 面具) 进行象征分析。
+      return `请以荣格心理结构 (自我、阴影、面具) 进行象征分析，帮助用户看见被压抑或忽视的部分。
 ${outputFormat}
 
 抽取的牌:
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
 
     case "二选一牌阵":
-      return `请以塔罗象征学与决策心理学分析此选择议题。
+      return `请以塔罗象征学与决策心理学分析此选择议题，帮助用户看清两条路径的本质差异，而非简单给出答案。
 ${outputFormat}
 
 抽取的牌:
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
 
     case "内在天赋":
-      return `请从成长心理学与能力结构角度分析此六位置牌阵。
+      return `请从成长心理学与能力结构角度分析，帮助用户发现自己的潜能与成长方向。
 ${outputFormat}
 
 抽取的牌:
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
 
     default:
-      return `请根据塔罗象征与心理分析方式解读以下内容:
+      return `请根据塔罗象征与心理分析方式解读以下内容，务必紧扣用户问题进行回应:
 ${outputFormat}
 
 ${cardsInfo}
-
-用户问题: ${question}`;
+${questionAnalysis}`;
   }
 }
 
@@ -328,13 +378,225 @@ Page({
     // ========== 聊天输入栏状态 ==========
     chatInputText: "", // 聊天输入框内容
 
+    // ========== 手势交互状态 (Card Flow on Fixed Ring) ==========
+    fanScale: 1.0, // 圆环缩放比例（仅缩放，不旋转）
+    cardOffsetAngle: 0, // 卡牌偏移角度 (deg) - 控制卡牌沿圆环流动，支持360度无限旋转
+    isDragging: false, // 是否正在拖动（用于禁用CSS过渡以获得实时响应）
+
     // ========== 配置数据 ==========
     animConfig: ANIMATION_CONFIG,
-    questionTemplates: guideQuestions,
-    spreads: spreads,
-    selectedSpread: defaultSpread,
+    questionTemplates: [
+      "我和 TA 的关系接下来会怎样？",
+      "我应该如何推进当前的工作/项目？",
+      "在这个选择上，我需要注意什么风险？",
+      "今天我最需要留意的内在声音是什么？",
+    ],
+    spreads: [
+      {
+        name: "Yes or No",
+        count: 1,
+        desc: "单张直觉给出方向，引导你理解当下能量，而不是绝对的结果。",
+        keywords: [
+          "吗",
+          "能否",
+          "是否",
+          "是不是",
+          "会不会",
+          "要不要",
+          "好不好",
+          "行不行",
+          "可不可以",
+          "应不应该",
+          "有没有必要",
+          "要不要继续",
+          "要不要开始",
+          "能不能成功",
+          "是不是合适",
+        ],
+        positions: ["答案"],
+      },
+      {
+        name: "得与失",
+        count: 2,
+        desc: "帮助你看清在这个情境中，你可能得到什么、需要付出什么，是评估利弊的好工具。",
+        keywords: [
+          "值得",
+          "利弊",
+          "好处",
+          "坏处",
+          "得失",
+          "风险",
+          "收益",
+          "代价",
+          "成本",
+          "回报",
+          "是否划算",
+          "究竟值不值得",
+          "是否有价值",
+        ],
+        positions: ["得到", "付出"],
+      },
+      {
+        name: "时间之流",
+        count: 3,
+        desc: "看见一个事情从过去、现在到未来的流动趋势，让你更理解整体的发展方向。",
+        keywords: [
+          "过去",
+          "现在",
+          "未来",
+          "趋势",
+          "发展",
+          "走向",
+          "接下来",
+          "之后",
+          "以前",
+          "目前",
+          "未来会怎样",
+          "之后会发生什么",
+          "会如何演变",
+        ],
+        positions: ["过去", "现在", "未来"],
+      },
+      {
+        name: "圣三角牌阵",
+        count: 3,
+        desc: "经典的三点牌阵，从过去、现在、未来三个角度提供启发式建议。",
+        keywords: [
+          "过去",
+          "现在",
+          "未来",
+          "趋势",
+          "发展",
+          "走向",
+          "之后",
+          "接下来",
+          "未来会怎样",
+          "事情会如何变化",
+          "演变",
+          "三角",
+          "三角形",
+          "三点牌阵",
+        ],
+        positions: ["过去", "现在", "未来"],
+      },
+      {
+        name: "自我探索",
+        count: 4,
+        desc: "从现状、外在、内在到潜力，帮助你理解自己的当下状态与成长方向。",
+        keywords: [
+          "成长",
+          "自我",
+          "内在",
+          "灵性",
+          "使命",
+          "方向",
+          "潜能",
+          "潜力",
+          "觉察",
+          "状态",
+          "人生方向",
+          "我现在的状态",
+          "我是谁",
+          "我应该成为什么样的人",
+        ],
+        positions: ["现状", "外在", "内在", "潜力"],
+      },
+      {
+        name: "身心灵牌阵",
+        count: 5,
+        desc: "从身体、心、灵到建议与结果，提供全方位的疗愈与平衡视角。",
+        keywords: [
+          "身心",
+          "身体",
+          "健康",
+          "心灵",
+          "情绪",
+          "疗愈",
+          "放松",
+          "压力",
+          "疲惫",
+          "不安",
+          "能量",
+          "如何调整自己",
+          "我哪里不平衡",
+          "如何恢复状态",
+        ],
+        positions: ["身", "心", "灵", "建议", "结果"],
+      },
+      {
+        name: "荣格原型",
+        count: 3,
+        desc: "自我、阴影与面具三个层次，让你理解内在动力及心理能量结构。",
+        keywords: [
+          "原型",
+          "阴影",
+          "面具",
+          "潜意识",
+          "内在小孩",
+          "心理",
+          "真实的我",
+          "隐藏的部分",
+          "人格",
+          "我的内在动力是什么",
+        ],
+        positions: ["自我", "阴影", "面具"],
+      },
+      {
+        name: "二选一牌阵",
+        count: 6,
+        desc: "对比方案 A 与 B 的优劣，并从风险与建议中帮助你做出更清晰的选择。",
+        keywords: [
+          "选择",
+          "两个选项",
+          "A和B",
+          "方案A",
+          "方案B",
+          "对比",
+          "选择哪个",
+          "取舍",
+          "哪个更好",
+          "哪个更适合",
+          "我应该选哪一个",
+        ],
+        positions: ["选项A", "选项B", "A风险", "B风险", "建议", "结果"],
+      },
+      {
+        name: "内在天赋",
+        count: 6,
+        desc: "从天赋、资源、阻碍、行动与潜力角度洞察你的职业与能力方向。",
+        keywords: [
+          "职业",
+          "事业",
+          "天赋",
+          "擅长",
+          "优势",
+          "能力",
+          "方向",
+          "才能",
+          "潜力",
+          "专业",
+          "我适合做什么",
+          "换工作",
+          "跳槽",
+          "职业选择",
+          "发展方向",
+          "我适合的职业",
+          "技能",
+        ],
+        positions: ["天赋", "资源", "阻碍", "行动", "潜力", "未来趋势"],
+      },
+    ],
+
+    selectedSpread: {
+      name: "自我探索",
+      count: 4,
+      desc: "现状 / 外在 / 内在 / 潜力。",
+      positions: ["现状", "外在", "内在", "潜力"],
+    },
+
     tarotCollection: "tarotDraws",
-    cardBackUrl: defaultCardBackUrl,
+    cardBackUrl:
+      "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsBack/Back 1.webp",
   },
 
   // ============================================================
@@ -462,7 +724,11 @@ Page({
         const interpretationText = draw.interpretation || "";
         const blocks = parseInterpretation(interpretationText);
         this.setData({
-          drawnCard: cardRes.data,
+          drawnCard: {
+            ...cardRes.data,
+            isReversed: !!draw.isReversed, // 恢复逆位状态
+            image: draw.cardImage || cardRes.data?.image,
+          },
           currentDrawId: draw._id, // 保存当前抽牌记录的ID
           question: draw.question || "",
           actionPlan: draw.actionPlan || "",
@@ -508,10 +774,36 @@ Page({
   // ============================================================
 
   /**
-   * 点击扇形中的牌 - 支持多卡选择 + 高亮 + 飞出动画
+   * 点击扇形中的牌 - 显示确认弹窗，用户确认后才选牌
+   * 🆕 增强防误触机制：需要满足严格的点击条件 + 确认弹窗
    */
   onFanCardTap(e) {
     if (this.data.phase !== "selecting") return;
+
+    // 🆕 防误触检查 1：如果刚刚结束滑动/惯性动画，忽略此次点击
+    const now = Date.now();
+    if (this._lastGestureEndTime && now - this._lastGestureEndTime < 150) {
+      console.log("[Tarot] Tap ignored: too close to gesture end");
+      return;
+    }
+
+    // 🆕 防误触检查 2：如果正在惯性滑动中，忽略点击
+    if (this._inertiaTimer) {
+      console.log("[Tarot] Tap ignored: inertia scrolling");
+      return;
+    }
+
+    // 🆕 防误触检查 3：如果正在拖动中，忽略点击
+    if (this.data.isDragging) {
+      console.log("[Tarot] Tap ignored: dragging");
+      return;
+    }
+
+    // 🆕 防误触检查 4：检查是否是有效的点击（未移动太多距离）
+    if (this._isTap === false) {
+      console.log("[Tarot] Tap ignored: was a drag gesture");
+      return;
+    }
 
     // 确保 index 是数字类型（WeChat Mini Program 的 dataset 可能返回字符串）
     const index = Number(e.currentTarget.dataset.index);
@@ -523,12 +815,7 @@ Page({
       return;
     }
 
-    const {
-      selectedCardIndices,
-      requiredCardCount,
-      remainingCardCount,
-      deckCards,
-    } = this.data;
+    const { selectedCardIndices } = this.data;
 
     // 如果这张牌已经被选中，忽略
     if (selectedCardIndices.includes(index)) {
@@ -540,8 +827,59 @@ Page({
       return;
     }
 
-    // 触觉反馈 - 选牌时轻触振动
+    // 触觉反馈 - 轻触反馈提示用户点击到了牌
     wx.vibrateShort({ type: "light" });
+
+    // 🆕 显示确认弹窗，让用户确认选择
+    const positionIndex = selectedCardIndices.length;
+    const positionName =
+      this.data.selectedSpread?.positions?.[positionIndex] ||
+      `第${positionIndex + 1}张牌`;
+
+    wx.showModal({
+      title: "确认选牌",
+      content: `确定选择这张牌作为「${positionName}」吗？`,
+      confirmText: "确定选择",
+      cancelText: "取消",
+      confirmColor: "#d4af37",
+      success: (res) => {
+        if (res.confirm) {
+          // 用户确认后执行选牌
+          this._confirmCardSelection(index);
+        }
+      },
+    });
+  },
+
+  /**
+   * 确认选牌 - 用户确认后真正执行选牌逻辑
+   * @param {number} index - 选中的牌索引
+   */
+  _confirmCardSelection(index) {
+    const {
+      selectedCardIndices,
+      requiredCardCount,
+      remainingCardCount,
+      deckCards,
+    } = this.data;
+
+    // 再次检查是否已被选中（防止重复确认）
+    if (selectedCardIndices.includes(index)) {
+      return;
+    }
+
+    // 触觉反馈 - 选牌确认时中等强度振动
+    wx.vibrateShort({ type: "medium" });
+
+    // 🆕 用户选牌后，取消放大保持计时器，立即重置缩放
+    if (this._zoomHoldTimer) {
+      clearTimeout(this._zoomHoldTimer);
+      this._zoomHoldTimer = null;
+      // 稍后重置缩放（给选牌动画一点时间）
+      setTimeout(() => {
+        this._resetScaleAndPosition();
+      }, 300);
+    }
 
     const newSelectedIndices = [...selectedCardIndices, index];
     const newRemainingCount = remainingCardCount - 1;
@@ -559,7 +897,7 @@ Page({
     });
 
     console.log(
-      `[Tarot] Card tapped: ${index}, remaining: ${newRemainingCount}/${requiredCardCount}`
+      `[Tarot] Card confirmed: ${index}, remaining: ${newRemainingCount}/${requiredCardCount}`
     );
 
     this.setData({
@@ -627,7 +965,7 @@ Page({
       // 短暂延迟后进入扇形铺开（让淡出动画有时间执行）
       setTimeout(() => {
         this.startSpreadAnimation();
-      }, 300);
+      }, 650);
     });
 
     // 备用定时器：如果音效加载失败，确保流程继续
@@ -638,7 +976,7 @@ Page({
         this.setData({ shuffleFadeOut: true });
         setTimeout(() => {
           this.startSpreadAnimation();
-        }, 300);
+        }, 650);
       }
     }, fallbackDuration);
   },
@@ -837,11 +1175,16 @@ Page({
           }
         });
 
-        // 为每张牌保存抽牌记录
+        // 为每张牌判定逆位并保存抽牌记录
         for (let i = 0; i < cards.length; i++) {
           const card = cards[i];
           const position =
             this.data.selectedSpread?.positions?.[i] || `位置${i + 1}`;
+
+          // 🎲 逆位判定：30% 概率出现逆位
+          const isReversed = Math.random() < REVERSED_RATE;
+          // 保存逆位状态到卡牌对象
+          card.isReversed = isReversed;
 
           let drawId = null;
           try {
@@ -851,6 +1194,8 @@ Page({
                 cardName: card.name,
                 position: position,
                 positionIndex: i,
+                isReversed: isReversed, // 保存逆位状态
+                cardImage: card.image || "",
                 date: today,
                 createTime: db.serverDate(),
                 question: this.data.question || "",
@@ -873,6 +1218,8 @@ Page({
                     cardName: card.name,
                     position: position,
                     positionIndex: i,
+                    isReversed: isReversed, // 保存逆位状态
+                    cardImage: card.image || "",
                     date: today,
                     createTime: db.serverDate(),
                     question: this.data.question || "",
@@ -907,7 +1254,7 @@ Page({
           drawIds.push(drawId);
         }
 
-        // 为每张牌添加位置信息
+        // 为每张牌添加位置信息（逆位状态已在上面循环中添加）
         const cardsWithPosition = cards.map((card, index) => ({
           ...card,
           position:
@@ -1050,12 +1397,20 @@ Page({
     // 多卡牌阵
     if (drawnCards && drawnCards.length > 1) {
       const cardsInfo = drawnCards
-        .map(
-          (card) =>
-            `位置: ${card.position}\n牌名: ${card.name}\n关键词: ${
-              card.keywords
-            }\n含义: ${card.meaning || "待解读"}`
-        )
+        .map((card) => {
+          // 根据正逆位选择关键词和含义
+          const keywords = card.isReversed
+            ? card.reversedKeywords || card.keywords
+            : card.keywords;
+          const meaning = card.isReversed
+            ? card.reversedMeaning || card.meaning
+            : card.meaning;
+          const positionText = card.isReversed ? "（逆位）" : "（正位）";
+
+          return `位置: ${card.position}\n牌名: ${
+            card.name
+          }${positionText}\n关键词: ${keywords}\n含义: ${meaning || "待解读"}`;
+        })
         .join("\n\n");
 
       prompt = buildPromptBySpread(selectedSpread, cardsInfo, question);
@@ -1069,53 +1424,78 @@ Page({
         return;
       }
 
-      const cardsInfo = `牌名: ${singleCard.name}\n关键词: ${singleCard.keywords}\n含义: ${singleCard.meaning}`;
+      // 根据正逆位选择关键词和含义
+      const keywords = singleCard.isReversed
+        ? singleCard.reversedKeywords || singleCard.keywords
+        : singleCard.keywords;
+      const meaning = singleCard.isReversed
+        ? singleCard.reversedMeaning || singleCard.meaning
+        : singleCard.meaning;
+      const positionText = singleCard.isReversed ? "（逆位）" : "（正位）";
 
+      const cardsInfo = `牌名: ${singleCard.name}${positionText}\n关键词: ${keywords}\n含义: ${meaning}`;
+
+      // 🔥 优化单卡 prompt - 强调回应用户问题
       prompt = `
-请从塔罗象征学与心理动力角度分析此单张牌。
+【重要】请先深入理解用户问题背后的真正关切，然后用这张牌作为镜子，直接回应用户的困惑。
 
 ${cardsInfo}
 
-用户问题: ${question}
+用户问题: "${question}"
 
-重点内容:
-1. 核心象征主题
-2. 用户当下的心理动力
-3. 与问题的关键关联
-4. 可采取的行动建议
+请先在心中分析：
+1. 用户真正想知道什么？
+2. 这个问题反映了用户怎样的情绪状态？
+3. 这张牌如何直接回应用户的核心关切？
+
+然后按格式输出，【针对你的问题】部分是最重要的，必须直接、温暖、有力地回应用户。
 `;
     }
 
     // 获取用户个人信息上下文
     const profileContext = buildProfileContext({ type: "tarot" });
 
+    // 🔥 优化后的 System Prompt - 强调深度回应用户问题
     const systemPrompt = `
-你是一位专业塔罗解读师。
-风格稳重、有力量、深刻，专注心理象征与自我觉察。
-禁止预测未来, 禁止具体时间, 禁止金钱或医疗内容。
+你是一位资深塔罗心理咨询师，擅长通过塔罗象征深入理解来访者的内心世界。
+
+【核心原则】
+你的首要任务是【深刻回应用户的问题】，而不仅仅是解释牌面含义。
+用户带着困惑来到你面前，你需要：
+1. 真正听懂他们问题背后的情感需求
+2. 用牌面象征作为桥梁，触及他们内心的真实关切
+3. 让用户感到"被理解"和"被看见"
+
+【解读风格】
+- 温暖而有力量，像一位智慧的朋友在对话
+- 直接回应问题，不绕弯子
+- 用"你"来称呼用户，建立连接感
+- 语言简洁有力，避免空泛的套话
+
+【禁止内容】
+- 禁止预测具体未来事件或时间
+- 禁止涉及金钱数字、医疗诊断
+- 禁止宿命论、恐吓性表达
 ${profileContext}
 
-输出格式要求（必须严格遵循）:
-使用【标题】格式分块输出，每个部分独立成段，标题与内容之间换行。
+【输出格式】严格使用【标题】格式分块：
 
-输出结构:
-【整体主题】
-2-3句话概括此次解读的核心主题
+【问题核心】
+点明用户问题背后真正的关切（1-2句）
 
 【牌面解析】
-分析抽到的塔罗牌的象征意义，每一张塔罗牌用2-3句话阐述
+每张牌的象征如何回应用户的困惑（每张牌2-3句，必须关联问题）
+
+【针对你的问题】
+直接、温暖、有力地回应用户提出的问题（3-4句，这是最重要的部分）
 
 【深层洞察】
-揭示潜意识需求或核心议题（3-4句）
+揭示用户可能未意识到的内在模式（2-3句）
 
 【行动建议】
-提供1-2条具体可执行的建议
+1-2条与问题直接相关的具体建议
 
-内容要求:
-1. 提供洞察, 不作未来预测
-2. 内容清晰、有力量、理性
-3. 避免恐吓、宿命论或夸大表达
-4. 总长度控制在200-280字
+【字数要求】总长度控制在250-350字
 `;
     const messages = [
       { role: "system", content: systemPrompt },
@@ -1146,19 +1526,30 @@ ${profileContext}
           loading: false,
         });
 
-        // 更新抽牌记录到数据库
+        // 通过云函数更新抽牌记录（解决前端权限问题）
         if (this.data.currentDrawId) {
           const collection = this.data.tarotCollection;
+          console.log("[tarot] 准备更新记录:", {
+            collection,
+            docId: this.data.currentDrawId,
+          });
           try {
-            await db
-              .collection(collection)
-              .doc(this.data.currentDrawId)
-              .update({
+            const res = await wx.cloud.callFunction({
+              name: "updateTarotDraw",
+              data: {
+                drawId: this.data.currentDrawId,
+                collection,
                 data: {
                   question: this.data.question,
                   interpretation: fullText,
                 },
-              });
+              },
+            });
+            if (res.result && res.result.success) {
+              console.log("[tarot] ✅ 更新解读成功:", res.result);
+            } else {
+              console.warn("[tarot] ⚠️ 更新解读返回失败:", res.result);
+            }
           } catch (updateErr) {
             console.error("更新解读失败", updateErr);
           }
@@ -1243,7 +1634,16 @@ ${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未�
       shuffleFadeOut: false,
       // 重置牌阵为默认
       selectedSpread: defaultSpread,
+      // 重置手势状态
+      fanScale: 1.0,
+      cardOffsetAngle: 0,
     });
+
+    // 停止吸附动画
+    if (this._snapTimer) {
+      clearTimeout(this._snapTimer);
+      this._snapTimer = null;
+    }
 
     // 重置后刷新今日已抽次数
     this.fetchTodayCount();
@@ -1256,7 +1656,7 @@ ${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未�
     this.resetDraw();
   },
 
-  // 保存行动计划
+  // 保存行动计划（通过云函数，解决前端权限问题）
   async saveActionPlan() {
     if (!this.data.drawnCard || !this.data.currentDrawId) return;
 
@@ -1264,39 +1664,38 @@ ${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未�
 
     try {
       const collection = this.data.tarotCollection;
-      await db
-        .collection(collection)
-        .doc(this.data.currentDrawId)
-        .update({
+      const res = await wx.cloud.callFunction({
+        name: "updateTarotDraw",
+        data: {
+          drawId: this.data.currentDrawId,
+          collection,
           data: {
             actionPlan: this.data.actionPlan || "",
           },
-        });
-
-      wx.hideLoading();
-      wx.showToast({
-        title: "已保存",
-        icon: "success",
+        },
       });
-    } catch (err) {
-      console.error("保存行动计划失败", err);
+
       wx.hideLoading();
 
-      // 检查是否是权限错误
-      if (err && (err.errCode === -502003 || err.errCode === -502005)) {
-        wx.showModal({
-          title: "权限配置提示",
-          content:
-            "数据库权限未配置，请在云开发控制台设置 tarotDraws 集合权限为【仅创建者可读写】。详见《数据库权限配置指南.md》",
-          showCancel: false,
-          confirmText: "我知道了",
+      if (res.result && res.result.success) {
+        wx.showToast({
+          title: "已保存",
+          icon: "success",
         });
       } else {
+        console.warn("[tarot] 保存行动计划返回失败:", res.result);
         wx.showToast({
           title: "保存失败，请稍后再试",
           icon: "none",
         });
       }
+    } catch (err) {
+      console.error("保存行动计划失败", err);
+      wx.hideLoading();
+      wx.showToast({
+        title: "保存失败，请稍后再试",
+        icon: "none",
+      });
     }
   },
 
@@ -1360,5 +1759,512 @@ ${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未�
         }
       },
     });
+  },
+
+  // ============================================================
+  // 手势交互方法 - Card Flow on Fixed Ring (优化版 - 惯性滑动 + 触感 + 音效)
+  // ============================================================
+
+  /**
+   * 触摸开始 - 记录初始触摸点
+   * 🔥 精修版：分层交互模型
+   */
+  onFanTouchStart(e) {
+    if (this.data.phase !== "selecting" && this.data.phase !== "spreading")
+      return;
+
+    const touches = e.touches;
+    const now = Date.now();
+    this._touchStartTime = now;
+    this._isTap = true;
+    this._touchStartX = touches[0].clientX;
+    this._touchStartY = touches[0].clientY;
+    this._lastTouchX = touches[0].clientX;
+    this._lastTouchTime = now;
+
+    // 惯性滑动相关
+    this._velocityX = 0;
+    this._velocityHistory = [];
+
+    // 触感反馈相关
+    this._lastHapticTime = 0;
+    this._accumulatedSlide = 0;
+
+    // 音效相关
+    this._lastSoundTime = 0;
+
+    // 🔥 初始化内部角度变量
+    this._rawAngle = this.data.cardOffsetAngle;
+
+    // 🔥 标记是否需要渲染更新
+    this._needsRender = false;
+    this._renderScheduled = false;
+
+    if (touches.length === 1) {
+      this._gestureMode = "cardFlow";
+
+      // 设置拖动状态 - 禁用 CSS 过渡
+      this.setData({ isDragging: true });
+
+      // 停止惯性动画
+      if (this._inertiaTimer) {
+        clearTimeout(this._inertiaTimer);
+        this._inertiaTimer = null;
+      }
+
+      // 停止吸附动画
+      if (this._snapTimer) {
+        clearTimeout(this._snapTimer);
+        this._snapTimer = null;
+      }
+
+      // 🔥 启动渲染循环
+      this._startRenderLoop();
+    } else if (touches.length === 2) {
+      this._gestureMode = "pinch";
+      this._isTap = false;
+      const distance = this._getDistance(touches[0], touches[1]);
+      this._initialPinchDistance = distance;
+      this._initialScale = this.data.fanScale;
+      this._scaleStartOffset = this.data.cardOffsetAngle;
+    }
+  },
+
+  /**
+   * 🔥 启动渲染循环 - 固定 60fps 更新视图
+   */
+  _startRenderLoop() {
+    if (this._renderLoopTimer) return;
+
+    const renderLoop = () => {
+      if (this._needsRender) {
+        this._needsRender = false;
+        this.setData({ cardOffsetAngle: this._rawAngle });
+      }
+
+      // 只有在拖动状态下继续循环
+      if (this.data.isDragging) {
+        this._renderLoopTimer = setTimeout(renderLoop, 16);
+      } else {
+        this._renderLoopTimer = null;
+      }
+    };
+
+    this._renderLoopTimer = setTimeout(renderLoop, 16);
+  },
+
+  /**
+   * 触摸移动 - 处理缩放或卡牌流动
+   * 🔥 精修版：onFanTouchMove 中不直接调用 setData
+   * 只更新内部变量，由渲染循环统一更新视图
+   */
+  onFanTouchMove(e) {
+    if (this.data.phase !== "selecting" && this.data.phase !== "spreading")
+      return;
+
+    const touches = e.touches;
+    const now = Date.now();
+
+    // 双指缩放处理（低频操作，保留 setData）
+    if (this._gestureMode === "pinch" && touches.length === 2) {
+      const currentDistance = this._getDistance(touches[0], touches[1]);
+      const scaleDelta = currentDistance / this._initialPinchDistance;
+      let newScale = this._initialScale * scaleDelta;
+
+      newScale = Math.max(
+        GESTURE_CONFIG.zoom.minScale,
+        Math.min(GESTURE_CONFIG.zoom.maxScale, newScale)
+      );
+
+      this.setData({ fanScale: newScale });
+      return;
+    }
+
+    // 卡牌流动处理 - 🔥 只更新内部变量，不调用 setData
+    if (this._gestureMode === "cardFlow" && touches.length === 1) {
+      const currentX = touches[0].clientX;
+      const currentY = touches[0].clientY;
+      const deltaX = currentX - this._lastTouchX;
+      const deltaTime = now - this._lastTouchTime;
+
+      // 判定是否超过点击阈值
+      const totalDeltaX = currentX - this._touchStartX;
+      const totalDeltaY = currentY - this._touchStartY;
+      if (
+        Math.abs(totalDeltaX) > GESTURE_CONFIG.touch.tapThreshold ||
+        Math.abs(totalDeltaY) > GESTURE_CONFIG.touch.tapThreshold
+      ) {
+        this._isTap = false;
+      }
+
+      // 🔥 只更新内部角度变量（不调用 setData）
+      const sensitivity = GESTURE_CONFIG.cardFlow.sensitivity;
+      const deltaAngle = deltaX * sensitivity;
+      this._rawAngle += deltaAngle;
+
+      // 🔥 标记需要渲染（由渲染循环统一处理）
+      this._needsRender = true;
+
+      // 计算速度（用于惯性滑动）- 单位: px/ms
+      if (deltaTime > 0) {
+        const instantVelocity = deltaX / deltaTime;
+        const clampedVelocity = Math.max(
+          -GESTURE_CONFIG.cardFlow.inertia.maxVelocity,
+          Math.min(GESTURE_CONFIG.cardFlow.inertia.maxVelocity, instantVelocity)
+        );
+
+        this._velocityHistory.push({
+          velocity: clampedVelocity,
+          time: now,
+        });
+        if (this._velocityHistory.length > 5) {
+          this._velocityHistory.shift();
+        }
+      }
+
+      // 累积滑动距离（用于触感反馈）
+      this._accumulatedSlide += Math.abs(deltaX);
+
+      // 触感反馈
+      if (GESTURE_CONFIG.haptic.enabled) {
+        if (
+          this._accumulatedSlide >= GESTURE_CONFIG.haptic.slideThreshold &&
+          now - this._lastHapticTime >= GESTURE_CONFIG.haptic.slideInterval
+        ) {
+          wx.vibrateShort({ type: "light" });
+          this._lastHapticTime = now;
+          this._accumulatedSlide = 0;
+        }
+      }
+
+      // 滑动音效
+      if (GESTURE_CONFIG.sound.enabled) {
+        if (
+          Math.abs(deltaX) > 2 &&
+          now - this._lastSoundTime >= GESTURE_CONFIG.sound.slideInterval
+        ) {
+          this._playSlideSound();
+          this._lastSoundTime = now;
+        }
+      }
+
+      // 更新上一次触摸位置
+      this._lastTouchX = currentX;
+      this._lastTouchTime = now;
+    }
+  },
+
+  /**
+   * 触摸结束 - 处理点击判定、惯性滑动和缩放重置
+   * 🔥 精修版：停止渲染循环，启动惯性或吸附
+   */
+  onFanTouchEnd() {
+    if (this.data.phase !== "selecting" && this.data.phase !== "spreading")
+      return;
+
+    // 🔥 停止渲染循环
+    if (this._renderLoopTimer) {
+      clearTimeout(this._renderLoopTimer);
+      this._renderLoopTimer = null;
+    }
+
+    const touchDuration = Date.now() - this._touchStartTime;
+
+    // 判断是否是点击（用于选牌）
+    if (this._isTap && touchDuration < GESTURE_CONFIG.touch.tapTimeThreshold) {
+      this.setData({ isDragging: false });
+      this._gestureMode = null;
+      return;
+    }
+
+    // 双指缩放结束
+    if (this._gestureMode === "pinch") {
+      this.setData({ isDragging: false });
+      if (this.data.fanScale > 1.1 && GESTURE_CONFIG.zoom.autoResetEnabled) {
+        if (this._zoomHoldTimer) {
+          clearTimeout(this._zoomHoldTimer);
+        }
+        this._zoomHoldTimer = setTimeout(() => {
+          this._resetScaleAndPosition();
+          this._zoomHoldTimer = null;
+        }, GESTURE_CONFIG.zoom.holdDuration);
+      } else {
+        this._resetScaleAndPosition();
+      }
+      this._gestureMode = null;
+      return;
+    }
+
+    // 卡牌流动结束 - 🔥 启动惯性滑动或吸附
+    if (this._gestureMode === "cardFlow") {
+      const avgVelocity = this._calculateAverageVelocity();
+
+      if (
+        GESTURE_CONFIG.cardFlow.inertia.enabled &&
+        Math.abs(avgVelocity) > GESTURE_CONFIG.cardFlow.inertia.minVelocity
+      ) {
+        this._startInertiaScroll(avgVelocity);
+      } else if (GESTURE_CONFIG.cardFlow.snapEnabled) {
+        this._snapAndFinalize();
+      } else {
+        this._finalizeAngle(this._rawAngle);
+      }
+
+      this._lastGestureEndTime = Date.now();
+    }
+
+    this._gestureMode = null;
+  },
+
+  /**
+   * 计算两个触摸点之间的距离
+   */
+  _getDistance(touch1, touch2) {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  },
+
+  /**
+   * 计算平均速度（用于惯性滑动）
+   */
+  _calculateAverageVelocity() {
+    if (!this._velocityHistory || this._velocityHistory.length === 0) {
+      return 0;
+    }
+    const sum = this._velocityHistory.reduce((acc, v) => acc + v.velocity, 0);
+    return sum / this._velocityHistory.length;
+  },
+
+  /**
+   * 🔥 更新内部角度变量 - 禁止 setData
+   * 拖动与惯性阶段只更新内部变量，视觉更新在 _finalizeAngle 中统一处理
+   * @param {number} angle - 当前角度
+   */
+  _applyAngleToView(angle) {
+    // 仅更新内部变量，不做任何 setData
+    this._rawAngle = angle;
+  },
+
+  /**
+   * 🔥 最终同步角度到 Page data - 唯一允许 setData 的地方
+   * @param {number} angle - 最终角度
+   */
+  _finalizeAngle(angle) {
+    this._rawAngle = angle;
+    this.setData({
+      cardOffsetAngle: angle,
+      isDragging: false,
+    });
+  },
+
+  /**
+   * 🔥 吸附并最终同步 - 统一的吸附逻辑（无限圆环模型）
+   * 使用 easeOutQuart 缓动实现平滑吸附，避免"回拽感"
+   */
+  _snapAndFinalize() {
+    const totalCards = ANIMATION_CONFIG.spread.totalCards;
+    const angleRange = ANIMATION_CONFIG.spread.angleRange;
+    const totalAngle = angleRange[1] - angleRange[0];
+    const angleStep = totalAngle / (totalCards - 1);
+
+    // 使用内部变量计算目标角度（无限圆环，不取模）
+    const currentOffset = this._rawAngle;
+    const nearestStep = Math.round(currentOffset / angleStep);
+    const snapOffset = nearestStep * angleStep;
+    const deltaOffset = snapOffset - currentOffset;
+
+    // 如果偏移量极小，直接同步
+    if (Math.abs(deltaOffset) < 0.3) {
+      this._finalizeAngle(snapOffset);
+      return;
+    }
+
+    // 平滑吸附动画 - 使用时间驱动的缓动
+    const startOffset = currentOffset;
+    const duration = GESTURE_CONFIG.cardFlow.snapDuration;
+    const startTime = Date.now();
+
+    const animateSnap = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // easeOutQuart 缓动 - 快速启动，平滑停止
+      const eased = 1 - Math.pow(1 - progress, 4);
+      this._rawAngle = startOffset + deltaOffset * eased;
+
+      if (progress < 1) {
+        // 吸附过程中实时更新视图
+        this.setData({ cardOffsetAngle: this._rawAngle });
+        this._snapTimer = setTimeout(animateSnap, 16);
+      } else {
+        this._snapTimer = null;
+        this._finalizeAngle(snapOffset);
+      }
+    };
+
+    this._snapTimer = setTimeout(animateSnap, 16);
+  },
+
+  /**
+   * 启动惯性滑动（支持360度无限旋转）
+   * 🔥 精修版：统一物理模型 - velocity 单位为 deg/frame (16ms)
+   * @param {number} initialVelocityPx - 初始速度 (px/ms)
+   */
+  _startInertiaScroll(initialVelocityPx) {
+    const friction = GESTURE_CONFIG.cardFlow.inertia.friction;
+    const sensitivity = GESTURE_CONFIG.cardFlow.sensitivity;
+
+    // 🔥 将 px/ms 速度转换为 deg/frame 速度（统一单位）
+    // 每帧 16ms，所以 velocity_deg_per_frame = velocity_px_per_ms * sensitivity * 16
+    let velocityDegPerFrame = initialVelocityPx * sensitivity * 16;
+
+    // 最小速度阈值（deg/frame）
+    const minVelocityDegPerFrame = 0.1;
+
+    const animateInertia = () => {
+      // 应用摩擦力（每帧固定衰减）
+      velocityDegPerFrame *= friction;
+
+      // 速度低于阈值时停止
+      if (Math.abs(velocityDegPerFrame) < minVelocityDegPerFrame) {
+        this._inertiaTimer = null;
+        this._lastGestureEndTime = Date.now();
+
+        // 惯性结束后吸附
+        if (GESTURE_CONFIG.cardFlow.snapEnabled) {
+          this._snapAndFinalize();
+        } else {
+          this._finalizeAngle(this._rawAngle);
+        }
+        return;
+      }
+
+      // 更新角度（直接加 deg/frame，无需乘 deltaTime）
+      this._rawAngle += velocityDegPerFrame;
+
+      // 惯性过程中实时更新视图
+      this.setData({ cardOffsetAngle: this._rawAngle });
+
+      // 继续动画
+      this._inertiaTimer = setTimeout(animateInertia, 16);
+    };
+
+    this._inertiaTimer = setTimeout(animateInertia, 16);
+  },
+
+  /**
+   * 重置缩放和位置 - 缩放结束后平滑回到默认状态
+   */
+  _resetScaleAndPosition() {
+    const startScale = this.data.fanScale;
+    const targetScale = GESTURE_CONFIG.zoom.defaultScale;
+    const duration = GESTURE_CONFIG.zoom.resetDuration;
+    const startTime = Date.now();
+
+    // 轻微振动反馈
+    wx.vibrateShort({ type: "light" });
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // easeOutBack 缓动函数 - 带轻微回弹效果
+      const c1 = 1.70158;
+      const c3 = c1 + 1;
+      const eased =
+        1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2);
+
+      const newScale = startScale + (targetScale - startScale) * eased;
+      this.setData({ fanScale: newScale });
+
+      if (progress < 1) {
+        this._scaleResetTimer = setTimeout(animate, 16);
+      } else {
+        this._scaleResetTimer = null;
+        // 确保最终值精确
+        this.setData({ fanScale: targetScale });
+      }
+    };
+
+    animate();
+  },
+
+  /**
+   * 播放滑动音效 - 轻微的卡牌滑动声
+   */
+  _playSlideSound() {
+    // 使用简单的系统音效，避免加载外部音频文件
+    // 微信小程序没有内置的滑动音效，这里使用轻触反馈代替
+    // 如果需要真实音效，可以预加载一个短音频文件
+    if (!this._slideAudioContext) {
+      // 创建音频上下文（可选：预加载一个短音效文件）
+      // 这里暂时不播放音效，只依赖触感反馈
+      // 如果需要音效，可以在 onLoad 中预加载音频
+      return;
+    }
+
+    try {
+      this._slideAudioContext.seek(0);
+      this._slideAudioContext.play();
+    } catch (err) {
+      // 忽略音效播放错误
+    }
+  },
+
+  /**
+   * 预加载滑动音效（可选）
+   */
+  _preloadSlideSound() {
+    // 如果有滑动音效文件，可以在这里预加载
+    // const SLIDE_SOUND_URL = "cloud://...";
+    // this._slideAudioContext = wx.createInnerAudioContext();
+    // this._slideAudioContext.src = SLIDE_SOUND_URL;
+    // this._slideAudioContext.volume = 0.3;
+  },
+
+  /**
+   * 重置手势状态（在重新抽牌时调用）
+   * 🔥 精修版：清除所有内部变量和计时器
+   */
+  _resetGestureState() {
+    this.setData({
+      fanScale: GESTURE_CONFIG.zoom.defaultScale,
+      cardOffsetAngle: 0,
+      isDragging: false,
+    });
+
+    // 重置内部角度变量
+    this._rawAngle = 0;
+    this._needsRender = false;
+
+    // 清除所有计时器
+    if (this._snapTimer) {
+      clearTimeout(this._snapTimer);
+      this._snapTimer = null;
+    }
+
+    if (this._inertiaTimer) {
+      clearTimeout(this._inertiaTimer);
+      this._inertiaTimer = null;
+    }
+
+    if (this._scaleResetTimer) {
+      clearTimeout(this._scaleResetTimer);
+      this._scaleResetTimer = null;
+    }
+
+    if (this._zoomHoldTimer) {
+      clearTimeout(this._zoomHoldTimer);
+      this._zoomHoldTimer = null;
+    }
+
+    // 🔥 清除渲染循环计时器
+    if (this._renderLoopTimer) {
+      clearTimeout(this._renderLoopTimer);
+      this._renderLoopTimer = null;
+    }
+
+    this._lastGestureEndTime = null;
   },
 });

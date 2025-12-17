@@ -145,6 +145,16 @@
     "plays": 0,
     "order": 2
   },
+   {
+    "title": "3分钟静心冥想",
+    "description": "3分钟快速调整身心状态，恢复平静",
+    "category": "relax",
+    "cover": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation-images/身体放松颂钵.webp",
+    "audioUrl": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/meditation/3 Minute Relaxation, Calming.mp3",
+    "duration": "03:08",
+    "plays": 0,
+    "order": 3
+  },
   {
     "title": "内在小孩疗愈",
     "description": "与内在小孩对话，给予爱与接纳",

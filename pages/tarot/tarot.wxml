@@ -3,8 +3,10 @@
 <!-- 塔罗牌抽取页面 - 专业级交互与动画                              -->
 <!-- 阶段流程: idle → shuffling → spreading → selecting → selected → result -->
 <!-- 升级版: 神秘、温柔、灵性、治愈、iOS级别质感                      -->
+<!-- 360度无限旋转: 支持左右滑动连续旋转卡牌圆环                       -->
 <!-- ============================================================ -->
-<view class="container tarot-container phase-{{phase}}">
+
+<view class="container tarot-container phase-{{phase}} {{isDragging ? 'is-dragging' : ''}}">
 
   <!-- 档案完善提示条 -->
   <view class="profile-tip-banner" wx:if="{{showProfileTip && phase === 'idle'}}">
@@ -35,14 +37,14 @@
     <view class="header-row">
       <view class="tarot-title">🔮 每日塔罗</view>
       <view class="header-actions">
-        <view class="pill">今日 {{todayCount}}/100</view>
-        <navigator url="/pages/tarot/history/history" class="history-link">
-          <text>📖 历史记录</text>
-        </navigator>
-      </view>
+      <view class="pill">今日 {{todayCount}}/100</view>
+      <navigator url="/pages/tarot/history/history" class="history-link">
+        <text>📖 历史记录</text>
+      </navigator>
     </view>
+  </view>
     <!-- 合规提示 -->
-    <view class="compliance-tip">仅供自我反思，非占卜预测</view>
+    <view class="compliance-tip">塔罗内容仅作为象征反思工具，不提供任何预测或占卜指导</view>
 
     <!-- 流程步骤指示器 -->
     <view class="flow-steps">
@@ -53,7 +55,7 @@
 
     <!-- 问题输入区域 (仅在 idle 阶段可编辑，紧凑版) -->
     <view class="question-section question-section-compact" wx:if="{{phase === 'idle'}}">
-      <view class="section-title">💭</view>
+      <view class="section-title">💭 你想问什么？</view>
       <scroll-view class="template-scroll" scroll-x="true">
         <view
           class="template-chip"
@@ -106,31 +108,54 @@
     <!-- ========== 核心牌阵交互区域 ========== -->
     <!-- 洗牌动画区域 -->
     <view class="cards-area-wrapper" wx:if="{{phase === 'idle' || phase === 'shuffling'}}">
-      <view class="shuffle-animation-container {{phase === 'idle' ? 'shuffle-static' : (shuffleFadeOut ? 'shuffle-fade-out' : 'shuffle-animating')}}">
-        <view class="shuffle-deck">
-          <view
-            wx:for="{{8}}"
-            wx:key="index"
-            class="shuffle-card {{phase === 'shuffling' ? 'shuffle-card-' + index : 'shuffle-card-static'}}"
-          >
-            <image class="shuffle-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
-          </view>
+      <view class="shuffle-animation-container {{phase === 'idle' ? 'shuffle-static' : (shuffleFadeOut ? 'shuffle-gather' : 'shuffle-animating')}}">
+        <view class="shuffle-deck {{phase === 'idle' ? 'is-idle' : 'is-shuffling'}}">
+          <block wx:if="{{phase === 'idle'}}">
+            <view
+              wx:for="{{8}}"
+              wx:key="index"
+              class="shuffle-card shuffle-card-idle-{{index}} shuffle-card-static"
+            >
+              <image class="shuffle-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
+            </view>
+          </block>
+          <block wx:else>
+            <view
+              wx:for="{{28}}"
+              wx:key="index"
+              class="shuffle-card shuffle-card-pos-{{index}} {{shuffleFadeOut ? 'shuffle-card-gather' : ('shuffle-card-' + (index % 8))}}"
+            >
+              <image class="shuffle-card-img" src="{{cardBackUrl}}" mode="aspectFill" />
+            </view>
+          </block>
         </view>
-        <view class="shuffle-text" wx:if="{{phase !== 'idle'}}">
-          {{shuffleFadeOut ? '✨ 牌阵展开中...' : '✨ 正在洗牌...'}}
+        <view class="shuffle-text">
+          {{phase === 'idle' ? '🃏 准备好你的问题，开始洗牌' : (shuffleFadeOut ? '✨ 牌阵展开中...' : '✨ 正在洗牌...')}}
         </view>
       </view>
     </view>
 
-    <!-- 扇形牌阵交互区域 -->
+    <!-- 扇形牌阵交互区域 - 360度连续旋转 + 惯性滑动 -->
     <view class="cards-area-wrapper" wx:if="{{phase === 'spreading' || phase === 'selecting' || phase === 'selected'}}">
-      <view class="fan-container {{phase === 'selected' ? 'cards-fading' : ''}}">
-        <view class="fan-deck">
+      <!-- 手势提示 (首次进入选牌阶段时显示) -->
+      <view class="gesture-hint" wx:if="{{phase === 'selecting' && remainingCardCount === requiredCardCount}}">
+        <text>👆 左右滑动旋转圆环 · 双指缩放 · 点击选牌</text>
+      </view>
+
+      <view
+        class="fan-container {{phase === 'selected' ? 'cards-fading' : ''}} {{isDragging ? 'is-dragging' : ''}}"
+        bindtouchstart="onFanTouchStart"
+        bindtouchmove="onFanTouchMove"
+        bindtouchend="onFanTouchEnd"
+        bindtouchcancel="onFanTouchEnd"
+        style="--fan-scale: {{fanScale}}; --card-offset-angle: {{cardOffsetAngle}}deg;"
+      >
+        <view class="fan-deck fan-deck-interactive" data-angle="{{cardOffsetAngle}}">
           <view
             wx:for="{{deckCards}}"
             wx:key="id"
             class="fan-card-item {{item.isSpread ? 'spread' : ''}} {{item.isChosen ? 'card-chosen' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex === index ? 'card-flying' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex !== index ? 'card-dimmed' : ''}}"
-            style="--angle: {{item.angle}}deg; --x: {{item.x}}rpx; --y: {{item.y}}rpx; --z-index: {{item.zIndex}}; --delay: {{item.animationDelay}}ms;"
+            style="--base-angle: {{item.angle}}deg; --x: {{item.x}}rpx; --y: {{item.y}}rpx; --z-index: {{item.zIndex}}; --delay: {{item.animationDelay}}ms;"
             bindtap="onFanCardTap"
             data-index="{{index}}"
           >
@@ -172,7 +197,7 @@
     >
       开始洗牌
     </button>
-    <view wx:if="{{phase === 'idle'}}" class="ai-disclaimer">AI生成 · 仅供参考</view>
+    <view wx:if="{{phase === 'idle'}}" class="ai-disclaimer">本内容由AI生成，仅供参考</view>
 
   </view> <!-- 未抽牌状态 End -->
 
@@ -199,14 +224,17 @@
           class="card-result-item card-reveal-animation"
           style="animation-delay: {{index * 150}}ms"
         >
-          <image class="card-image-small" src="{{item.image}}" mode="aspectFit" />
+          <view class="card-image-wrapper">
+            <image class="card-image-small {{item.isReversed ? 'reversed' : ''}}" src="{{item.image}}" mode="aspectFit" />
+            <view wx:if="{{item.isReversed}}" class="reverse-badge">逆位</view>
+          </view>
 
           <view class="card-info-row">
             <view class="card-position-label">{{item.position}}</view>
             <view class="card-name-small">{{item.name}}</view>
           </view>
 
-          <view class="card-keywords-small">{{item.keywords}}</view>
+          <view class="card-keywords-small">{{item.isReversed ? item.reversedKeywords : item.keywords}}</view>
         </view>
       </view>
     </scroll-view>
@@ -214,7 +242,10 @@
     <!-- 单张 -->
     <view wx:elif="{{drawnCard}}" class="card-result card-reveal-animation">
 
-      <image class="card-image" src="{{drawnCard.image}}" mode="aspectFit" />
+      <view class="card-image-wrapper">
+        <image class="card-image {{drawnCard.isReversed ? 'reversed' : ''}}" src="{{drawnCard.image}}" mode="aspectFit" />
+        <view wx:if="{{drawnCard.isReversed}}" class="reverse-badge">逆位</view>
+      </view>
 
       <view class="card-info-row">
         <view wx:if="{{selectedSpread.positions[0]}}" class="card-position-label">
@@ -223,7 +254,7 @@
         <view class="card-name">{{drawnCard.name}}</view>
       </view>
 
-      <view class="card-keywords">{{drawnCard.keywords}}</view>
+      <view class="card-keywords">{{drawnCard.isReversed ? drawnCard.reversedKeywords : drawnCard.keywords}}</view>
     </view>
 
     <!-- 牌阵位置说明 -->
@@ -231,7 +262,7 @@
       <view class="spread-positions">
         <view wx:for="{{drawnCards}}" wx:key="_id" class="pos-chip">
           <text class="pos-index">{{index + 1}}</text>
-          <text class="pos-label">{{item.position}}: {{item.name}}</text>
+          <text class="pos-label">{{item.position}}: {{item.name}}{{item.isReversed ? '（逆位）' : ''}}</text>
         </view>
       </view>
     </view>
@@ -244,7 +275,7 @@
       <button class="btn-primary" bindtap="getInterpretation" disabled="{{!question || loading}}">
         {{loading ? '解读中...' : '获取解读'}}
       </button>
-      <view class="ai-disclaimer">AI生成 · 仅供参考</view>
+      <view class="ai-disclaimer">本内容由AI生成，仅供参考</view>
     </view>
 
     <!-- 小岛解读 -->

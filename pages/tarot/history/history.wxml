@@ -15,7 +15,10 @@
     <block wx:for="{{list}}" wx:key="_id">
       <view class="card">
         <view class="card-left">
-          <image class="card-image" src="{{item.cardImage}}" mode="aspectFit" lazy-load="{{true}}"></image>
+          <view class="card-image-wrapper">
+            <image class="card-image {{item.isReversed ? 'reversed' : ''}}" src="{{item.cardImage}}" mode="aspectFit" lazy-load="{{true}}"></image>
+            <view wx:if="{{item.isReversed}}" class="reverse-badge">逆位</view>
+          </view>
         </view>
         <view class="card-right">
           <view class="card-name">{{item.cardName}}</view>

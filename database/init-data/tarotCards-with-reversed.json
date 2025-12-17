@@ -1,626 +1,797 @@
-[
+
   {
     "name": "愚者",
     "nameEn": "The Fool",
     "keywords": "新开始、冒险、纯真",
     "meaning": "代表新的开始和无限可能，鼓励你以开放的心态迎接未知",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/0-The Fool.webp",
-    "order": 0
-  },
+    "order": 0,
+    "reversedKeywords": "轻信他人、天真幼稚、鲁莽冒险、不当行为",
+    "reversedMeaning": "【逆位】轻信他人、天真幼稚；承担不必要的风险；在需要严肃时缺乏认真态度；行为愚蠢或分心；缺乏经验；未能尊重既有的传统与界限；举止不当"
+  }
   {
     "name": "魔术师",
     "nameEn": "The Magician",
     "keywords": "创造、行动、技能",
     "meaning": "象征着将想法转化为现实的能力，你拥有实现目标的资源",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/1-The Magician.webp",
-    "order": 1
-  },
+    "order": 1,
+    "reversedKeywords": "自我膨胀、过度自负、操控他人、投机取巧",
+    "reversedMeaning": "【逆位】自我膨胀、ego 过度；滥用自身天赋；操控或欺骗他人；过于强势或咄咄逼人；利用廉价的幻象去迷惑他人；拒绝投入掌握自身技艺所需的时间与努力；走捷径"
+  }
   {
     "name": "女祭司",
     "nameEn": "The High Priestess",
     "keywords": "直觉、智慧、内在",
     "meaning": "提醒你倾听内在的声音，相信自己的直觉和潜意识",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/2-The High Priestess.webp",
-    "order": 2
-  },
+    "order": 2,
+   "reversedKeywords": "直觉受阻、内在失联、秘密遮蔽、判断失真",
+"reversedMeaning": "【逆位】直觉被压抑或难以信任；内在声音被外界干扰；重要信息或真相被隐藏；判断力受到情绪或恐惧影响"
+
+  }
   {
-    "name": "皇后",
-    "nameEn": "The Empress",
-    "keywords": "丰盛、滋养、创造",
-    "meaning": "代表丰盛和滋养，鼓励你关爱自己和他人",
-    "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/3-The Empress.webp",
-    "order": 3
-  },
-  {
-    "name": "皇帝",
-    "nameEn": "The Emperor",
-    "keywords": "权威、结构、稳定",
-    "meaning": "象征秩序和稳定，提醒你建立清晰的界限和结构",
-    "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/4-The Emperor.webp",
-    "order": 4
-  },
-  {
-    "name": "教皇",
-    "nameEn": "The Hierophant",
-    "keywords": "传统、信仰、指引",
-    "meaning": "代表传统智慧和精神指引，寻找内在的信仰",
-    "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/5-The Hierophant.webp",
-    "order": 5
-  },
-  {
-    "name": "恋人",
-    "nameEn": "The Lovers",
-    "keywords": "选择、关系、和谐",
-    "meaning": "象征重要的选择和关系，提醒你遵从内心的真实感受",
-    "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/6-The Lovers.webp",
-    "order": 6
-  },
-  {
-    "name": "战车",
-    "nameEn": "The Chariot",
-    "keywords": "意志、前进、胜利",
-    "meaning": "代表坚定的意志和前进的动力，你有能力克服障碍",
-    "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/7-The Chariot.webp",
-    "order": 7
-  },
-  {
-    "name": "力量",
-    "nameEn": "Strength",
-    "keywords": "勇气、耐心、温柔",
-    "meaning": "象征内在的力量和温柔的勇气，以爱和耐心面对挑战",
-    "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/8-Strength.webp",
-    "order": 8
-  },
-  {
-    "name": "隐者",
-    "nameEn": "The Hermit",
-    "keywords": "内省、独处、智慧",
-    "meaning": "提醒你向内探索，在独处中寻找智慧和答案",
-    "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/9-The Hermit.webp",
-    "order": 9
-  },
-  {
-    "name": "命运之轮",
-    "nameEn": "Wheel of Fortune",
-    "keywords": "变化、循环、机遇",
-    "meaning": "象征生命的循环和变化，接纳生命的起伏",
-    "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/10-Wheel of Fortune.webp",
-    "order": 10
-  },
+  "name": "皇后",
+  "nameEn": "The Empress",
+  "keywords": "丰盛、滋养、创造",
+  "meaning": "代表丰盛和滋养，鼓励你关爱自己和他人",
+  "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/3-The Empress.webp",
+  "order": 3,
+  "reversedKeywords": "过度放纵、情感依附、窒息关怀、创造受阻",
+"reversedMeaning": "【逆位】过度放纵或依赖；以关爱之名造成压迫；情感或物质上的失衡；创造力被依附关系或成瘾模式削弱"
+
+}
+{
+  "name": "皇帝",
+  "nameEn": "The Emperor",
+  "keywords": "权威、结构、稳定",
+  "meaning": "象征秩序和稳定，提醒你建立清晰的界限和结构",
+  "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/4-The Emperor.webp",
+  "order": 4,
+  "reversedKeywords": "过度控制、压制创造、专断独裁、强权施压",
+  "reversedMeaning": "【逆位】事无巨细的控制；以僵硬、铁腕的方式压制他人的创造力；坚持一意孤行；采取独裁式思维；通过公开的强制手段来达成目标并维持秩序"
+}
+{
+  "name": "教皇",
+  "nameEn": "The Hierophant",
+  "keywords": "传统、信仰、指引",
+  "meaning": "代表传统智慧和精神指引，寻找内在的信仰",
+  "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/5-The Hierophant.webp",
+  "order": 5,
+  "reversedKeywords": "反叛传统、质疑权威、形式僵化、盲目从众",
+  "reversedMeaning": "【逆位】这张牌逆位时，代表对既有传统、规则或权威的反抗与质疑；可能表现为拒绝遵循社会规范，或相反地陷入僵化的形式主义与盲目从众之中；提示你重新审视外在教条与内在信念之间的关系"
+}
+{
+  "name": "恋人",
+  "nameEn": "The Lovers",
+  "keywords": "选择、关系、和谐",
+  "meaning": "象征重要的选择和关系，提醒你遵从内心的真实感受",
+  "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/6-The Lovers.webp",
+  "order": 6,
+  "reversedKeywords": "失衡激情、情感依赖、关系破裂、错误选择",
+  "reversedMeaning": "【逆位】削弱自身的激情；让对爱的不健康渴望驱动破坏性的行为；破坏彼此的连结；违背真正关心你之人的最佳利益；信息不足的决定"
+}
+{
+  "name": "战车",
+  "nameEn": "The Chariot",
+  "keywords": "意志、前进、胜利",
+  "meaning": "代表坚定的意志和前进的动力，你有能力克服障碍",
+  "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/7-The Chariot.webp",
+  "order": 7,
+  "reversedKeywords": "停滞自满、忽视他人、沉溺过去、冲动失控",
+  "reversedMeaning": "【逆位】沉溺于既有成就；粗暴地忽视他人的感受或期待；过度关注过去的成功而忽略未来的机会；无法约束冲动行为"
+}
+{
+  "name": "力量",
+  "nameEn": "Strength",
+  "keywords": "勇气、耐心、温柔",
+  "meaning": "象征内在的力量和温柔的勇气，以爱和耐心面对挑战",
+  "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/8-Strength.webp",
+  "order": 8,
+  "reversedKeywords": "纵容软弱、成瘾失衡、本能失控、逃避立场",
+  "reversedMeaning": "【逆位】纵容自身的软弱，即使你知道这会损害自己的健康与幸福；沉溺于成瘾状态；让本能反过来驯服并支配你；在必要时未能坚定立场"
+}
+{
+  "name": "隐者",
+  "nameEn": "The Hermit",
+  "keywords": "内省、独处、智慧",
+  "meaning": "提醒你向内探索，在独处中寻找智慧和答案",
+  "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/9-The Hermit.webp",
+  "order": 9,
+  "reversedKeywords": "自我孤立、逃避接触、自负自封、才能隐藏",
+  "reversedMeaning": "【逆位】将自己封闭成孤独者；害怕与他人接触；变得自以为无所不知；夸大自身的专业主张；因自我价值感不足而隐藏自己的能力与才华"
+}
+{
+  "name": "命运之轮",
+  "nameEn": "Wheel of Fortune",
+  "keywords": "变化、循环、机遇",
+  "meaning": "象征生命的循环和变化，接纳生命的起伏",
+  "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/10-Wheel of Fortune.webp",
+  "order": 10,
+  "reversedKeywords": "命运受阻、运势低迷、抗拒变化、失控循环",
+ "reversedMeaning": "【逆位】这张牌逆位出现时，象征运势受阻、事情反复不顺，或对变化的抗拒导致停滞；你可能感到命运失去掌控，提醒你觉察自身在循环中的位置，并重新调整应对变化的方式"
+}
+
+  
   {
     "name": "正义",
     "nameEn": "Justice",
     "keywords": "公平、真相、平衡",
     "meaning": "代表公正和平衡，提醒你做出诚实的选择",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/11-Justice.webp",
-    "order": 11
-  },
+    "order": 11,
+    "reversedKeywords": "苛刻批评、教条主义、失衡裁决、偏私不公",
+    "reversedMeaning": "【逆位】给予严厉的批评；对规则与条例过度执着；即使这样做具有破坏性或适得其反，仍然死板地按章行事；将仓促的决定误认为及时的行动；偏袒某一方"
+  }
   {
     "name": "倒吊人",
     "nameEn": "The Hanged Man",
     "keywords": "放下、换位、等待",
     "meaning": "鼓励你换个角度看问题，在等待中获得新的领悟",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/12-The Hanged Man.webp",
-    "order": 12
-  },
+    "order": 12,
+    "reversedKeywords": "拒绝牺牲、抗拒改变、价值背离、利己推责",
+    "reversedMeaning": "【逆位】对真实的自我与自身价值不忠；在需要时拒绝作出牺牲；拒绝适应新的情境；将责任归咎于他人；以牺牲他人为代价获取利益"
+  }
   {
     "name": "死神",
     "nameEn": "Death",
     "keywords": "转变、结束、重生",
     "meaning": "象征旧事物的结束和新生，拥抱转变带来的成长",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/13-Death.webp",
-    "order": 13
-  },
+    "order": 13,
+    "reversedKeywords": "抗拒结束、执念旧习、停滞不变、自我忽视",
+    "reversedMeaning": "【逆位】对死亡与消逝过度执着；拒绝放下旧习或不健康的关系；坚持一切人与事都应永远保持不变；未能好好照顾自己"
+  }
   {
     "name": "节制",
     "nameEn": "Temperance",
     "keywords": "平衡、和谐、整合",
     "meaning": "提醒你寻找平衡，整合生命中的不同面向",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/14-Temperance.webp",
-    "order": 14
-  },
+    "order": 14,
+    "reversedKeywords": "极端失衡、关系破裂、成瘾倾向、协作瓦解",
+    "reversedMeaning": "【逆位】走向极端；破坏集体协作；忽视健康的生活方式；形成成瘾行为；纵欲无度；将事物或关系撕裂；破坏联盟"
+  }
   {
     "name": "恶魔",
     "nameEn": "The Devil",
     "keywords": "束缚、欲望、觉察",
     "meaning": "提醒你觉察内在的束缚和限制，你有能力解放自己",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/15-The Devil.webp",
-    "order": 15
-  },
+    "order": 15,
+    "reversedKeywords": "物欲至上、贪得无厌、本能支配、责任外推",
+    "reversedMeaning": "【逆位】过分强调外表与表象；永远想要更多；将物质与占有置于人与关系之上；任由低级本能支配自己的生活；自私自利；把自身的阴暗冲动归因于外界或他人"
+  }
   {
     "name": "塔",
     "nameEn": "The Tower",
     "keywords": "突变、释放、觉醒",
     "meaning": "象征突然的改变和旧结构的瓦解，为新生创造空间",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/16-The Tower.webp",
-    "order": 16
-  },
+    "order": 16,
+    "reversedKeywords": "抗拒崩解、故意失明、拒绝改变、破坏行为",
+    "reversedMeaning": "【逆位】紧抓抑制成长的传统不放；刻意选择视而不见；拒绝承认需要改变的证据；忽视来自更高层面的指引；恶意从事具有破坏性的行为"
+  }
   {
     "name": "星星",
     "nameEn": "The Star",
     "keywords": "希望、疗愈、灵感",
     "meaning": "带来希望和疗愈的能量，相信美好的未来",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/17-The Star.webp",
-    "order": 17
-  },
+    "order": 17,
+    "reversedKeywords": "否认真相、逃避责任、迷信幻象、精神匮乏",
+    "reversedMeaning": "【逆位】否认令人不适的真相；否认个人责任并宣称“事情就是这样发生的”；忽视征兆与象征；偏好幻象而非现实；散播悲观情绪与精神上的吝啬"
+  }
   {
     "name": "月亮",
     "nameEn": "The Moon",
     "keywords": "直觉、梦境、潜意识",
     "meaning": "提醒你关注内在的直觉和潜意识的信息",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/18-The Moon.webp",
-    "order": 18
-  },
+    "order": 18,
+    "reversedKeywords": "现实混淆、妄想迷失、理性过度、神秘否定",
+    "reversedMeaning": "【逆位】无法分辨幻想与现实；遭受妄想的困扰；失去对奇幻或神秘事物的欣赏；采取冷酷而极端理性的思维方式；无法欣赏生命的奥秘"
+  }
   {
     "name": "太阳",
     "nameEn": "The Sun",
     "keywords": "喜悦、成功、光明",
     "meaning": "象征喜悦和成功，享受生命的美好时刻",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/19-The Sun.webp",
-    "order": 19
-  },
+    "order": 19,
+    "reversedKeywords": "自我陶醉、形象迷恋、匆忙分心、能力夸大",
+    "reversedMeaning": "【逆位】被自身成就所迷惑；沉溺于自我形象；感到匆忙与分心；过度消耗自己直至精疲力竭；夸大自身能力或歪曲个人成就"
+  }
   {
     "name": "审判",
     "nameEn": "Judgement",
     "keywords": "觉醒、重生、召唤",
     "meaning": "代表内在的觉醒和重生，回应生命的召唤",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/20-Judgement.webp",
-    "order": 20
-  },
+    "order": 20,
+    "reversedKeywords": "评判失利、未达标准、逃避准备、拒绝更新",
+    "reversedMeaning": "【逆位】在衡量中被判定不足；未能达到明确的标准；因懈怠或不当行为而被当场发现；未为明知将到来的考验作好准备；拒绝一次重新塑造自我的机会"
+  }
+  
   {
     "name": "世界",
     "nameEn": "The World",
     "keywords": "完成、圆满、整合",
     "meaning": "象征一个周期的完成和圆满，庆祝你的成就",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/21-The World.webp",
-    "order": 21
-  },
+    "order": 21,
+    "reversedKeywords": "满足受阻、格局受限、物质主义、灵性遮蔽",
+    "reversedMeaning": "【逆位】让贪婪与嫉妒阻碍你享受已拥有的一切；无法在日常事件中看见更宏大的整体秩序；认为一切存在之物都必须是可触摸、可计数或可衡量的；未能在身边的人身上看见神性或更高层面的映照"
+  }
   {
     "name": "圣杯一",
     "nameEn": "Ace of Cups",
     "keywords": "情感、关系、新的开始、直觉启发",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「新的开始」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C1-Ace of Cups.webp",
-    "order": 22
-  },
+    "order": 22,
+    "reversedKeywords": "情感封闭、爱意受阻、压抑直觉、空虚失落",
+    "reversedMeaning": "【逆位】情感被压抑或难以表达；新的情感开始受阻；拒绝倾听直觉的声音；内在感到空虚或情绪枯竭"
+  }
   {
     "name": "圣杯二",
     "nameEn": "Two of Cups",
     "keywords": "情感、关系、连接、交流、合作",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「连接」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C2-Two of Cups.webp",
-    "order": 23
-  },
+    "order": 23,
+    "reversedKeywords": "关系失衡、沟通受阻、信任破裂、分离冲突",
+    "reversedMeaning": "【逆位】关系中的不平等与失衡；沟通中断或误解加深；信任被削弱；合作关系出现分裂或冲突"
+  }
   {
     "name": "圣杯三",
     "nameEn": "Three of Cups",
     "keywords": "情感、关系、庆祝、友情、支持",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「庆祝」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C3-Three of Cups.webp",
-    "order": 24
-  },
+    "order": 24,
+    "reversedKeywords": "过度享乐、社交失衡、流言是非、疏离孤立",
+    "reversedMeaning": "【逆位】过度沉溺于享乐或社交；群体关系失衡；卷入流言或表面关系；在热闹之中反而感到孤立"
+  }
   {
     "name": "圣杯四",
     "nameEn": "Four of Cups",
     "keywords": "情感、关系、停顿、思考、再评估",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「停顿」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C4-Four of Cups.webp",
-    "order": 25
-  },
+    "order": 25,
+    "reversedKeywords": "逃避现实、错失机会、情绪麻木、觉察不足",
+    "reversedMeaning": "【逆位】逃避面对现实的情感状态；对出现的机会视而不见；情绪麻木或提不起兴趣；缺乏对内在感受的觉察"
+  }
   {
     "name": "圣杯五",
     "nameEn": "Five of Cups",
     "keywords": "情感、关系、失落、学习放下",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「失落」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C5-Five of Cups.webp",
-    "order": 26
-  },
+    "order": 26,
+    "reversedKeywords": "走出失落、逐渐释怀、情绪复原、重新希望",
+    "reversedMeaning": "【逆位】逐渐从失落中恢复；开始放下过去的遗憾；情绪慢慢复原；重新看见仍然存在的希望"
+  }
   {
     "name": "圣杯六",
     "nameEn": "Six of Cups",
     "keywords": "情感、关系、回忆、疗愈、成长",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「回忆」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C6-Six of Cups.webp",
-    "order": 27
-  },
+    "order": 27,
+    "reversedKeywords": "沉溺过去、拒绝成长、怀旧失衡、现实逃避",
+    "reversedMeaning": "【逆位】过度沉溺于过去的回忆；拒绝向前成长；对怀旧产生依赖；以回忆逃避当下的现实"
+  }
   {
     "name": "圣杯七",
     "nameEn": "Seven of Cups",
     "keywords": "情感、关系、选择、想象、辨别",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「选择」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C7-Seven of Cups.webp",
-    "order": 28
-  },
+    "order": 28,
+    "reversedKeywords": "迷雾消散、看清现实、做出抉择、幻想破灭",
+    "reversedMeaning": "【逆位】逐渐看清幻想背后的真相；混乱减少；开始做出明确的选择；放下不切实际的期待"
+  }
   {
     "name": "圣杯八",
     "nameEn": "Eight of Cups",
     "keywords": "情感、关系、调整、离开旧局面",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「调整」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C8-Eight of Cups.webp",
-    "order": 29
-  },
+    "order": 29,
+    "reversedKeywords": "迟疑不前、逃避离开、情感依附、原地停留",
+    "reversedMeaning": "【逆位】明知需要离开却迟迟不前；对旧关系或情境产生依附；逃避必要的情感调整；停留在已不再满足的状态中"
+  }
   {
     "name": "圣杯九",
     "nameEn": "Nine of Cups",
     "keywords": "情感、关系、满足、成果、心愿",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「满足」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C9-Nine of Cups.webp",
-    "order": 30
-  },
+    "order": 30,
+    "reversedKeywords": "空虚不满、过度享乐、欲望失衡、虚假满足",
+    "reversedMeaning": "【逆位】表面的满足掩盖内在的空虚；过度追求享乐；欲望失衡；发现心愿达成后仍难以真正满足"
+  }
+
+  
   {
     "name": "圣杯十",
     "nameEn": "Ten of Cups",
     "keywords": "情感、关系、圆满、成就、阶段完成",
     "meaning": "与情感和关系相关的课题正在被放大，特别与「圆满」有关，提醒你在当下情境中留意这一点。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C10-Ten of Cups.webp",
-    "order": 31
-  },
+    "order": 31,
+    "reversedKeywords": "关系失和、表面幸福、家庭张力、情感落空",
+    "reversedMeaning": "【逆位】关系或家庭中的不和谐浮现；外表看似圆满，内在却缺乏真正的情感满足；情感期待未被实现；亲密关系中的张力影响整体幸福感"
+  }
   {
     "name": "圣杯侍从",
     "nameEn": "Page of Cups",
     "keywords": "情感、关系、消息、学习、初学者",
     "meaning": "与情感和关系相关的课题正在被放大，并提醒你以「侍从」的方式来表达情感。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C-Page of Cups.webp",
-    "order": 32
-  },
+    "order": 32,
+    "reversedKeywords": "情绪幼稚、逃避现实、假消息、情感阻滞",
+    "reversedMeaning": "【逆位】情绪表达不成熟；逃避真实的情感议题；误解或错误的信息传递；难以开启新的情感体验"
+  }
   {
     "name": "圣杯骑士",
     "nameEn": "Knight of Cups",
     "keywords": "情感、关系、行动、推进、冒险",
     "meaning": "与情感和关系相关的课题正在被放大，并提醒你以「骑士」的方式来表达情感。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C-Knight of Cups.webp",
-    "order": 33
-  },
+    "order": 33,
+    "reversedKeywords": "情感逃避、不切实际、操纵情绪、承诺落空",
+    "reversedMeaning": "【逆位】沉溺于幻想而缺乏实际行动；情感表达不稳定；以情绪操纵他人；浪漫承诺难以兑现"
+  }
   {
     "name": "圣杯王后",
     "nameEn": "Queen of Cups",
     "keywords": "情感、关系、成熟、包容、滋养",
     "meaning": "与情感和关系相关的课题正在被放大，并提醒你以「王后」的方式来表达情感。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C-Queen of Cups.webp",
-    "order": 34
-  },
+    "order": 34,
+    "reversedKeywords": "情绪失衡、过度付出、自我忽视、情感依赖",
+    "reversedMeaning": "【逆位】情绪容易被外界影响；过度照顾他人而忽视自身需求；情感界限模糊；在关系中形成依赖"
+  }
   {
     "name": "圣杯国王",
     "nameEn": "King of Cups",
     "keywords": "情感、关系、领导、掌控、责任",
     "meaning": "与情感和关系相关的课题正在被放大，并提醒你以「国王」的方式来承担情感上的责任与领导。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/C-King of Cups.webp",
-    "order": 35
-  },
+    "order": 35,
+    "reversedKeywords": "情绪操控、压抑感受、冷漠疏离、责任失守",
+    "reversedMeaning": "【逆位】情绪被压抑或失控；以冷静外表掩盖内在波动；利用情感影响他人；未能承担应有的情感责任"
+  }
   {
     "name": "钱币一",
     "nameEn": "Ace of Pentacles",
     "keywords": "物质、工作、现实、新的开始、直觉启发",
     "meaning": "与物质生活、工作和现实层面的课题正在被放大，特别与「新的开始」有关，提醒你留意新的机会与资源。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P1-Ace of Pentacles.webp",
-    "order": 36
-  },
+    "order": 36,
+    "reversedKeywords": "机会流失、计划受阻、资源浪费、现实焦虑",
+    "reversedMeaning": "【逆位】新的机会未能落实；现实层面的计划受阻；资源使用不当；对金钱或工作的不安全感增强"
+  }
   {
     "name": "钱币二",
     "nameEn": "Two of Pentacles",
     "keywords": "物质、工作、现实、平衡、协调、流动",
     "meaning": "与物质与工作相关的课题正在被放大，提醒你在多重任务和责任之间寻找灵活的平衡与节奏。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P2-Two of Pentacles.webp",
-    "order": 37
-  },
+    "order": 37,
+    "reversedKeywords": "失衡超载、优先混乱、精力分散、压力失控",
+    "reversedMeaning": "【逆位】难以维持生活与工作的平衡；责任分配混乱；精力被过度分散；压力逐渐失控"
+  }
   {
     "name": "钱币三",
     "nameEn": "Three of Pentacles",
     "keywords": "物质、工作、现实、合作、专业、建设",
     "meaning": "与事业与合作相关的课题正在被放大，提醒你重视团队协作与专业能力的提升，一步步打好基础。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P3-Three of Pentacles.webp",
-    "order": 38
-  },
+    "order": 38,
+    "reversedKeywords": "协作受阻、专业不足、沟通失调、独断行事",
+    "reversedMeaning": "【逆位】团队合作不顺；缺乏对专业意见的尊重；沟通出现问题；各自为政影响整体进展"
+  }
   {
     "name": "钱币四",
     "nameEn": "Four of Pentacles",
     "keywords": "物质、工作、现实、占有、安全感、保守",
     "meaning": "与安全感和资源相关的课题正在被放大，提醒你在「抓紧不放」与「适度流动」之间找到更健康的平衡。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P4-Four of Pentacles.webp",
-    "order": 39
-  },
+    "order": 39,
+    "reversedKeywords": "控制松动、资源流失、恐惧释放、安全动摇",
+    "reversedMeaning": "【逆位】对资源或控制的执着开始松动；可能出现财务或安全感的不稳定；学会放手的同时伴随不安"
+  }
   {
     "name": "钱币五",
     "nameEn": "Five of Pentacles",
     "keywords": "物质、工作、现实、匮乏、失落、支持",
     "meaning": "与金钱、工作或现实压力有关的课题正在被放大，提醒你看见身边仍然存在的支持，而不只盯着缺失。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P5-Five of Pentacles.webp",
-    "order": 40
-  },
+    "order": 40,
+    "reversedKeywords": "逐步复原、接受帮助、走出匮乏、现实改善",
+    "reversedMeaning": "【逆位】逐渐走出匮乏状态；开始接受来自他人的帮助；现实条件出现改善的迹象；重新建立安全感"
+  }
+
+  
   {
     "name": "钱币六",
     "nameEn": "Six of Pentacles",
     "keywords": "物质、工作、现实、给予、接受、交换",
     "meaning": "与资源流动与互相支持相关的课题正在被放大，提醒你在给予和接受之间找到平衡，练习健康的界限与慷慨。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P6-Six of Pentacles.webp",
-    "order": 41
-  },
+    "order": 41,
+    "reversedKeywords": "付出失衡、利益操控、单向给予、交换不公",
+    "reversedMeaning": "【逆位】给予与接受之间失去平衡；资源分配不公；以帮助之名进行操控；付出与回报严重失衡"
+  }
   {
     "name": "钱币七",
     "nameEn": "Seven of Pentacles",
     "keywords": "物质、工作、现实、等待、评估、耐心",
     "meaning": "与长期投入和收获相关的课题正在被放大，提醒你给自己一点时间评估方向，而不是急着要结果。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P7-Seven of Pentacles.webp",
-    "order": 42
-  },
+    "order": 42,
+    "reversedKeywords": "急于求成、缺乏耐心、投入浪费、方向迷失",
+    "reversedMeaning": "【逆位】对成果缺乏耐心；急于看到回报；对长期投入产生怀疑；时间与精力可能被投入在错误的方向上"
+  }
   {
     "name": "钱币八",
     "nameEn": "Eight of Pentacles",
     "keywords": "物质、工作、现实、练习、精进、专注",
     "meaning": "与技能打磨和努力工作相关的课题正在被放大，提醒你通过持续练习与专注投入来提升自己的专业与价值。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P8-Eight of Pentacles.webp",
-    "order": 43
-  },
+    "order": 43,
+    "reversedKeywords": "敷衍了事、缺乏专注、技能停滞、工作倦怠",
+    "reversedMeaning": "【逆位】对工作或学习失去专注；缺乏持续精进的动力；敷衍完成任务；因重复或压力而产生倦怠"
+  }
   {
     "name": "钱币九",
     "nameEn": "Nine of Pentacles",
     "keywords": "物质、工作、现实、自主、丰盛、享受成果",
     "meaning": "与个人成就与独立相关的课题正在被放大，提醒你肯定自己走过的路，允许自己享受辛苦得来的成果。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P9-Nine of Pentacles.webp",
-    "order": 44
-  },
+    "order": 44,
+    "reversedKeywords": "虚假独立、依赖他人、空虚不安、成果不实",
+    "reversedMeaning": "【逆位】表面上的独立掩盖内在的不安；对物质或他人产生依赖；成果未带来真正的满足；自我价值感动摇"
+  }
   {
     "name": "钱币十",
     "nameEn": "Ten of Pentacles",
     "keywords": "物质、工作、现实、圆满、家庭、传承",
     "meaning": "与长期稳定、家庭支持与物质圆满相关的课题正在被放大，提醒你思考想要留下怎样的基础与传承。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P10-Ten of Pentacles.webp",
-    "order": 45
-  },
+    "order": 45,
+    "reversedKeywords": "家庭冲突、财务不稳、传承断裂、长期风险",
+    "reversedMeaning": "【逆位】家庭或长期结构出现不稳定；财务基础动摇；代际关系紧张；原本的安全感受到威胁"
+  }
   {
     "name": "钱币侍从",
     "nameEn": "Page of Pentacles",
     "keywords": "物质、工作、现实、学习、新机会、实践",
     "meaning": "与学习新技能或新工作方向相关的课题正在被放大，提醒你以初学者的心态去探索实际的机会。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P-Page of Pentacles.webp",
-    "order": 46
-  },
+    "order": 46,
+    "reversedKeywords": "缺乏投入、学习停滞、机会忽视、实践不足",
+    "reversedMeaning": "【逆位】对新机会缺乏实际行动；学习态度松散；计划停留在想法阶段；难以将潜力落实为成果"
+  }
   {
     "name": "钱币骑士",
     "nameEn": "Knight of Pentacles",
     "keywords": "物质、工作、现实、勤奋、负责、稳健",
     "meaning": "与踏实推进和持续努力相关的课题正在被放大，提醒你用稳定、负责的态度一步一步向前。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P-Knight of Pentacles.webp",
-    "order": 47
-  },
+    "order": 47,
+    "reversedKeywords": "停滞僵化、缺乏动力、过度保守、行动迟缓",
+    "reversedMeaning": "【逆位】行动停滞不前；对改变过于抗拒；缺乏前进动力；因过度谨慎而错失进展"
+  }
   {
     "name": "钱币王后",
     "nameEn": "Queen of Pentacles",
     "keywords": "物质、工作、现实、滋养、务实、照顾",
     "meaning": "与照顾自己与他人的现实需求相关的课题正在被放大，提醒你用务实又温暖的方式经营生活与工作。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P-Queen of Pentacles.webp",
-    "order": 48
-  },
+    "order": 48,
+    "reversedKeywords": "过度付出、忽视自我、现实失衡、照顾失序",
+    "reversedMeaning": "【逆位】过度照顾他人而忽略自身需求；现实事务失去平衡；精力被家庭或工作过度消耗"
+  }
   {
     "name": "钱币国王",
     "nameEn": "King of Pentacles",
     "keywords": "物质、工作、现实、稳定、管理、责任",
     "meaning": "与资源管理与现实掌控相关的课题正在被放大，提醒你以成熟、稳重的态度来承担物质与事业上的责任。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/P-King of Pentacles.webp",
-    "order": 49
-  },
+    "order": 49,
+    "reversedKeywords": "物质至上、控制欲强、责任逃避、价值偏差",
+    "reversedMeaning": "【逆位】过分强调物质与掌控；以权力或资源操纵他人；责任感失衡；现实价值观出现偏差"
+  }
   {
     "name": "宝剑一",
     "nameEn": "Ace of Swords",
     "keywords": "思维、沟通、新的开始、清晰、真相",
     "meaning": "与想法和沟通方式相关的课题正在被放大，特别与「新的开始」与看清真相有关，提醒你说真话、想清楚。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S1-Ace of Swords.webp",
-    "order": 50
-  },
+    "order": 50,
+    "reversedKeywords": "思维混乱、沟通受阻、真相模糊、判断失误",
+    "reversedMeaning": "【逆位】思维不清晰；沟通中产生误解；真相被扭曲或隐藏；判断力下降，新的开始受阻"
+  }
+
+  
   {
     "name": "宝剑二",
     "nameEn": "Two of Swords",
     "keywords": "思维、沟通、犹豫、抉择、拉扯",
     "meaning": "与内心矛盾或沟通卡住相关的课题正在被放大，提醒你正视自己的感受，而不是一味压抑或逃避选择。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S2-Two of Swords.webp",
-    "order": 51
-  },
+    "order": 51,
+    "reversedKeywords": "逃避抉择、情绪外泄、真相显现、内在冲突",
+    "reversedMeaning": "【逆位】长期回避的选择逐渐无法忽视；被压抑的情绪开始浮现；内在冲突加剧；真相逐步显露，迫使你面对现实"
+  }
   {
     "name": "宝剑三",
     "nameEn": "Three of Swords",
     "keywords": "思维、沟通、受伤、心痛、误解",
     "meaning": "与情感受伤、误会或刺痛的想法相关的课题正在被放大，提醒你给自己空间处理伤痛，同时从中学习。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S3-Three of Swords.webp",
-    "order": 52
-  },
+    "order": 52,
+    "reversedKeywords": "伤痛缓解、逐渐释怀、拒绝面对、情绪压抑",
+    "reversedMeaning": "【逆位】伤痛开始减轻或逐渐被疗愈；试图压抑或否认情绪；尚未完全面对内心的痛苦；需要时间才能真正放下"
+  }
   {
     "name": "宝剑四",
     "nameEn": "Four of Swords",
     "keywords": "思维、沟通、休息、停顿、恢复",
     "meaning": "与精神压力与疲惫相关的课题正在被放大，提醒你允许自己休息、整理思绪，再继续前进。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S4-Four of Swords.webp",
-    "order": 53
-  },
+    "order": 53,
+    "reversedKeywords": "过度消耗、拒绝休息、焦躁不安、恢复受阻",
+    "reversedMeaning": "【逆位】未能真正获得休息；精神持续紧绷；焦虑感加重；恢复过程被打断，身心需要更明确的修整"
+  }
   {
     "name": "宝剑五",
     "nameEn": "Five of Swords",
     "keywords": "思维、沟通、争执、输赢、固执",
     "meaning": "与争论与沟通方式相关的课题正在被放大，提醒你思考「赢了道理、输了关系」是否真的是你想要的结果。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S5-Five of Swords.webp",
-    "order": 54
-  },
+    "order": 54,
+    "reversedKeywords": "冲突缓和、和解可能、内疚反思、撤离纷争",
+    "reversedMeaning": "【逆位】冲突逐渐降温；开始反思争执带来的代价；出现和解或退让的可能；选择退出无意义的斗争"
+  }
   {
     "name": "宝剑六",
     "nameEn": "Six of Swords",
     "keywords": "思维、沟通、过渡、移动、前行",
     "meaning": "与从旧思维或旧环境中移动出来相关的课题正在被放大，提醒你慢慢划向更平静的水域，给自己一点时间过渡。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S6-Six of Swords.webp",
-    "order": 55
-  },
+    "order": 55,
+    "reversedKeywords": "难以离开、过渡受阻、回头拉扯、心理停滞",
+    "reversedMeaning": "【逆位】难以真正离开旧处境；过渡过程受阻；情绪或思维反复回头；仍被过去牵制而难以前行"
+  }
   {
     "name": "宝剑七",
     "nameEn": "Seven of Swords",
     "keywords": "思维、沟通、隐瞒、策略、取舍",
     "meaning": "与信息不透明或心里打小算盘相关的课题正在被放大，提醒你诚实面对自己的动机，并评估这种做法的后果。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S7-Seven of Swords.webp",
-    "order": 56
-  },
+    "order": 56,
+    "reversedKeywords": "谎言曝光、策略失败、良心不安、回避责任",
+    "reversedMeaning": "【逆位】隐瞒或欺瞒的行为被揭穿；策略失效；内心出现不安或愧疚；需要为自己的行为承担责任"
+  }
   {
     "name": "宝剑八",
     "nameEn": "Eight of Swords",
     "keywords": "思维、沟通、束缚、恐惧、自我限制",
     "meaning": "与「被困住」的感觉相关的课题正在被放大，提醒你观察是不是自己的信念在困住自己，而现实其实还有出口。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S8-Eight of Swords.webp",
-    "order": 57
-  },
+    "order": 57,
+    "reversedKeywords": "束缚松动、觉察限制、恐惧释放、重获选择",
+    "reversedMeaning": "【逆位】开始看见束缚的来源；恐惧逐渐松动；意识到自己仍有选择空间；有机会摆脱心理限制"
+  }
   {
     "name": "宝剑九",
     "nameEn": "Nine of Swords",
     "keywords": "思维、沟通、焦虑、失眠、过度担忧",
     "meaning": "与担心和脑内小剧场相关的课题正在被放大，提醒你区分「真实问题」和「想象出来的恐惧」，并寻找支持。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S9-Nine of Swords.webp",
-    "order": 58
-  },
+    "order": 58,
+    "reversedKeywords": "焦虑缓解、正视恐惧、情绪释放、寻求帮助",
+    "reversedMeaning": "【逆位】焦虑逐渐减轻；开始正视真正的恐惧来源；情绪得到释放；愿意寻求他人的支持"
+  }
   {
     "name": "宝剑十",
     "nameEn": "Ten of Swords",
     "keywords": "思维、沟通、结束、放下、重启",
     "meaning": "与一个阶段的结束相关的课题正在被放大，提醒你承认「已经到此为止」，在低谷之后会有新的开始。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S10-Ten of Swords.webp",
-    "order": 59
-  },
+    "order": 59,
+    "reversedKeywords": "逐步复原、拒绝结束、痛苦延续、转机未明",
+    "reversedMeaning": "【逆位】痛苦尚未完全结束；仍紧抓已然终结的事物；复原过程缓慢；需要承认现实才能迎来转机"
+  }
   {
     "name": "宝剑侍从",
     "nameEn": "Page of Swords",
     "keywords": "思维、沟通、好奇、学习、讯息",
     "meaning": "与新的想法与学习相关的课题正在被放大，提醒你勇敢发问、多多探索，用开放的态度接收新资讯。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S-Page of Swords.webp",
-    "order": 60
-  },
+    "order": 60,
+    "reversedKeywords": "流言误传、思维浮躁、缺乏专注、讯息失真",
+    "reversedMeaning": "【逆位】讯息混乱或被误传；思维浮躁不安；学习缺乏专注；需要重新核实信息与动机"
+  }
+
+  
   {
     "name": "宝剑骑士",
     "nameEn": "Knight of Swords",
     "keywords": "思维、沟通、冲劲、直接、急切",
     "meaning": "与表达方式和行动速度相关的课题正在被放大，提醒你在快速前冲之前，也稍微确认一下方向与影响。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S-Knight of Swords.webp",
-    "order": 61
-  },
+    "order": 61,
+    "reversedKeywords": "冲动失控、言行鲁莽、方向混乱、判断失误",
+    "reversedMeaning": "【逆位】行动缺乏清晰方向；言语过于激烈或鲁莽；判断力下降；容易因冲动而造成不必要的冲突或后果"
+  }
   {
     "name": "宝剑王后",
     "nameEn": "Queen of Swords",
     "keywords": "思维、沟通、清晰、理性、界限",
     "meaning": "与理性判断和设立界限相关的课题正在被放大，提醒你既要诚实，也要温柔坚定地说出自己的需要与底线。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S-Queen of Swords.webp",
-    "order": 62
-  },
+    "order": 62,
+    "reversedKeywords": "冷漠刻薄、言语伤人、偏见判断、情感隔离",
+    "reversedMeaning": "【逆位】沟通方式变得尖锐或冷漠；理性失衡而转为苛刻；容易以偏见做出判断；情感与他人产生距离"
+  }
   {
     "name": "宝剑国王",
     "nameEn": "King of Swords",
     "keywords": "思维、沟通、决策、公平、权威",
     "meaning": "与理性领导和重要决策相关的课题正在被放大，提醒你用清晰、客观和负责任的方式来做选择与判断。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/S-King of Swords.webp",
-    "order": 63
-  },
+    "order": 63,
+    "reversedKeywords": "滥用权威、操纵信息、独断专行、失去公正",
+    "reversedMeaning": "【逆位】权威被不当使用；以理性之名操纵或控制他人；决策缺乏公正；过度自信导致判断偏差"
+  }
   {
     "name": "权杖一",
     "nameEn": "Ace of Wands",
     "keywords": "行动、创造力、新灵感、启动",
     "meaning": "与行动力和创造能量相关的课题正在被放大，特别与「新的灵感与开始」有关，提醒你抓住当下的动力。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W1-Ace of Wands.webp",
-    "order": 64
-  },
+    "order": 64,
+    "reversedKeywords": "灵感受阻、动力不足、行动延迟、热情消退",
+    "reversedMeaning": "【逆位】新的灵感难以落实；行动力受阻；热情减弱；启动阶段出现拖延或信心不足"
+  }
   {
     "name": "权杖二",
     "nameEn": "Two of Wands",
     "keywords": "行动、创造力、规划、选择、远景",
     "meaning": "与未来方向和行动规划相关的课题正在被放大，提醒你站高一点看远一点，为下一步做出有意识的选择。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W2-Two of Wands.webp",
-    "order": 65
-  },
+    "order": 65,
+    "reversedKeywords": "方向犹豫、视野受限、计划停滞、选择恐惧",
+    "reversedMeaning": "【逆位】对未来方向缺乏清晰判断；视野受限；计划难以推进；因害怕选择而停留在原地"
+  }
   {
     "name": "权杖三",
     "nameEn": "Three of Wands",
     "keywords": "行动、创造力、拓展、期待、机会",
     "meaning": "与走出舒适圈、扩大版图相关的课题正在被放大，提醒你相信已经种下的努力，期待新的机会靠近你。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W3-Three of Wands.webp",
-    "order": 66
-  },
+    "order": 66,
+    "reversedKeywords": "机会受阻、发展延迟、视角狭窄、拓展失败",
+    "reversedMeaning": "【逆位】拓展计划受阻；对外部机会判断失误；发展进程延迟；需要重新调整对未来的期待"
+  }
   {
     "name": "权杖四",
     "nameEn": "Four of Wands",
     "keywords": "行动、创造力、庆祝、稳定、归属",
     "meaning": "与阶段性成果与仪式感相关的课题正在被放大，提醒你为自己的努力办一场小小庆祝，感受支持与归属。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W4-Four of Wands.webp",
-    "order": 67
-  },
+    "order": 67,
+    "reversedKeywords": "稳定动摇、归属缺失、庆祝受阻、内部不和",
+    "reversedMeaning": "【逆位】原有的稳定感出现裂痕；归属感不足；庆祝或成果未被认可；团队或家庭内部存在不和"
+  }
   {
     "name": "权杖五",
     "nameEn": "Five of Wands",
     "keywords": "行动、创造力、竞争、分歧、较劲",
     "meaning": "与意见不合或竞争环境相关的课题正在被放大，提醒你练习健康的竞争与合作，而不是无意义的消耗。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W5-Five of Wands.webp",
-    "order": 68
-  },
+    "order": 68,
+    "reversedKeywords": "冲突回避、竞争失衡、压抑不满、表面和谐",
+    "reversedMeaning": "【逆位】表面冲突减少但内在不满仍在；竞争方式失衡；问题被回避而非解决；需要正视真实分歧"
+  }
   {
     "name": "权杖六",
     "nameEn": "Six of Wands",
     "keywords": "行动、创造力、胜利、认可、自信",
     "meaning": "与被看见和受到肯定相关的课题正在被放大，提醒你接受掌声，也记得感谢一路支持你的人。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W6-Six of Wands.webp",
-    "order": 69
-  },
+    "order": 69,
+    "reversedKeywords": "认可缺失、自信动摇、虚荣受挫、成就被忽视",
+    "reversedMeaning": "【逆位】努力未被认可；自信受到打击；成就感下降；对外界评价过度依赖"
+  }
   {
     "name": "权杖七",
     "nameEn": "Seven of Wands",
     "keywords": "行动、创造力、立场、防卫、坚持",
     "meaning": "与保护自己位置与信念相关的课题正在被放大，提醒你在压力下仍然可以坚定自己的选择，同时照顾好身心。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W7-Seven of Wands.webp",
-    "order": 70
-  },
+    "order": 70,
+    "reversedKeywords": "立场动摇、放弃防线、信心不足、压力过大",
+    "reversedMeaning": "【逆位】难以坚持原有立场；信心动摇；防御能力下降；在持续压力下产生退缩或放弃的念头"
+  }
+
+  
   {
     "name": "权杖八",
     "nameEn": "Eight of Wands",
     "keywords": "行动、创造力、速度、讯息、推进",
     "meaning": "与快速发展与信息流动相关的课题正在被放大，提醒你抓住节奏，灵活应对突然而来的机会或变化。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W8-Eight of Wands.webp",
-    "order": 71
-  },
+    "order": 71,
+    "reversedKeywords": "进展延迟、讯息混乱、节奏失衡、行动受阻",
+    "reversedMeaning": "【逆位】事情推进放缓或停滞；沟通与讯息出现误解或延迟；节奏被打乱；需要重新协调行动顺序"
+  }
   {
     "name": "权杖九",
     "nameEn": "Nine of Wands",
     "keywords": "行动、创造力、疲惫、防备、坚持到底",
     "meaning": "与长时间奋斗后的疲惫感相关的课题正在被放大，提醒你在快撑不住的时候也不要忘了肯定自己的坚韧。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W9-Nine of Wands.webp",
-    "order": 72
-  },
+    "order": 72,
+    "reversedKeywords": "精疲力竭、防线崩溃、信念动摇、过度消耗",
+    "reversedMeaning": "【逆位】长期防御导致精力耗尽；信心开始动摇；防线逐渐崩溃；需要认真评估是否继续坚持"
+  }
   {
     "name": "权杖十",
     "nameEn": "Ten of Wands",
     "keywords": "行动、创造力、负担、责任、超载",
     "meaning": "与扛太多任务与责任相关的课题正在被放大，提醒你适度放下不必要的负担，学会求助与分工。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W10-Ten of Wands.webp",
-    "order": 73
-  },
+    "order": 73,
+    "reversedKeywords": "责任失衡、压力爆发、逃避负担、释放需求",
+    "reversedMeaning": "【逆位】责任与压力已难以承受；可能选择逃避或被迫放下；提醒你重新分配负担，避免彻底耗尽"
+  }
   {
     "name": "权杖侍从",
     "nameEn": "Page of Wands",
     "keywords": "行动、创造力、灵感、好奇、冒险",
     "meaning": "与尝试新计划、新体验相关的课题正在被放大，提醒你用轻盈、好奇的态度去探索新的可能性。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W-Page of Wands.webp",
-    "order": 74
-  },
+    "order": 74,
+    "reversedKeywords": "灵感受挫、冲动失序、缺乏准备、方向不明",
+    "reversedMeaning": "【逆位】灵感尚未成熟；行动冲动却缺乏规划；方向感不足；需要更多准备与耐心"
+  }
   {
     "name": "权杖骑士",
     "nameEn": "Knight of Wands",
     "keywords": "行动、创造力、热情、冲劲、冒险",
     "meaning": "与大胆行动与追随热情相关的课题正在被放大，提醒你勇敢出发，同时也留意冲动带来的风险。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W-Knight of Wands.webp",
-    "order": 75
-  },
+    "order": 75,
+    "reversedKeywords": "冲动鲁莽、行动失控、计划缺失、半途而废",
+    "reversedMeaning": "【逆位】行动缺乏持续性；冲动导致混乱；计划不周全；容易虎头蛇尾或中途放弃"
+  }
   {
     "name": "权杖王后",
     "nameEn": "Queen of Wands",
     "keywords": "行动、创造力、自信、魅力、主导",
     "meaning": "与自信表达与创造主导权相关的课题正在被放大，提醒你相信自己的吸引力与领导气场。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W-Queen of Wands.webp",
-    "order": 76
-  },
+    "order": 76,
+    "reversedKeywords": "自信受损、情绪不稳、控制欲强、魅力受阻",
+    "reversedMeaning": "【逆位】自信下降；情绪波动影响判断；可能以控制或嫉妒的方式行事；需要重新找回内在力量"
+  }
   {
     "name": "权杖国王",
     "nameEn": "King of Wands",
     "keywords": "行动、创造力、远见、领导、决心",
     "meaning": "与愿景、领导与大方向相关的课题正在被放大，提醒你以成熟而有魄力的方式，带领自己和他人朝目标前进。",
     "image": "cloud://cloud1-5gc5jltwbcbef586.636c-cloud1-5gc5jltwbcbef586-1386967363/tarotCardsImages/tarotCardsFront/W-King of Wands.webp",
-    "order": 77
+    "order": 77,
+    "reversedKeywords": "领导失衡、专断自负、方向混乱、滥用权力",
+    "reversedMeaning": "【逆位】领导力失去平衡；方向判断偏差；可能过度自我中心；需要重新校准愿景与责任"
   }
-]
+

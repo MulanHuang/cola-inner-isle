@@ -68,7 +68,7 @@
   <!-- 快捷按钮区（灵性卡片风） -->
   <view class="welcome-actions">
     <view class="welcome-action-card action-1" bindtap="quickSend" data-text="今天心情有点低落">
-      🌧️ 今天心情有点低落
+      🌧️今天心情有点低落
     </view>
     <view class="welcome-action-card action-2" bindtap="quickSend" data-text="做了一个奇怪的梦">
       🌙 做了一个奇怪的梦

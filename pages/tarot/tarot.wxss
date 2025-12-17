@@ -73,18 +73,15 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 16rpx 20rpx;
-  padding: 18rpx 24rpx;
-  background: linear-gradient(
-    90deg,
-    rgba(212, 175, 55, 0.15) 0%,
-    rgba(180, 100, 255, 0.1) 100%
-  );
-  border-radius: 16rpx;
-  border: 1rpx solid rgba(212, 175, 55, 0.3);
-  box-shadow: 0 4rpx 16rpx rgba(212, 175, 55, 0.15);
+  margin: 8rpx 20rpx;
+  padding: 8rpx 12rpx;
+  background: rgba(240, 215, 140, 0.05);
+  border-radius: 10rpx;
+  border: 1rpx solid rgba(240, 215, 140, 0.08);
+  box-shadow: none;
   position: relative;
   z-index: 10;
+  opacity: 0.7;
 }
 
 .profile-tip-content {
@@ -95,35 +92,28 @@ page {
 }
 
 .profile-tip-icon {
-  font-size: 28rpx;
+  font-size: 22rpx;
+  color: rgba(240, 215, 140, 0.45);
 }
 
 .profile-tip-text {
-  font-size: 26rpx;
-  color: var(--primary-gold-light, #f0d78c);
+  font-size: 22rpx;
+  color: rgba(240, 215, 140, 0.45);
   flex: 1;
 }
 
 .profile-tip-arrow {
-  font-size: 26rpx;
-  color: var(--primary-gold, #d4af37);
-  font-weight: 500;
+  font-size: 20rpx;
+  color: rgba(240, 215, 140, 0.35);
+  font-weight: 400;
 }
 
 .profile-tip-close {
-  font-size: 28rpx;
-  color: rgba(255, 255, 255, 0.5);
-  padding: 8rpx;
-  margin-left: 12rpx;
-  /* 神秘渐变背景 */
-  background: linear-gradient(
-    180deg,
-    #1a1428 0%,
-    #2d2440 25%,
-    #3d2a5c 50%,
-    #4a3a6b 75%,
-    #5a4a7b 100%
-  );
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 6rpx;
+  margin-left: 8rpx;
+  background: transparent;
   position: relative;
   box-sizing: border-box;
 }
@@ -177,6 +167,19 @@ page {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.1);
   }
+}
+
+/* 🔥 滑动时完全隐藏背景光效，让圆环旋转更清爽 */
+.tarot-container.is-dragging::before,
+.tarot-container.is-dragging::after {
+  opacity: 0 !important;
+  transition: opacity 0.15s ease-out;
+}
+
+.tarot-container.is-dragging .stars-container::before,
+.tarot-container.is-dragging .stars-container::after {
+  opacity: 0 !important;
+  transition: opacity 0.15s ease-out;
 }
 
 /* ============================================================ */
@@ -310,21 +313,17 @@ page {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 12rpx;
+  gap: 8rpx;
+  opacity: 0.65;
 }
 
 .tarot-title {
-  font-size: 48rpx;
-  font-weight: 700;
-  /* 金色渐变标题 + 多层光晕 */
-  background: linear-gradient(135deg, #f0d78c 0%, #d4af37 50%, #b8942d 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 2rpx 8rpx rgba(212, 175, 55, 0.3);
-  filter: drop-shadow(0 0 10rpx rgba(212, 175, 55, 0.2))
-    drop-shadow(0 0 20rpx rgba(212, 175, 55, 0.1));
-  animation: title-glow 5s ease-in-out infinite;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: rgba(240, 215, 140, 0.6);
+  text-shadow: none;
+  filter: none;
+  animation: none;
 }
 
 /* 标题持续微光动画 */
@@ -341,43 +340,35 @@ page {
 }
 
 .history-link {
-  font-size: 26rpx;
-  color: var(--primary-gold-light);
+  font-size: 22rpx;
+  color: rgba(240, 215, 140, 0.55);
   text-decoration: none;
-  padding: 10rpx 20rpx;
-  background: rgba(212, 175, 55, 0.15);
-  border: 1rpx solid rgba(212, 175, 55, 0.3);
-  border-radius: 999rpx;
-  backdrop-filter: blur(10rpx);
-  transition: all 0.3s ease;
+  padding: 8rpx 14rpx;
+  background: rgba(212, 175, 55, 0.06);
+  border: 1rpx solid rgba(212, 175, 55, 0.12);
+  border-radius: 14rpx;
+  backdrop-filter: blur(6rpx);
+  transition: none;
 }
 
 .history-link:active {
-  background: rgba(212, 175, 55, 0.25);
-  transform: scale(0.96);
+  background: rgba(212, 175, 55, 0.12);
+  transform: none;
 }
 
 .pill {
-  padding: 10rpx 20rpx;
-  background: rgba(212, 175, 55, 0.12);
-  color: var(--primary-gold-light);
-  border-radius: 999rpx;
-  font-size: 24rpx;
-  border: 1rpx solid rgba(212, 175, 55, 0.2);
-  backdrop-filter: blur(8rpx);
-}
-
-.tarot-subtitle {
-  font-size: 26rpx;
-  color: rgba(240, 215, 140, 0.7);
-  margin-bottom: 12rpx;
-  padding: 0 30rpx;
-  animation: title-fade-in 1s ease-out 0.4s both;
+  padding: 8rpx 12rpx;
+  background: rgba(212, 175, 55, 0.05);
+  color: rgba(240, 215, 140, 0.55);
+  border-radius: 14rpx;
+  font-size: 22rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.12);
+  backdrop-filter: blur(4rpx);
 }
 
 /* 合规提示样式 */
 .compliance-tip {
-  font-size: 22rpx;
+  font-size: 18rpx;
   color: rgba(240, 215, 140, 0.5);
   margin-bottom: 24rpx;
   padding: 0 30rpx;
@@ -477,9 +468,71 @@ page {
   margin-top: 32rpx;
 }
 
+/* shuffling 阶段：整体下移，让牌堆更靠下 */
+.phase-shuffling .cards-area-wrapper {
+  margin-top: 160rpx;
+  margin-bottom: 12rpx;
+}
+
 /* ============================================================ */
 /* 洗牌动画 (Shuffling Phase)                                    */
 /* ============================================================ */
+.shuffle-scatter-zone {
+  margin: 24rpx 0 12rpx;
+  padding: 20rpx 24rpx 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.shuffle-instruction {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 26rpx;
+  letter-spacing: 1rpx;
+}
+
+.shuffle-pile {
+  position: relative;
+  width: 520rpx;
+  height: 420rpx;
+  margin: 12rpx auto 0;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.shuffle-pile.shuffling {
+  transform: scale(1.04);
+}
+
+.shuffle-pile.shuffle-fade-out {
+  opacity: 0.2;
+  transform: scale(0.9);
+}
+
+.shuffle-pile-card {
+  position: absolute;
+  width: 140rpx;
+  height: 220rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.35);
+  transition: transform 0.35s ease, box-shadow 0.25s ease;
+}
+
+.shuffle-pile-card.jitter {
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.45);
+}
+
+.shuffle-pile-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 12rpx;
+}
+
 .shuffle-animation-container {
   display: flex;
   flex-direction: column;
@@ -497,6 +550,12 @@ page {
 
 /* 动画播放状态 */
 .shuffle-animation-container.shuffle-animating {
+  opacity: 1;
+  filter: none;
+}
+
+/* 洗牌结束后的“收拢成牌堆”过渡（不直接淡出） */
+.shuffle-animation-container.shuffle-gather {
   opacity: 1;
   filter: none;
 }
@@ -519,26 +578,53 @@ page {
 
 .shuffle-deck {
   position: relative;
-  width: 180rpx;
-  height: 260rpx;
+  width: 640rpx;
+  height: 640rpx;
   perspective: 1000rpx;
+}
+
+.shuffle-deck.is-idle {
+  width: 220rpx;
+  height: 320rpx;
+}
+
+.shuffle-deck.is-gathering {
+  width: 240rpx;
+  height: 360rpx;
 }
 
 /* 洗牌中的每张牌 - 神秘风格 */
 .shuffle-card {
   position: absolute;
-  width: 90rpx;
-  height: 144rpx;
-  border-radius: 10rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.4),
-    0 0 20rpx rgba(212, 175, 55, 0.15);
+  width: 160rpx;
+  height: 240rpx;
+  border-radius: 14rpx;
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.28);
   overflow: hidden;
   left: 50%;
   top: 50%;
   transform-origin: center center;
+  transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+    rotate(var(--rot, 0deg));
   background: linear-gradient(135deg, #2d2440 0%, #3d2a5c 100%);
-  border: 1rpx solid rgba(212, 175, 55, 0.3);
+  border: 1rpx solid rgba(240, 215, 140, 0.14);
   transition: transform 0.3s ease;
+}
+
+.shuffle-deck.is-idle .shuffle-card {
+  width: 120rpx;
+  height: 180rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.25);
+  border: 1rpx solid rgba(240, 215, 140, 0.12);
+}
+
+.shuffle-deck.is-gathering .shuffle-card {
+  width: 120rpx;
+  height: 180rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.25);
+  border: 1rpx solid rgba(240, 215, 140, 0.12);
 }
 
 .shuffle-card-img {
@@ -547,60 +633,28 @@ page {
   object-fit: cover;
 }
 
-/* 静态摆放状态 - 8张牌整齐摆放 + 轻柔漂浮 */
+.shuffle-card-gather {
+  animation: none !important;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 420ms ease, border-color 420ms ease;
+}
+
+/* Quin 风格：静态散落牌堆 + 轻柔漂浮 */
 .shuffle-card-static {
   animation: shuffle-idle-float 5s ease-in-out infinite !important;
-}
-.shuffle-card-static:nth-child(1) {
-  transform: translate(-50%, -50%) rotate(-2deg);
-  z-index: 8;
-  animation-delay: 0s !important;
-}
-.shuffle-card-static:nth-child(2) {
-  transform: translate(-50%, -50%) rotate(1deg) translateX(2rpx);
-  z-index: 7;
-  animation-delay: -0.6s !important;
-}
-.shuffle-card-static:nth-child(3) {
-  transform: translate(-50%, -50%) rotate(-1deg) translateX(-2rpx);
-  z-index: 6;
-  animation-delay: -1.2s !important;
-}
-.shuffle-card-static:nth-child(4) {
-  transform: translate(-50%, -50%) rotate(2deg) translateY(2rpx);
-  z-index: 5;
-  animation-delay: -1.8s !important;
-}
-.shuffle-card-static:nth-child(5) {
-  transform: translate(-50%, -50%) rotate(-1.5deg) translateY(-2rpx);
-  z-index: 4;
-  animation-delay: -2.4s !important;
-}
-.shuffle-card-static:nth-child(6) {
-  transform: translate(-50%, -50%) rotate(1.5deg);
-  z-index: 3;
-  animation-delay: -3s !important;
-}
-.shuffle-card-static:nth-child(7) {
-  transform: translate(-50%, -50%) rotate(-0.5deg);
-  z-index: 2;
-  animation-delay: -3.6s !important;
-}
-.shuffle-card-static:nth-child(8) {
-  transform: translate(-50%, -50%) rotate(0.5deg);
-  z-index: 1;
-  animation-delay: -4.2s !important;
 }
 
 /* 静态牌轻柔漂浮动画 */
 @keyframes shuffle-idle-float {
   0%,
   100% {
-    transform: translate(-50%, -50%) translateY(0);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(var(--rot, 0deg)) scale(1);
     filter: brightness(1);
   }
   50% {
-    transform: translate(-50%, -50%) translateY(-4rpx);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(var(--rot, 0deg)) translateY(-6rpx) scale(1.01);
     filter: brightness(1.02);
   }
 }
@@ -647,147 +701,564 @@ page {
   z-index: 1;
 }
 
+/* idle 阶段：回到“堆叠牌堆”视觉（不影响 shuffling 阶段的散落牌堆） */
+.shuffle-card-idle-0 {
+  --x: -6rpx;
+  --y: -6rpx;
+  --rot: -2deg;
+  z-index: 8;
+}
+.shuffle-card-idle-1 {
+  --x: 5rpx;
+  --y: -2rpx;
+  --rot: 1.5deg;
+  z-index: 7;
+}
+.shuffle-card-idle-2 {
+  --x: -4rpx;
+  --y: 3rpx;
+  --rot: -1deg;
+  z-index: 6;
+}
+.shuffle-card-idle-3 {
+  --x: 6rpx;
+  --y: 6rpx;
+  --rot: 2.2deg;
+  z-index: 5;
+}
+.shuffle-card-idle-4 {
+  --x: -2rpx;
+  --y: 8rpx;
+  --rot: -1.6deg;
+  z-index: 4;
+}
+.shuffle-card-idle-5 {
+  --x: 2rpx;
+  --y: 10rpx;
+  --rot: 1deg;
+  z-index: 3;
+}
+.shuffle-card-idle-6 {
+  --x: -1rpx;
+  --y: 12rpx;
+  --rot: -0.6deg;
+  z-index: 2;
+}
+.shuffle-card-idle-7 {
+  --x: 1rpx;
+  --y: 14rpx;
+  --rot: 0.4deg;
+  z-index: 1;
+}
+
+/* 每张牌的基础散落位置（0-13） */
+.shuffle-card-pos-0 {
+  --x: -150rpx;
+  --y: -120rpx;
+  --rot: -22deg;
+}
+.shuffle-card-pos-1 {
+  --x: 60rpx;
+  --y: -150rpx;
+  --rot: 14deg;
+}
+.shuffle-card-pos-2 {
+  --x: 160rpx;
+  --y: -40rpx;
+  --rot: 26deg;
+}
+.shuffle-card-pos-3 {
+  --x: 130rpx;
+  --y: 110rpx;
+  --rot: 8deg;
+}
+.shuffle-card-pos-4 {
+  --x: -40rpx;
+  --y: 160rpx;
+  --rot: -12deg;
+}
+.shuffle-card-pos-5 {
+  --x: -170rpx;
+  --y: 80rpx;
+  --rot: -6deg;
+}
+.shuffle-card-pos-6 {
+  --x: -110rpx;
+  --y: -10rpx;
+  --rot: 18deg;
+}
+.shuffle-card-pos-7 {
+  --x: 10rpx;
+  --y: 10rpx;
+  --rot: -4deg;
+}
+.shuffle-card-pos-8 {
+  --x: -40rpx;
+  --y: -190rpx;
+  --rot: 6deg;
+}
+.shuffle-card-pos-9 {
+  --x: 190rpx;
+  --y: 40rpx;
+  --rot: -18deg;
+}
+.shuffle-card-pos-10 {
+  --x: -210rpx;
+  --y: -40rpx;
+  --rot: 10deg;
+}
+.shuffle-card-pos-11 {
+  --x: 30rpx;
+  --y: 210rpx;
+  --rot: 22deg;
+}
+.shuffle-card-pos-12 {
+  --x: -80rpx;
+  --y: 120rpx;
+  --rot: 30deg;
+}
+.shuffle-card-pos-13 {
+  --x: 90rpx;
+  --y: 150rpx;
+  --rot: -28deg;
+}
+.shuffle-card-pos-14 {
+  --x: -180rpx;
+  --y: 140rpx;
+  --rot: 16deg;
+}
+.shuffle-card-pos-15 {
+  --x: 140rpx;
+  --y: -180rpx;
+  --rot: -20deg;
+}
+.shuffle-card-pos-16 {
+  --x: -100rpx;
+  --y: -160rpx;
+  --rot: 12deg;
+}
+.shuffle-card-pos-17 {
+  --x: 200rpx;
+  --y: 80rpx;
+  --rot: -14deg;
+}
+.shuffle-card-pos-18 {
+  --x: -60rpx;
+  --y: 200rpx;
+  --rot: 24deg;
+}
+.shuffle-card-pos-19 {
+  --x: 80rpx;
+  --y: -100rpx;
+  --rot: -8deg;
+}
+.shuffle-card-pos-20 {
+  --x: -200rpx;
+  --y: -80rpx;
+  --rot: 20deg;
+}
+.shuffle-card-pos-21 {
+  --x: 120rpx;
+  --y: 180rpx;
+  --rot: -16deg;
+}
+.shuffle-card-pos-22 {
+  --x: -140rpx;
+  --y: 60rpx;
+  --rot: 10deg;
+}
+.shuffle-card-pos-23 {
+  --x: 50rpx;
+  --y: -200rpx;
+  --rot: -24deg;
+}
+.shuffle-card-pos-24 {
+  --x: -20rpx;
+  --y: 140rpx;
+  --rot: 6deg;
+}
+.shuffle-card-pos-25 {
+  --x: 180rpx;
+  --y: -60rpx;
+  --rot: -10deg;
+}
+.shuffle-card-pos-26 {
+  --x: -160rpx;
+  --y: -140rpx;
+  --rot: 18deg;
+}
+.shuffle-card-pos-27 {
+  --x: 100rpx;
+  --y: 60rpx;
+  --rot: -6deg;
+}
+
+/* 洗牌结束：将散落的牌收拢成“堆叠牌堆”再进入摊开 */
+.shuffle-animation-container.shuffle-gather .shuffle-deck {
+  width: 240rpx;
+  height: 360rpx;
+}
+
+.shuffle-animation-container.shuffle-gather .shuffle-deck.is-shuffling {
+  width: 240rpx;
+  height: 360rpx;
+}
+
+.shuffle-animation-container.shuffle-gather .shuffle-deck.is-shuffling {
+  /* 兼容：保持原 class，直接通过 gather 状态收拢 */
+}
+
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-0 {
+  --x: -6rpx;
+  --y: -6rpx;
+  --rot: -2deg;
+  z-index: 14;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-1 {
+  --x: 5rpx;
+  --y: -2rpx;
+  --rot: 1.5deg;
+  z-index: 13;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-2 {
+  --x: -4rpx;
+  --y: 3rpx;
+  --rot: -1deg;
+  z-index: 12;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-3 {
+  --x: 6rpx;
+  --y: 6rpx;
+  --rot: 2.2deg;
+  z-index: 11;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-4 {
+  --x: -2rpx;
+  --y: 8rpx;
+  --rot: -1.6deg;
+  z-index: 10;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-5 {
+  --x: 2rpx;
+  --y: 10rpx;
+  --rot: 1deg;
+  z-index: 9;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-6 {
+  --x: -1rpx;
+  --y: 12rpx;
+  --rot: -0.6deg;
+  z-index: 8;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-7 {
+  --x: 1rpx;
+  --y: 14rpx;
+  --rot: 0.4deg;
+  z-index: 7;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-8 {
+  --x: -3rpx;
+  --y: 16rpx;
+  --rot: -0.2deg;
+  z-index: 6;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-9 {
+  --x: 3rpx;
+  --y: 18rpx;
+  --rot: 0.8deg;
+  z-index: 5;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-10 {
+  --x: -2rpx;
+  --y: 20rpx;
+  --rot: -1.1deg;
+  z-index: 4;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-11 {
+  --x: 2rpx;
+  --y: 22rpx;
+  --rot: 1.2deg;
+  z-index: 3;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-12 {
+  --x: -1rpx;
+  --y: 24rpx;
+  --rot: -0.6deg;
+  z-index: 2;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-13 {
+  --x: 1rpx;
+  --y: 26rpx;
+  --rot: 0.6deg;
+  z-index: 1;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-14 {
+  --x: -2rpx;
+  --y: 28rpx;
+  --rot: -0.8deg;
+  z-index: 0;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-15 {
+  --x: 2rpx;
+  --y: 30rpx;
+  --rot: 0.4deg;
+  z-index: -1;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-16 {
+  --x: -1rpx;
+  --y: 32rpx;
+  --rot: -0.5deg;
+  z-index: -2;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-17 {
+  --x: 1rpx;
+  --y: 34rpx;
+  --rot: 0.7deg;
+  z-index: -3;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-18 {
+  --x: -3rpx;
+  --y: 36rpx;
+  --rot: -0.3deg;
+  z-index: -4;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-19 {
+  --x: 3rpx;
+  --y: 38rpx;
+  --rot: 0.9deg;
+  z-index: -5;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-20 {
+  --x: -2rpx;
+  --y: 40rpx;
+  --rot: -0.6deg;
+  z-index: -6;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-21 {
+  --x: 2rpx;
+  --y: 42rpx;
+  --rot: 0.5deg;
+  z-index: -7;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-22 {
+  --x: -1rpx;
+  --y: 44rpx;
+  --rot: -0.4deg;
+  z-index: -8;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-23 {
+  --x: 1rpx;
+  --y: 46rpx;
+  --rot: 0.3deg;
+  z-index: -9;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-24 {
+  --x: -2rpx;
+  --y: 48rpx;
+  --rot: -0.7deg;
+  z-index: -10;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-25 {
+  --x: 2rpx;
+  --y: 50rpx;
+  --rot: 0.6deg;
+  z-index: -11;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-26 {
+  --x: -1rpx;
+  --y: 52rpx;
+  --rot: -0.5deg;
+  z-index: -12;
+}
+.shuffle-animation-container.shuffle-gather .shuffle-card-pos-27 {
+  --x: 1rpx;
+  --y: 54rpx;
+  --rot: 0.4deg;
+  z-index: -13;
+}
+
 /* 神秘洗牌动画关键帧 - 旋转 + 缩放 + 浮动 */
 @keyframes shuffle-mystical-0 {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(0deg) scale(1) translateY(0);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(calc(var(--rot, 0deg) + 0deg)) scale(1);
   }
   25% {
-    transform: translate(-50%, -50%) rotate(-15deg) scale(1.05)
-      translateY(-20rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 42rpx), calc(var(--y, 0rpx) - 56rpx))
+      rotate(calc(var(--rot, 0deg) - 16deg)) scale(1.05);
   }
   50% {
-    transform: translate(-50%, -50%) rotate(8deg) scale(0.95) translateY(10rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 54rpx), calc(var(--y, 0rpx) + 28rpx))
+      rotate(calc(var(--rot, 0deg) + 10deg)) scale(0.96);
   }
   75% {
-    transform: translate(-50%, -50%) rotate(-5deg) scale(1.02)
-      translateY(-10rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 24rpx), calc(var(--y, 0rpx) + 36rpx))
+      rotate(calc(var(--rot, 0deg) - 8deg)) scale(1.02);
   }
 }
 
 @keyframes shuffle-mystical-1 {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(5deg) scale(1) translateY(0);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(calc(var(--rot, 0deg) + 2deg)) scale(1);
   }
   25% {
-    transform: translate(-50%, -50%) rotate(20deg) scale(0.96) translateY(15rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 62rpx), calc(var(--y, 0rpx) - 30rpx))
+      rotate(calc(var(--rot, 0deg) + 18deg)) scale(0.97);
   }
   50% {
-    transform: translate(-50%, -50%) rotate(-12deg) scale(1.04)
-      translateY(-25rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 50rpx), calc(var(--y, 0rpx) - 64rpx))
+      rotate(calc(var(--rot, 0deg) - 14deg)) scale(1.05);
   }
   75% {
-    transform: translate(-50%, -50%) rotate(3deg) scale(0.98) translateY(5rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 18rpx), calc(var(--y, 0rpx) + 44rpx))
+      rotate(calc(var(--rot, 0deg) + 8deg)) scale(0.99);
   }
 }
 
 @keyframes shuffle-mystical-2 {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(-8deg) scale(0.98) translateY(5rpx);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(calc(var(--rot, 0deg) - 6deg)) scale(0.99);
   }
   25% {
-    transform: translate(-50%, -50%) rotate(12deg) scale(1.03)
-      translateY(-15rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 60rpx), calc(var(--y, 0rpx) + 24rpx))
+      rotate(calc(var(--rot, 0deg) + 10deg)) scale(1.03);
   }
   50% {
-    transform: translate(-50%, -50%) rotate(-18deg) scale(0.95)
-      translateY(20rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 42rpx), calc(var(--y, 0rpx) + 66rpx))
+      rotate(calc(var(--rot, 0deg) - 18deg)) scale(0.96);
   }
   75% {
-    transform: translate(-50%, -50%) rotate(6deg) scale(1.01) translateY(-8rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 18rpx), calc(var(--y, 0rpx) - 46rpx))
+      rotate(calc(var(--rot, 0deg) + 8deg)) scale(1.01);
   }
 }
 
 @keyframes shuffle-mystical-3 {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(10deg) scale(1.02)
-      translateY(-10rpx);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(calc(var(--rot, 0deg) + 10deg)) scale(1.01);
   }
   25% {
-    transform: translate(-50%, -50%) rotate(-8deg) scale(0.97) translateY(18rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 64rpx), calc(var(--y, 0rpx) + 40rpx))
+      rotate(calc(var(--rot, 0deg) - 10deg)) scale(0.98);
   }
   50% {
-    transform: translate(-50%, -50%) rotate(15deg) scale(1.06)
-      translateY(-22rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 58rpx), calc(var(--y, 0rpx) - 36rpx))
+      rotate(calc(var(--rot, 0deg) + 14deg)) scale(1.06);
   }
   75% {
-    transform: translate(-50%, -50%) rotate(-3deg) scale(0.99) translateY(8rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 18rpx), calc(var(--y, 0rpx) - 70rpx))
+      rotate(calc(var(--rot, 0deg) - 4deg)) scale(1);
   }
 }
 
 @keyframes shuffle-mystical-4 {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(-5deg) scale(0.97) translateY(12rpx);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(calc(var(--rot, 0deg) - 6deg)) scale(0.98);
   }
   25% {
-    transform: translate(-50%, -50%) rotate(18deg) scale(1.04)
-      translateY(-18rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 72rpx), calc(var(--y, 0rpx) - 18rpx))
+      rotate(calc(var(--rot, 0deg) + 16deg)) scale(1.04);
   }
   50% {
-    transform: translate(-50%, -50%) rotate(-10deg) scale(0.94)
-      translateY(25rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 52rpx), calc(var(--y, 0rpx) + 76rpx))
+      rotate(calc(var(--rot, 0deg) - 12deg)) scale(0.96);
   }
   75% {
-    transform: translate(-50%, -50%) rotate(8deg) scale(1.02) translateY(-5rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 44rpx), calc(var(--y, 0rpx) - 34rpx))
+      rotate(calc(var(--rot, 0deg) + 8deg)) scale(1.02);
   }
 }
 
 @keyframes shuffle-mystical-5 {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(12deg) scale(1) translateY(-8rpx);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(calc(var(--rot, 0deg) + 10deg)) scale(1);
   }
   25% {
-    transform: translate(-50%, -50%) rotate(-15deg) scale(0.96)
-      translateY(22rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 76rpx), calc(var(--y, 0rpx) + 18rpx))
+      rotate(calc(var(--rot, 0deg) - 16deg)) scale(0.97);
   }
   50% {
-    transform: translate(-50%, -50%) rotate(6deg) scale(1.05) translateY(-20rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 64rpx), calc(var(--y, 0rpx) - 52rpx))
+      rotate(calc(var(--rot, 0deg) + 8deg)) scale(1.06);
   }
   75% {
-    transform: translate(-50%, -50%) rotate(-8deg) scale(0.98) translateY(10rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 14rpx), calc(var(--y, 0rpx) + 72rpx))
+      rotate(calc(var(--rot, 0deg) - 6deg)) scale(0.99);
   }
 }
 
 @keyframes shuffle-mystical-6 {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(-12deg) scale(0.96)
-      translateY(15rpx);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(calc(var(--rot, 0deg) - 10deg)) scale(0.98);
   }
   25% {
-    transform: translate(-50%, -50%) rotate(10deg) scale(1.02)
-      translateY(-12rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 66rpx), calc(var(--y, 0rpx) + 8rpx))
+      rotate(calc(var(--rot, 0deg) + 10deg)) scale(1.02);
   }
   50% {
-    transform: translate(-50%, -50%) rotate(-6deg) scale(0.98) translateY(18rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 30rpx), calc(var(--y, 0rpx) + 78rpx))
+      rotate(calc(var(--rot, 0deg) - 8deg)) scale(0.98);
   }
   75% {
-    transform: translate(-50%, -50%) rotate(15deg) scale(1.04)
-      translateY(-15rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 58rpx), calc(var(--y, 0rpx) - 52rpx))
+      rotate(calc(var(--rot, 0deg) + 12deg)) scale(1.04);
   }
 }
 
 @keyframes shuffle-mystical-7 {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(8deg) scale(1.01) translateY(-5rpx);
+    transform: translate(-50%, -50%) translate(var(--x, 0rpx), var(--y, 0rpx))
+      rotate(calc(var(--rot, 0deg) + 8deg)) scale(1.01);
   }
   25% {
-    transform: translate(-50%, -50%) rotate(-12deg) scale(0.95)
-      translateY(20rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) + 70rpx), calc(var(--y, 0rpx) - 20rpx))
+      rotate(calc(var(--rot, 0deg) - 12deg)) scale(0.96);
   }
   50% {
-    transform: translate(-50%, -50%) rotate(5deg) scale(1.03) translateY(-18rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 74rpx), calc(var(--y, 0rpx) - 28rpx))
+      rotate(calc(var(--rot, 0deg) + 10deg)) scale(1.04);
   }
   75% {
-    transform: translate(-50%, -50%) rotate(-10deg) scale(0.97)
-      translateY(12rpx);
+    transform: translate(-50%, -50%)
+      translate(calc(var(--x, 0rpx) - 18rpx), calc(var(--y, 0rpx) + 70rpx))
+      rotate(calc(var(--rot, 0deg) - 10deg)) scale(0.99);
   }
 }
 
@@ -863,36 +1334,136 @@ page {
 .fan-deck {
   position: relative;
   width: 100%;
-  height: 420rpx;
+  /* 360度圆环需要足够高度容纳完整圆形 */
+  height: 620rpx;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   /* 扇形底部柔光 - 增强层级 */
   filter: drop-shadow(0 20rpx 40rpx rgba(212, 175, 55, 0.18))
     drop-shadow(0 40rpx 60rpx rgba(123, 104, 166, 0.1));
 }
 
-/* 每张扇形牌 - 神秘风格升级 + 光晕增强 */
+/* ============================================================ */
+/* 手势交互增强 - Pinch to Zoom & Swipe to Scroll                */
+/* ============================================================ */
+
+/* 手势提示条 */
+.gesture-hint {
+  position: absolute;
+  top: -10rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12rpx 24rpx;
+  background: rgba(26, 20, 40, 0.85);
+  border-radius: 999rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  z-index: 100;
+  animation: gesture-hint-fade 4s ease-out forwards;
+  backdrop-filter: blur(8rpx);
+}
+
+.gesture-hint text {
+  font-size: 22rpx;
+  color: rgba(240, 215, 140, 0.8);
+  white-space: nowrap;
+}
+
+@keyframes gesture-hint-fade {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10rpx);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/* 支持缩放的牌阵 - 圆环布局（圆环固定不动，卡牌沿圆环流动） */
+.fan-deck-interactive {
+  /* 只应用缩放，不旋转圆环容器 */
+  transform: scale(var(--fan-scale, 1));
+  transform-origin: center center;
+  /* 触摸优化 - 禁用浏览器默认手势 */
+  touch-action: none;
+  /* 🔥 优化缩放重置动画 - 更流畅的贝塞尔曲线 */
+  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* 开启硬件加速 */
+  will-change: transform;
+  /* 🔥 3D 硬件加速，提升滑动性能 */
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* 滑动时禁用所有过渡，获得最即时的响应 */
+.fan-container.is-dragging .fan-deck-interactive {
+  transition: none !important;
+}
+
+/* 🔥 滑动时禁用卡牌的所有动画和过渡，确保最流畅的响应 */
+.fan-container.is-dragging .fan-card-item {
+  transition: none !important;
+  animation-play-state: paused !important;
+}
+
+/* 缩放和旋转的视觉容器 */
+.fan-container {
+  /* 添加 CSS 变量默认值 */
+  --fan-scale: 1;
+  --card-offset-angle: 0deg;
+}
+
+/* 每张扇形牌 - 360度圆环布局，支持无限旋转 */
 .fan-card-item {
   position: absolute;
-  width: var(--card-width, 70rpx);
-  height: var(--card-height, 112rpx);
-  border-radius: 10rpx;
-  /* 增强阴影分离度 - 更立体多层光晕 */
-  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.35), 0 8rpx 16rpx rgba(0, 0, 0, 0.25),
-    0 2rpx 6rpx rgba(212, 175, 55, 0.15), 0 0 12rpx rgba(212, 175, 55, 0.08);
+  width: var(--card-width, 32rpx);
+  height: var(--card-height, 52rpx);
+  border-radius: 5rpx;
+  /* 轻量阴影 - 适应更小的牌 */
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.35), 0 4rpx 8rpx rgba(0, 0, 0, 0.25),
+    0 1rpx 3rpx rgba(212, 175, 55, 0.15);
   overflow: hidden;
   cursor: pointer;
-  transform-origin: center calc(100% + 400rpx);
-  transform: rotate(0deg);
+  /* 圆环布局: pivotDistance = 260rpx，牌从圆心向外辐射 */
+  transform-origin: center calc(100% + 260rpx);
+  /* 使用 calc 组合基础角度和偏移角度，支持360度无限旋转 */
+  transform: rotate(
+    calc(var(--base-angle, 0deg) + var(--card-offset-angle, 0deg))
+  );
   opacity: 0;
-  transition: box-shadow 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+  /* 🔥 优化非拖动时的过渡效果 - 更快响应 */
+  transition: box-shadow 0.15s ease-out, filter 0.15s ease-out,
+    opacity 0.2s ease-out;
   z-index: var(--z-index, 1);
-  bottom: 0;
+  /* 定位在容器中心，牌围绕此点旋转形成圆环 */
+  top: 50%;
   left: 50%;
-  margin-left: calc(var(--card-width, 70rpx) / -2);
+  margin-top: 0;
+  margin-left: calc(var(--card-width, 32rpx) / -2);
   /* 金色边框 */
   border: 1rpx solid rgba(212, 175, 55, 0.3);
+  /* 🔥 开启硬件加速，提升滑动流畅度 */
+  will-change: transform, opacity;
+  /* 🔥 3D 硬件加速 - 关键性能优化 */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  /* 🔥 防止重绘闪烁 */
+  -webkit-perspective: 1000;
+  perspective: 1000;
 }
 
 /* 铺开后的状态 + 呼吸动画 */
@@ -903,15 +1474,21 @@ page {
   animation-delay: var(--delay, 0ms);
 }
 
-/* 轻微漂浮呼吸动画 - 增强版 4-6rpx 幅度 */
+/* 轻微漂浮呼吸动画 - 使用组合角度 */
 @keyframes card-breathe {
   0%,
   100% {
-    transform: rotate(var(--angle, 0deg)) translateY(0);
+    transform: rotate(
+        calc(var(--base-angle, 0deg) + var(--card-offset-angle, 0deg))
+      )
+      translateY(0);
     filter: brightness(1);
   }
   50% {
-    transform: rotate(var(--angle, 0deg)) translateY(-5rpx);
+    transform: rotate(
+        calc(var(--base-angle, 0deg) + var(--card-offset-angle, 0deg))
+      )
+      translateY(-5rpx);
     filter: brightness(1.03);
   }
 }
@@ -926,7 +1503,10 @@ page {
     opacity: 1;
   }
   100% {
-    transform: rotate(var(--angle, 0deg)) scale(1);
+    transform: rotate(
+        calc(var(--base-angle, 0deg) + var(--card-offset-angle, 0deg))
+      )
+      scale(1);
     opacity: 1;
   }
 }
@@ -937,7 +1517,10 @@ page {
   box-shadow: 0 16rpx 40rpx rgba(212, 175, 55, 0.6),
     0 0 30rpx rgba(212, 175, 55, 0.5), 0 0 50rpx rgba(240, 215, 140, 0.3),
     inset 0 0 15rpx rgba(212, 175, 55, 0.3);
-  transform: rotate(var(--angle, 0deg)) scale(1.2) translateY(-8rpx);
+  transform: rotate(
+      calc(var(--base-angle, 0deg) + var(--card-offset-angle, 0deg))
+    )
+    scale(1.2) translateY(-8rpx);
   border-color: rgba(212, 175, 55, 1);
   transition: all 0.1s ease-out;
 }
@@ -956,7 +1539,10 @@ page {
 
 @keyframes fly-to-center {
   0% {
-    transform: rotate(var(--angle, 0deg)) scale(1);
+    transform: rotate(
+        calc(var(--base-angle, 0deg) + var(--card-offset-angle, 0deg))
+      )
+      scale(1);
     opacity: 1;
     box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.3);
   }
@@ -990,7 +1576,7 @@ page {
   margin-top: 120rpx;
   padding: 24rpx 24rpx;
   position: absolute;
-  top: 30%; /* 原来可能是 50%，再往下调一点 */
+  top: 30%;
   transform: translateX(-50%);
   /* 柔光背景框 */
   background: linear-gradient(
@@ -1656,6 +2242,7 @@ page {
   box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.35),
     0 0 20rpx rgba(212, 175, 55, 0.15), 0 0 40rpx rgba(212, 175, 55, 0.08);
   border: 1rpx solid rgba(212, 175, 55, 0.2);
+  transition: transform 0.3s ease;
 }
 
 .card-name-small {
@@ -1675,10 +2262,14 @@ page {
 .card-keywords-small {
   font-size: 22rpx;
   color: rgba(240, 215, 140, 0.65);
-  max-width: 200rpx;
+  width: 180rpx;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 关键词最多展示两行，避免被遮挡 */
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
 }
 
 /* 单卡结果样式 - 放大卡牌 */
@@ -1690,6 +2281,7 @@ page {
     0 0 40rpx rgba(212, 175, 55, 0.2), 0 0 60rpx rgba(212, 175, 55, 0.1);
   border: 1rpx solid rgba(212, 175, 55, 0.25);
   animation: card-image-glow 4s ease-in-out infinite;
+  transition: transform 0.35s ease;
 }
 
 /* 单卡图片光晕呼吸效果 */
@@ -1703,6 +2295,31 @@ page {
     box-shadow: 0 18rpx 36rpx rgba(0, 0, 0, 0.35),
       0 0 50rpx rgba(212, 175, 55, 0.28), 0 0 80rpx rgba(212, 175, 55, 0.15);
   }
+}
+
+.card-image-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image.reversed,
+.card-image-small.reversed {
+  transform: rotate(180deg);
+}
+
+.reverse-badge {
+  position: absolute;
+  top: 10rpx;
+  right: 10rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #1a1111;
+  background: linear-gradient(135deg, #f7e7c6 0%, #d4af37 100%);
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.25);
 }
 
 .card-name {
@@ -1719,6 +2336,13 @@ page {
   font-size: 28rpx;
   color: rgba(240, 215, 140, 0.7);
   margin-top: 4rpx;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-all;
 }
 
 /* 问题展示 - 神秘风格 */
@@ -1737,36 +2361,21 @@ page {
 
 /* 问题输入区域 - 神秘风格升级 + 玻璃态增强 */
 .question-section {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 24rpx;
-  padding: 30rpx;
-  margin: 0 20rpx 16rpx;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2),
-    inset 0 0 30rpx rgba(212, 175, 55, 0.03), 0 0 40rpx rgba(212, 175, 55, 0.05);
-  border: 1rpx solid rgba(212, 175, 55, 0.2);
-  backdrop-filter: blur(16rpx) saturate(1.2);
-  animation: title-fade-in 1s ease-out 0.8s both;
+  padding: 36rpx;
+  margin: 28rpx 20rpx 26rpx;
+  box-shadow: none;
+  border: none;
+  backdrop-filter: blur(10rpx);
+  animation: none;
   position: relative;
   overflow: hidden;
 }
 
 /* 玻璃态光粒子边缘效果 */
 .question-section::before {
-  content: "";
-  position: absolute;
-  top: -1rpx;
-  left: 10%;
-  width: 80%;
-  height: 2rpx;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(212, 175, 55, 0.4) 20%,
-    rgba(240, 215, 140, 0.6) 50%,
-    rgba(212, 175, 55, 0.4) 80%,
-    transparent 100%
-  );
-  animation: shimmer-edge 4s ease-in-out infinite;
+  content: none;
 }
 
 @keyframes shimmer-edge {
@@ -1919,46 +2528,44 @@ page {
 
 .question-input {
   width: 100%;
-  min-height: 200rpx;
+  min-height: 220rpx;
   /* 神秘风格输入框 + 玻璃态增强 */
-  background: rgba(255, 255, 255, 0.05);
-  border: 1rpx solid rgba(212, 175, 55, 0.25);
-  border-radius: 16rpx;
-  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.02);
+  border: none;
+  border-radius: 20rpx;
+  padding: 28rpx;
   font-size: 28rpx;
   line-height: 1.6;
   box-sizing: border-box;
-  margin-bottom: 12rpx;
+  margin-bottom: 8rpx;
   color: var(--primary-gold-light);
   backdrop-filter: blur(8rpx);
-  box-shadow: inset 0 0 20rpx rgba(0, 0, 0, 0.1),
-    0 0 20rpx rgba(212, 175, 55, 0.05);
+  box-shadow: none;
   transition: all 0.3s ease;
 }
 
 .question-input:focus {
-  border-color: rgba(212, 175, 55, 0.45);
-  box-shadow: inset 0 0 20rpx rgba(0, 0, 0, 0.1),
-    0 0 30rpx rgba(212, 175, 55, 0.12);
+  border-color: transparent;
+  box-shadow: 0 0 0 1rpx rgba(212, 175, 55, 0.08);
 }
 
 .question-input::placeholder {
-  color: rgba(240, 215, 140, 0.4);
+  color: rgba(240, 215, 140, 0.32);
 }
 
 /* 紧凑版问题输入 - idle阶段使用 */
 .question-input-compact {
-  min-height: 100rpx;
-  max-height: 120rpx;
-  padding: 16rpx;
+  min-height: 160rpx;
+  max-height: 200rpx;
+  padding: 28rpx;
   font-size: 26rpx;
 }
 
 .char-count {
   text-align: right;
-  font-size: 24rpx;
-  color: rgba(240, 215, 140, 0.5);
-  margin-bottom: 20rpx;
+  font-size: 22rpx;
+  color: rgba(240, 215, 140, 0.45);
+  margin-bottom: 16rpx;
 }
 
 /* 解读结果 - 神秘风格 */
