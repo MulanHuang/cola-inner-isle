@@ -1,5 +1,7 @@
 // pages/explore/zodiac-detail/zodiac-detail.js
 const STAR_INDEXES = [0, 1, 2, 3, 4];
+const FORTUNE_CACHE_KEY = "zodiac.fortuneCache";
+const DAILY_BEHAVIOR_KEY = "zodiac.dailyBehavior";
 
 const ZODIAC_PROFILES = {
   aries: {
@@ -460,6 +462,180 @@ const ZODIAC_PROFILES = {
   },
 };
 
+const ZODIAC_KEYWORDS = {
+  aries: {
+    theme: ["主动", "突破", "执行"],
+    career: ["行动力", "开拓", "领跑"],
+    wealth: ["快进快出", "预算", "控制冲动"],
+    love: ["直率", "热烈", "主动表达"],
+    health: ["运动", "补水", "情绪释放"],
+  },
+  taurus: {
+    theme: ["稳定", "积累", "耐心"],
+    career: ["稳健推进", "细节打磨", "可持续"],
+    wealth: ["储蓄", "稳健配置", "长期主义"],
+    love: ["踏实", "慢热", "可靠陪伴"],
+    health: ["规律作息", "舒缓", "营养均衡"],
+  },
+  gemini: {
+    theme: ["沟通", "灵活", "信息"],
+    career: ["协作", "多线并行", "效率优化"],
+    wealth: ["小额试错", "信息优势", "控制分散"],
+    love: ["轻松互动", "有趣", "高频沟通"],
+    health: ["节奏管理", "放松", "减压"],
+  },
+  cancer: {
+    theme: ["情感", "安全感", "照顾"],
+    career: ["稳定团队", "支持协作", "细节关怀"],
+    wealth: ["稳守", "家庭规划", "避免情绪消费"],
+    love: ["温柔", "共情", "仪式感"],
+    health: ["作息规律", "舒缓情绪", "轻运动"],
+  },
+  leo: {
+    theme: ["自信", "舞台感", "领导"],
+    career: ["担当", "表现力", "目标驱动"],
+    wealth: ["价值回报", "形象投入", "控制面子消费"],
+    love: ["热情", "表达", "认可感"],
+    health: ["精力管理", "作息节奏", "避免透支"],
+  },
+  virgo: {
+    theme: ["秩序", "细节", "优化"],
+    career: ["流程", "质量", "复盘"],
+    wealth: ["精打细算", "风险控制", "预算"],
+    love: ["稳定", "体贴", "务实"],
+    health: ["规律", "轻负担运动", "压力管理"],
+  },
+  libra: {
+    theme: ["平衡", "关系", "审美"],
+    career: ["协调", "共识", "合作推进"],
+    wealth: ["平衡收支", "审慎选择", "避免犹豫"],
+    love: ["沟通", "体面", "互相成就"],
+    health: ["节律", "舒适感", "适度运动"],
+  },
+  scorpio: {
+    theme: ["深度", "掌控", "洞察"],
+    career: ["深挖问题", "专注", "核心资源"],
+    wealth: ["长期策略", "控制风险", "避免冲动"],
+    love: ["信任", "深度链接", "边界清晰"],
+    health: ["修复", "排压", "规律作息"],
+  },
+  sagittarius: {
+    theme: ["探索", "自由", "成长"],
+    career: ["机会捕捉", "视野", "行动"],
+    wealth: ["规划", "避免承诺过多", "稳中求进"],
+    love: ["坦诚", "空间感", "轻松互动"],
+    health: ["节奏感", "户外活动", "放松"],
+  },
+  capricorn: {
+    theme: ["责任", "长期", "自律"],
+    career: ["目标拆解", "执行", "稳步推进"],
+    wealth: ["稳健", "长期配置", "风险控制"],
+    love: ["承诺", "稳定", "行动兑现"],
+    health: ["耐力", "规律", "避免过劳"],
+  },
+  aquarius: {
+    theme: ["创新", "独立", "变革"],
+    career: ["新方法", "突破常规", "协作创新"],
+    wealth: ["新工具", "理性规划", "控制波动"],
+    love: ["理性表达", "自由", "共识"],
+    health: ["节奏管理", "放松", "情绪表达"],
+  },
+  pisces: {
+    theme: ["共情", "灵感", "浪漫"],
+    career: ["创意", "柔性沟通", "氛围感"],
+    wealth: ["稳守", "避免幻想", "小步试错"],
+    love: ["温柔", "共鸣", "情感连接"],
+    health: ["休息", "放松", "情绪整理"],
+  },
+};
+
+const ZODIAC_TONES = {
+  aries: {
+    daily: "更适合先动起来，再做微调。",
+    weekly: "用行动去验证方向，别拖太久。",
+    monthly: "把冲劲转成可持续节奏。",
+    yearly: "以挑战为牵引，持续突破。",
+    love: "直率表达更有效。",
+  },
+  taurus: {
+    daily: "稳住节奏，先把基础夯实。",
+    weekly: "把成果做扎实，比速度更重要。",
+    monthly: "用稳定积累换来安全感。",
+    yearly: "耐心投入会有回报。",
+    love: "慢热更能建立信任。",
+  },
+  gemini: {
+    daily: "信息先整理清楚，再下结论。",
+    weekly: "分清优先级，减少分心。",
+    monthly: "多沟通、少犹豫会更顺。",
+    yearly: "持续学习能打开新路径。",
+    love: "轻松互动更容易升温。",
+  },
+  cancer: {
+    daily: "先照顾好情绪，效率会更高。",
+    weekly: "稳定关系会提升整体感受。",
+    monthly: "营造安全感是关键。",
+    yearly: "把关心变成长期陪伴。",
+    love: "温柔与回应是主旋律。",
+  },
+  leo: {
+    daily: "把光芒用在关键任务上。",
+    weekly: "明确目标，带动节奏。",
+    monthly: "用成果建立影响力。",
+    yearly: "把领导力沉淀成方法。",
+    love: "热情表达会更打动人。",
+  },
+  virgo: {
+    daily: "先定标准，再做执行。",
+    weekly: "流程清晰会更高效。",
+    monthly: "复盘能带来持续优化。",
+    yearly: "细节积累会形成优势。",
+    love: "体贴与稳定最加分。",
+  },
+  libra: {
+    daily: "先做权衡，再做决定。",
+    weekly: "沟通一致是推进关键。",
+    monthly: "保持平衡会更顺畅。",
+    yearly: "稳定关系和合作更重要。",
+    love: "清晰表达更有安全感。",
+  },
+  scorpio: {
+    daily: "先看本质，再做选择。",
+    weekly: "专注深挖会见成果。",
+    monthly: "控制节奏更有掌控感。",
+    yearly: "长期深耕更有力量。",
+    love: "信任是关系的基石。",
+  },
+  sagittarius: {
+    daily: "先设方向，再自由发挥。",
+    weekly: "保持探索，但别忘执行。",
+    monthly: "把视野转成具体行动。",
+    yearly: "长期目标需要坚持感。",
+    love: "坦诚与空间感并行。",
+  },
+  capricorn: {
+    daily: "稳步推进，比速度更重要。",
+    weekly: "执行与复盘是关键。",
+    monthly: "设定里程碑更有动力。",
+    yearly: "长期主义是主轴。",
+    love: "用行动证明在乎。",
+  },
+  aquarius: {
+    daily: "新方法会带来新突破。",
+    weekly: "保持独立，但别忽略协作。",
+    monthly: "创新要有落地路径。",
+    yearly: "愿景需要耐心沉淀。",
+    love: "真诚与边界同样重要。",
+  },
+  pisces: {
+    daily: "情绪稳定后效率更高。",
+    weekly: "先照顾自己，再关心别人。",
+    monthly: "把灵感落到具体计划。",
+    yearly: "稳定的节奏更有安全感。",
+    love: "共情能拉近距离。",
+  },
+};
+
 function buildAnalysis(profile) {
   return [
     {
@@ -485,15 +661,644 @@ function buildAnalysis(profile) {
   ];
 }
 
-function buildFortune(profile) {
+function getTodayKey() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getWeekKey(date) {
+  const dayIndex = date.getDay();
+  const startOfWeek = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() - dayIndex
+  );
+  const year = startOfWeek.getFullYear();
+  const month = String(startOfWeek.getMonth() + 1).padStart(2, "0");
+  const day = String(startOfWeek.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getMonthKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
+function getYearKey(date) {
+  return `${date.getFullYear()}`;
+}
+
+function getYesterdayKey() {
+  const now = new Date();
+  const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  const year = yesterday.getFullYear();
+  const month = String(yesterday.getMonth() + 1).padStart(2, "0");
+  const day = String(yesterday.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function hashString(input) {
+  let hash = 0;
+  for (let i = 0; i < input.length; i += 1) {
+    hash = (hash << 5) - hash + input.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function clampScore(score) {
+  return Math.min(5, Math.max(1, score));
+}
+
+function updateBehaviorStreak() {
+  const todayKey = getTodayKey();
+  const yesterdayKey = getYesterdayKey();
+  const behavior = wx.getStorageSync(DAILY_BEHAVIOR_KEY) || {};
+  let streak = behavior.streak || 0;
+
+  if (behavior.lastDate === todayKey) {
+    return streak;
+  }
+
+  if (behavior.lastDate === yesterdayKey) {
+    streak += 1;
+  } else {
+    streak = 1;
+  }
+
+  wx.setStorageSync(DAILY_BEHAVIOR_KEY, {
+    lastDate: todayKey,
+    streak,
+  });
+
+  return streak;
+}
+
+function buildPersonalHint(userProfile) {
+  if (!userProfile) {
+    return "";
+  }
+  const hints = [];
+  if (userProfile.birthTime) {
+    hints.push("适合早做规划，把精力留给关键目标。");
+  }
+  if (userProfile.livePlace && userProfile.livePlace.length) {
+    hints.push("在熟悉环境中更能发挥稳定优势。");
+  }
+  if (userProfile.gender) {
+    hints.push("今天适合更清晰地表达需求与边界。");
+  }
+  return hints.length ? hints.join(" ") : "";
+}
+
+function buildKeywordHints(zodiacId) {
+  const bank = ZODIAC_KEYWORDS[zodiacId];
+  if (!bank) {
+    return {};
+  }
+  const format = (label, list) =>
+    list && list.length ? `${label}关键词：${list.join("、")}。` : "";
   return {
-    quote: profile.quote,
-    overall: profile.fortune.overall,
+    theme: format("主题", bank.theme),
+    career: format("事业", bank.career),
+    wealth: format("财务", bank.wealth),
+    love: format("爱情", bank.love),
+    health: format("健康", bank.health),
+  };
+}
+
+function buildKeywordList(zodiacId) {
+  return ZODIAC_KEYWORDS[zodiacId] || {};
+}
+
+function buildToneHints(zodiacId) {
+  return ZODIAC_TONES[zodiacId] || {};
+}
+
+function getDateFromKey(dateKey) {
+  if (!dateKey) {
+    return new Date();
+  }
+  const parts = dateKey.split("-");
+  if (parts.length === 3) {
+    return new Date(
+      Number(parts[0]),
+      Number(parts[1]) - 1,
+      Number(parts[2])
+    );
+  }
+  if (parts.length === 2) {
+    return new Date(Number(parts[0]), Number(parts[1]) - 1, 1);
+  }
+  if (parts.length === 1) {
+    return new Date(Number(parts[0]), 0, 1);
+  }
+  return new Date();
+}
+
+function getPrevDateKey(tabKey, dateKey) {
+  const date = getDateFromKey(dateKey);
+  if (tabKey === "weekly") {
+    const prev = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7);
+    return getWeekKey(prev);
+  }
+  if (tabKey === "monthly") {
+    const prev = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+    return getMonthKey(prev);
+  }
+  if (tabKey === "yearly") {
+    const prev = new Date(date.getFullYear() - 1, 0, 1);
+    return getYearKey(prev);
+  }
+  if (tabKey === "love") {
+    return getTodayKey();
+  }
+  const prev = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
+  return `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}-${String(prev.getDate()).padStart(2, "0")}`;
+}
+
+function getTrendShift(dateKey, zodiacId, tabKey) {
+  const date = getDateFromKey(dateKey);
+  const start = new Date(date.getFullYear(), 0, 0);
+  const diff = date - start;
+  const dayOfYear = Math.floor(diff / 86400000);
+  const seed = hashString(`${zodiacId}:${tabKey}`);
+  const phase = (seed % 360) * (Math.PI / 180);
+  const seasonal = Math.sin((dayOfYear / 365) * Math.PI * 2 + phase);
+  const tabScale = tabKey === "yearly" ? 0.3 : tabKey === "monthly" ? 0.6 : tabKey === "weekly" ? 0.8 : 1;
+  return Math.round(seasonal * tabScale);
+}
+
+function buildFortune(profile, zodiacId, tabKey, dateKey, userProfile) {
+  const scoreTextMap = {
+    5: "表现亮眼，适合大胆推进。",
+    4: "稳中向好，保持节奏更有收获。",
+    3: "平稳普通，细节决定体验。",
+    2: "容易分心，建议保守应对。",
+    1: "起伏较多，先稳住再行动。",
+  };
+  const getScoreText = (score) =>
+    scoreTextMap[score] || "保持平和，循序渐进。";
+  const cache = wx.getStorageSync(FORTUNE_CACHE_KEY) || {};
+  const cachedByDate = cache[dateKey] || {};
+  const cachedByZodiac = cachedByDate[zodiacId] || {};
+  const cached = cachedByZodiac[tabKey];
+  if (cached) {
+    return cached;
+  }
+
+  const streak = updateBehaviorStreak();
+  const streakBonus = Math.min(1, Math.floor(streak / 3));
+  const hashSeed = `${dateKey}:${zodiacId}:${tabKey}:${streak}`;
+  const seed = hashString(hashSeed);
+  const fluctuation = (seed % 3) - 1;
+  const trendShift = getTrendShift(dateKey, zodiacId, tabKey);
+  const scoreBase = {
+    love: profile.fortune.love,
+    career: profile.fortune.career,
+    wealth: profile.fortune.wealth,
+    health: profile.fortune.health,
+  };
+  const scoreWeights = {
+    love: (seed % 2) ? 1 : 0,
+    career: (seed % 3) ? 1 : 0,
+    wealth: (seed % 5) ? 0 : 1,
+    health: (seed % 7) ? 0 : 1,
+  };
+  const tabMultiplier = tabKey === "yearly" ? 0 : 1;
+  const smoothing =
+    tabKey === "yearly" ? 0.7 : tabKey === "monthly" ? 0.6 : tabKey === "weekly" ? 0.5 : 0.4;
+  const prevKey = getPrevDateKey(tabKey, dateKey);
+  const prevCache = cache[prevKey] || {};
+  const prevZodiac = prevCache[zodiacId] || {};
+  const prevFortune = prevZodiac[tabKey];
+  const scores = {
+    love: clampScore(scoreBase.love + fluctuation + trendShift + scoreWeights.love + streakBonus),
+    career: clampScore(
+      scoreBase.career + fluctuation + trendShift + scoreWeights.career + tabMultiplier
+    ),
+    wealth: clampScore(scoreBase.wealth + fluctuation + trendShift + scoreWeights.wealth),
+    health: clampScore(scoreBase.health + fluctuation + trendShift + scoreWeights.health),
+  };
+  if (prevFortune && prevFortune.scores) {
+    const prev = prevFortune.scores.reduce((acc, item) => {
+      acc[item.label] = item.score;
+      return acc;
+    }, {});
+    scores.love = clampScore(
+      Math.round(scores.love * (1 - smoothing) + (prev["爱情"] || scores.love) * smoothing)
+    );
+    scores.career = clampScore(
+      Math.round(
+        scores.career * (1 - smoothing) + (prev["事业"] || scores.career) * smoothing
+      )
+    );
+    scores.wealth = clampScore(
+      Math.round(
+        scores.wealth * (1 - smoothing) + (prev["财运"] || scores.wealth) * smoothing
+      )
+    );
+    scores.health = clampScore(
+      Math.round(
+        scores.health * (1 - smoothing) + (prev["健康"] || scores.health) * smoothing
+      )
+    );
+  }
+  const overall = clampScore(
+    Math.round((scores.love + scores.career + scores.wealth + scores.health) / 4)
+  );
+  const personalHint = buildPersonalHint(userProfile);
+  const keywordHints = buildKeywordHints(zodiacId);
+  const keywordList = buildKeywordList(zodiacId);
+  const toneHints = buildToneHints(zodiacId);
+  const tabPrefix = {
+    daily: "今日",
+    weekly: "本周",
+    monthly: "本月",
+    yearly: "今年",
+    love: "爱情面",
+  }[tabKey] || "今日";
+
+  const zodiacFlavor = {
+    daily: `以${profile.desc}的优势切入会更顺手。`,
+    weekly: `以“${profile.facts.max}”为核心推进，会更稳定。`,
+    monthly: `本月适合把${profile.facts.element}能量用在长期积累上。`,
+    yearly: `年度主线宜围绕${profile.facts.ruler}的特质展开。`,
+    love: `情感表达更适合${profile.facts.element}式的节奏。`,
+  };
+
+  const quotesByTab = {
+    daily: profile.quote,
+    weekly: "把重点放在稳步推进。",
+    monthly: "以长期节奏组织当下行动。",
+    yearly: "让目标成为你的方向感。",
+    love: "把真诚放在第一位。",
+  };
+  const tabQuote = quotesByTab[tabKey] || profile.quote;
+
+  const detailBuilders = {
+    daily: [
+      {
+        title: "综合运势",
+        icon: "⭐",
+        score: overall,
+        text: `${profile.name}${tabPrefix}整体节奏${overall >= 4 ? "偏积极" : "偏平稳"}，更适合围绕“${profile.facts.max}”优势推进核心事项。${getScoreText(
+          overall
+        )}把精力集中在最能产生成果的 20%，效果会更明显。${zodiacFlavor.daily} ${keywordHints.theme || ""} ${
+          personalHint ? ` ${personalHint}` : ""
+        } ${toneHints.daily || ""}`,
+      },
+      {
+        title: "事业学业",
+        icon: "👑",
+        score: scores.career,
+        text: `事业学业侧重点在“${profile.facts.max}”，宜先搭结构再填细节。${getScoreText(
+          scores.career
+        )}把复杂任务拆成 2-3 个里程碑，会更容易看见进度，也能降低拖延感。${profile.name}更适合在上午完成关键步骤。${keywordHints.career} ${toneHints.daily || ""}`,
+      },
+      {
+        title: "财富运势",
+        icon: "💰",
+        score: scores.wealth,
+        text: `财务方面适合“稳”字当头，先控支出再谈增长。${getScoreText(
+          scores.wealth
+        )}可以小额试错、避免冲动消费，让现金流更安心。${profile.facts.element}属性更适合“慢慢攒”的方式。${keywordHints.wealth} ${toneHints.daily || ""}`,
+      },
+      {
+        title: "爱情运势",
+        icon: "💗",
+        score: scores.love,
+        text: `情感互动更需要清晰表达与及时回应。${getScoreText(
+          scores.love
+        )}单身适合先建立轻松互动，再推进深入了解；有伴则可通过小仪式感强化连结。${zodiacFlavor.love} ${keywordHints.love} ${toneHints.love || ""}`,
+      },
+      {
+        title: "健康运势",
+        icon: "🍃",
+        score: scores.health,
+        text: `身体状态以“${profile.facts.element}”的节奏为宜，稳定比强度更重要。${getScoreText(
+          scores.health
+        )}建议优先保证睡眠与补水，适度拉伸或轻运动更能恢复精力。${profile.name}今天更适合做低强度恢复。${keywordHints.health} ${toneHints.daily || ""}`,
+      },
+    ],
+    weekly: [
+      {
+        title: "本周主题",
+        icon: "🗓️",
+        score: overall,
+        text: `${profile.name}本周主线更偏${overall >= 4 ? "推进" : "稳住"}，适合以“阶段性成果”做节奏锚点。${getScoreText(
+          overall
+        )}先完成一件能带来确定性的任务，会显著提升后续动力。${zodiacFlavor.weekly} ${keywordHints.theme || ""} ${
+          personalHint ? ` ${personalHint}` : ""
+        } ${toneHints.weekly || ""}`,
+      },
+      {
+        title: "事业节奏",
+        icon: "🧭",
+        score: scores.career,
+        text: `事业学业适合拉长时间维度安排，先做结构再做细节。${getScoreText(
+          scores.career
+        )}建议把每周重点控制在 2-3 件，避免被碎片任务稀释注意力。${keywordHints.career} ${toneHints.weekly || ""}`,
+      },
+      {
+        title: "财务规划",
+        icon: "💼",
+        score: scores.wealth,
+        text: `本周更适合做预算梳理与小步试错。${getScoreText(
+          scores.wealth
+        )}可以设置“本周支出上限”，让消费更有边界感。${keywordHints.wealth} ${toneHints.weekly || ""}`,
+      },
+      {
+        title: "关系提示",
+        icon: "🤝",
+        score: scores.love,
+        text: `关系中更需要稳定沟通和持续回应。${getScoreText(
+          scores.love
+        )}把一次坦诚的对话放在轻松场景里，效果更好。${keywordHints.love} ${toneHints.weekly || ""}`,
+      },
+      {
+        title: "身心管理",
+        icon: "🍃",
+        score: scores.health,
+        text: `保持节奏比冲刺更重要，适度休息会提升效率。${getScoreText(
+          scores.health
+        )}建议固定一段“低噪音时间”，让身心真正停下来。${keywordHints.health} ${toneHints.weekly || ""}`,
+      },
+    ],
+    monthly: [
+      {
+        title: "本月重点",
+        icon: "📌",
+        score: overall,
+        text: `${profile.name}本月更强调“${profile.facts.max}”的优势发挥，适合确立阶段目标与关键指标。${getScoreText(
+          overall
+        )}把目标拆成“可验证的小成果”，更容易保持稳定产出。${zodiacFlavor.monthly} ${keywordHints.theme || ""} ${
+          personalHint ? ` ${personalHint}` : ""
+        } ${toneHints.monthly || ""}`,
+      },
+      {
+        title: "事业布局",
+        icon: "🏗️",
+        score: scores.career,
+        text: `适合做长期规划与节奏铺排，把关键节点先锁定。${getScoreText(
+          scores.career
+        )}建议提前完成 1 个可交付成果，建立“可见的进度感”。${keywordHints.career} ${toneHints.monthly || ""}`,
+      },
+      {
+        title: "财务策略",
+        icon: "📊",
+        score: scores.wealth,
+        text: `本月适合优化支出结构或建立储备。${getScoreText(
+          scores.wealth
+        )}把“固定支出/弹性支出”分开，会更容易做调整。${keywordHints.wealth} ${toneHints.monthly || ""}`,
+      },
+      {
+        title: "情感氛围",
+        icon: "💞",
+        score: scores.love,
+        text: `关系更适合营造稳定、安全的互动氛围。${getScoreText(
+          scores.love
+        )}可以约定固定的相处时间，让彼此都有可预期的连接感。${keywordHints.love} ${toneHints.monthly || ""}`,
+      },
+      {
+        title: "健康管理",
+        icon: "🧘",
+        score: scores.health,
+        text: `适合建立可持续的作息与运动节奏。${getScoreText(
+          scores.health
+        )}重点在“规律”，而不是一次性强度。${keywordHints.health} ${toneHints.monthly || ""}`,
+      },
+    ],
+    yearly: [
+      {
+        title: "年度主线",
+        icon: "🌟",
+        score: overall,
+        text: `${profile.name}今年更强调长期主义与积累，适合制定清晰里程碑与阶段复盘点。${getScoreText(
+          overall
+        )}把目标放在“可持续成长”上，会更稳更有收获。${zodiacFlavor.yearly} ${keywordHints.theme || ""} ${
+          personalHint ? ` ${personalHint}` : ""
+        } ${toneHints.yearly || ""}`,
+      },
+      {
+        title: "事业方向",
+        icon: "🚀",
+        score: scores.career,
+        text: `年度事业适合确定赛道与持续深耕，避免频繁切换。${getScoreText(
+          scores.career
+        )}建议建立个人方法论，逐步形成可复用的能力模型。${keywordHints.career} ${toneHints.yearly || ""}`,
+      },
+      {
+        title: "财富策略",
+        icon: "🏦",
+        score: scores.wealth,
+        text: `适合稳健配置与长期规划，控制风险更重要。${getScoreText(
+          scores.wealth
+        )}避免过度分散，先把基础盘打稳。${keywordHints.wealth} ${toneHints.yearly || ""}`,
+      },
+      {
+        title: "关系长期",
+        icon: "💍",
+        score: scores.love,
+        text: `关系更看重长期承诺与价值观一致。${getScoreText(
+          scores.love
+        )}适合建立清晰的沟通规则与共同目标。${keywordHints.love} ${toneHints.yearly || ""}`,
+      },
+      {
+        title: "健康节奏",
+        icon: "🌿",
+        score: scores.health,
+        text: `长期健康更需要规律与耐心投入。${getScoreText(
+          scores.health
+        )}建议把体检/运动计划列入年度清单。${keywordHints.health} ${toneHints.yearly || ""}`,
+      },
+    ],
+    love: [
+      {
+        title: "情感氛围",
+        icon: "💗",
+        score: scores.love,
+        text: `爱情面整体偏${scores.love >= 4 ? "积极" : "平稳"}，把真诚放在首位会更顺利。${getScoreText(
+          scores.love
+        )}在表达感受时避免“拐弯猜测”，越清晰越温柔。${zodiacFlavor.love} ${keywordHints.love} ${
+          personalHint ? ` ${personalHint}` : ""
+        } ${toneHints.love || ""}`,
+      },
+      {
+        title: "单身建议",
+        icon: "✨",
+        score: scores.love,
+        text: `适合在轻松场景主动表达兴趣，保持自然与松弛感。${getScoreText(
+          scores.love
+        )}先从共同话题建立连接，再推进更深入的互动。${keywordHints.love} ${toneHints.love || ""}`,
+      },
+      {
+        title: "有伴建议",
+        icon: "🤍",
+        score: scores.love,
+        text: `更适合共同安排可落实的小计划，增强安全感与信任感。${getScoreText(
+          scores.love
+        )}“把话说清楚、把事做落地”会减少误解。${keywordHints.love} ${toneHints.love || ""}`,
+      },
+      {
+        title: "沟通关键词",
+        icon: "🗣️",
+        score: overall,
+        text: `清晰、回应、共情是关键词，避免含糊或过度猜测。${getScoreText(
+          overall
+        )}把“我需要”与“我感受”区分开表达，更容易被理解。${keywordHints.love} ${toneHints.love || ""}`,
+      },
+      {
+        title: "自我关怀",
+        icon: "🌙",
+        score: scores.health,
+        text: `把情绪照顾好，关系才更稳。适合安排放松与自我修复。${getScoreText(
+          scores.health
+        )}让自己先安定下来，会更容易给出稳定回应。${keywordHints.health} ${toneHints.love || ""}`,
+      },
+    ],
+  };
+
+  const tagMap = {
+    theme: keywordList.theme || [],
+    career: keywordList.career || [],
+    wealth: keywordList.wealth || [],
+    love: keywordList.love || [],
+    health: keywordList.health || [],
+  };
+  const actionTemplates = {
+    theme: {
+      daily: "行动建议：完成一件最关键任务。",
+      weekly: "行动建议：设定一个阶段性成果。",
+      monthly: "行动建议：锁定一个可验证目标。",
+      yearly: "行动建议：设定年度里程碑。",
+      love: "行动建议：主动表达真实需求。",
+    },
+    career: {
+      daily: "行动建议：先做结构再落细节。",
+      weekly: "行动建议：控制每周重点在 2-3 件。",
+      monthly: "行动建议：提前交付一个可见成果。",
+      yearly: "行动建议：建立可复用的方法论。",
+      love: "行动建议：在相处中保持明确回应。",
+    },
+    wealth: {
+      daily: "行动建议：记录支出并设定上限。",
+      weekly: "行动建议：做一次预算复盘。",
+      monthly: "行动建议：调整固定/弹性支出比例。",
+      yearly: "行动建议：建立长期储备与风险控制。",
+      love: "行动建议：用小投入制造仪式感。",
+    },
+    love: {
+      daily: "行动建议：用清晰表达减少误解。",
+      weekly: "行动建议：安排一次高质量对话。",
+      monthly: "行动建议：建立固定相处节奏。",
+      yearly: "行动建议：对齐长期价值观与目标。",
+      love: "行动建议：真诚说出期待与边界。",
+    },
+    health: {
+      daily: "行动建议：优先保证睡眠与补水。",
+      weekly: "行动建议：安排一次深度休息。",
+      monthly: "行动建议：形成规律作息与运动。",
+      yearly: "行动建议：把体检/运动列入清单。",
+      love: "行动建议：先稳定情绪再沟通。",
+    },
+  };
+  const riskTemplates = {
+    theme: {
+      daily: "风险提醒：多线并行会稀释成果。",
+      weekly: "风险提醒：节奏过快易疲惫。",
+      monthly: "风险提醒：目标过多会分散能量。",
+      yearly: "风险提醒：频繁切换会削弱积累。",
+      love: "风险提醒：回避沟通会加深误会。",
+    },
+    career: {
+      daily: "风险提醒：被琐事打断节奏。",
+      weekly: "风险提醒：任务过碎导致拖延。",
+      monthly: "风险提醒：不复盘会重复踩坑。",
+      yearly: "风险提醒：方向不稳会消耗动力。",
+      love: "风险提醒：含糊表达引发猜测。",
+    },
+    wealth: {
+      daily: "风险提醒：冲动消费影响现金流。",
+      weekly: "风险提醒：小支出累积失控。",
+      monthly: "风险提醒：大额支出缺乏预案。",
+      yearly: "风险提醒：过度分散降低收益。",
+      love: "风险提醒：把花钱当情绪补偿。",
+    },
+    love: {
+      daily: "风险提醒：过度揣测会耗能。",
+      weekly: "风险提醒：缺少回应造成距离。",
+      monthly: "风险提醒：沟通不对齐容易误解。",
+      yearly: "风险提醒：价值观不一致易反复。",
+      love: "风险提醒：回避冲突会累积压力。",
+    },
+    health: {
+      daily: "风险提醒：熬夜会削弱恢复。",
+      weekly: "风险提醒：压力堆积影响状态。",
+      monthly: "风险提醒：节奏失衡导致疲惫。",
+      yearly: "风险提醒：长期忽视小问题。",
+      love: "风险提醒：情绪过载影响判断。",
+    },
+  };
+  const boostTemplates = {
+    theme: "加分项：保持稳定输出。",
+    career: "加分项：清晰目标与复盘。",
+    wealth: "加分项：小额试错与记录。",
+    love: "加分项：真诚表达与回应。",
+    health: "加分项：规律作息与放松。",
+  };
+  const getSectionKey = (title) => {
+    if (title.includes("事业") || title.includes("学业") || title.includes("方向")) {
+      return "career";
+    }
+    if (title.includes("财")) {
+      return "wealth";
+    }
+    if (title.includes("爱") || title.includes("关系") || title.includes("沟通")) {
+      return "love";
+    }
+    if (title.includes("健康") || title.includes("身心")) {
+      return "health";
+    }
+    return "theme";
+  };
+  const enhanceDetails = (details) =>
+    details.map((item) => {
+      const sectionKey = getSectionKey(item.title);
+      const tags = tagMap[sectionKey] || [];
+      const action =
+        item.action || actionTemplates[sectionKey][tabKey] || actionTemplates.theme[tabKey];
+      const risk =
+        item.risk || riskTemplates[sectionKey][tabKey] || riskTemplates.theme[tabKey];
+      const boost =
+        item.boost ||
+        (tags.length
+          ? `加分项：${tags.join("、")}。`
+          : boostTemplates[sectionKey]);
+      return {
+        ...item,
+        action,
+        risk,
+        boost,
+        tags: item.tags || tags,
+      };
+    });
+
+  const fortune = {
+    quote: tabQuote,
+    overall,
     scores: [
-      { label: "爱情", score: profile.fortune.love },
-      { label: "事业", score: profile.fortune.career },
-      { label: "财运", score: profile.fortune.wealth },
-      { label: "健康", score: profile.fortune.health },
+      { label: "爱情", score: scores.love },
+      { label: "事业", score: scores.career },
+      { label: "财运", score: scores.wealth },
+      { label: "健康", score: scores.health },
     ],
     lucky: [
       { label: "幸运颜色", value: profile.facts.color },
@@ -502,39 +1307,21 @@ function buildFortune(profile) {
     ],
     good: profile.good,
     bad: profile.bad,
-    details: [
-      {
-        title: "综合运势",
-        icon: "⭐",
-        score: profile.fortune.overall,
-        text: `${profile.name}今天整体节奏稳定，保持专注可以看到实质进展。`,
-      },
-      {
-        title: "事业学业",
-        icon: "👑",
-        score: profile.fortune.career,
-        text: "交流协作顺畅，按计划推进会收获明确成果。",
-      },
-      {
-        title: "财富运势",
-        icon: "💰",
-        score: profile.fortune.wealth,
-        text: "收支保持平衡，适合做长期规划与复盘。",
-      },
-      {
-        title: "爱情运势",
-        icon: "💗",
-        score: profile.fortune.love,
-        text: "表达更坦率一些，会获得更积极的回应。",
-      },
-      {
-        title: "健康运势",
-        icon: "🍃",
-        score: profile.fortune.health,
-        text: "注意作息和饮食，适度放松提升状态。",
-      },
-    ],
+    details: enhanceDetails(detailBuilders[tabKey] || detailBuilders.daily),
   };
+  const nextCache = {
+    ...cache,
+    [dateKey]: {
+      ...cachedByDate,
+      [zodiacId]: {
+        ...cachedByZodiac,
+        [tabKey]: fortune,
+      },
+    },
+  };
+  wx.setStorageSync(FORTUNE_CACHE_KEY, nextCache);
+
+  return fortune;
 }
 
 Page({
@@ -559,13 +1346,36 @@ Page({
       details: [],
     },
     starIndexes: STAR_INDEXES,
+    calendarTabs: [
+      { key: "daily", label: "日运" },
+      { key: "weekly", label: "周运" },
+      { key: "monthly", label: "月运" },
+      { key: "yearly", label: "年运" },
+      { key: "love", label: "爱情" },
+    ],
+    activeCalendarTab: "daily",
+    calendarDisplay: {
+      day: "",
+      month: "",
+    },
+    weekDays: [],
+    selectedDateKey: "",
+    userProfile: null,
   },
 
   onLoad(options) {
     const zodiacId = options.id || "aries";
+    const userProfile = wx.getStorageSync("userProfile") || null;
     const profile = ZODIAC_PROFILES[zodiacId] || ZODIAC_PROFILES.aries;
     const analysisSections = buildAnalysis(profile);
-    const fortune = buildFortune(profile);
+    const selectedDateKey = getTodayKey();
+    const fortune = buildFortune(
+      profile,
+      zodiacId,
+      this.data.activeCalendarTab,
+      selectedDateKey,
+      userProfile
+    );
 
     this.setData({
       zodiacId,
@@ -586,12 +1396,120 @@ Page({
       traits: profile.traits,
       analysisSections,
       fortune,
+      calendarDisplay: this.getCalendarDisplay(selectedDateKey),
+      weekDays: this.getWeekDays(selectedDateKey),
+      selectedDateKey,
+      userProfile,
     });
   },
 
   onNavReady(e) {
     this.setData({
       navBarHeight: e.detail.navBarHeight || 0,
+    });
+  },
+
+  getCalendarDisplay(dateKey) {
+    const now = dateKey ? new Date(dateKey) : new Date();
+    return {
+      day: String(now.getDate()).padStart(2, "0"),
+      month: String(now.getMonth() + 1).padStart(2, "0"),
+    };
+  },
+
+  getWeekDays(selectedDateKey) {
+    const now = new Date();
+    const dayIndex = now.getDay();
+    const startOfWeek = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - dayIndex
+    );
+    const labels = ["日", "一", "二", "三", "四", "五", "六"];
+    const weekDays = [];
+
+    for (let i = 0; i < 7; i += 1) {
+      const date = new Date(
+        startOfWeek.getFullYear(),
+        startOfWeek.getMonth(),
+        startOfWeek.getDate() + i
+      );
+      const isToday =
+        date.getFullYear() === now.getFullYear() &&
+        date.getMonth() === now.getMonth() &&
+        date.getDate() === now.getDate();
+      const dateKey = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+      weekDays.push({
+        label: labels[i],
+        date: String(date.getDate()).padStart(2, "0"),
+        isToday,
+        dateKey,
+        isSelected: selectedDateKey === dateKey,
+      });
+    }
+
+    return weekDays;
+  },
+
+  getDateKeyForTab(tabKey, selectedDateKey) {
+    const baseDate = selectedDateKey
+      ? new Date(selectedDateKey)
+      : new Date();
+    if (tabKey === "weekly") {
+      return getWeekKey(baseDate);
+    }
+    if (tabKey === "monthly") {
+      return getMonthKey(baseDate);
+    }
+    if (tabKey === "yearly") {
+      return getYearKey(baseDate);
+    }
+    if (tabKey === "love") {
+      return getTodayKey();
+    }
+    return selectedDateKey || getTodayKey();
+  },
+
+  onCalendarTabChange(e) {
+    const next = e.currentTarget.dataset.key;
+    if (!next || next === this.data.activeCalendarTab) {
+      return;
+    }
+    const dateKey = this.getDateKeyForTab(next, this.data.selectedDateKey);
+    const profile = ZODIAC_PROFILES[this.data.zodiacId] || ZODIAC_PROFILES.aries;
+    const fortune = buildFortune(
+      profile,
+      this.data.zodiacId,
+      next,
+      dateKey,
+      this.data.userProfile
+    );
+    this.setData({ activeCalendarTab: next, fortune });
+  },
+
+  onCalendarDayTap(e) {
+    const selectedDateKey = e.currentTarget.dataset.date;
+    if (!selectedDateKey || selectedDateKey === this.data.selectedDateKey) {
+      return;
+    }
+    const tabKey = this.data.activeCalendarTab;
+    const dateKey = this.getDateKeyForTab(tabKey, selectedDateKey);
+    const profile = ZODIAC_PROFILES[this.data.zodiacId] || ZODIAC_PROFILES.aries;
+    const fortune = buildFortune(
+      profile,
+      this.data.zodiacId,
+      tabKey,
+      dateKey,
+      this.data.userProfile
+    );
+    this.setData({
+      selectedDateKey,
+      weekDays: this.getWeekDays(selectedDateKey),
+      calendarDisplay: this.getCalendarDisplay(selectedDateKey),
+      fortune,
     });
   },
 });

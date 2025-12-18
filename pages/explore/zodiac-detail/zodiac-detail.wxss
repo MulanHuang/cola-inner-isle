@@ -151,79 +151,224 @@
 }
 
 .fortune-quote {
-  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
   color: #6c6c6c;
   text-align: center;
-  margin-bottom: 24rpx;
-}
-
-.fortune-summary {
-  background: #fff4f4;
-  border-radius: 20rpx;
-  padding: 24rpx;
   margin-bottom: 20rpx;
 }
 
-.fortune-score {
+.quote-mark {
+  font-size: 46rpx;
+  color: #bdbdbd;
+  font-weight: 600;
+}
+
+.quote-text {
+  font-size: 30rpx;
+  color: #4f4f4f;
+  font-weight: 600;
+}
+
+.fortune-calendar {
+  margin-bottom: 24rpx;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18rpx;
+  padding-bottom: 14rpx;
+  border-bottom: 1rpx solid #eeeeee;
+}
+
+.calendar-date {
   display: flex;
   align-items: baseline;
-  gap: 12rpx;
-  margin-bottom: 12rpx;
+  gap: 6rpx;
+}
+
+.calendar-date-day {
+  font-size: 46rpx;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.calendar-date-month {
+  font-size: 24rpx;
+  color: #9d9d9d;
+}
+
+.calendar-tabs {
+  display: flex;
+  gap: 22rpx;
+}
+
+.calendar-tab {
+  font-size: 24rpx;
+  color: #9a9a9a;
+  position: relative;
+  padding-bottom: 8rpx;
+}
+
+.calendar-tab.active {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.calendar-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 26rpx;
+  height: 6rpx;
+  border-radius: 999rpx;
+  background: #ff6b6b;
+}
+
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10rpx;
+}
+
+.calendar-weekday {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.calendar-weekday-label {
+  font-size: 22rpx;
+  color: #b6b6b6;
+}
+
+.calendar-weekday-label.is-today {
+  color: #4f4f4f;
+  font-weight: 600;
+}
+
+.calendar-weekday-date {
+  width: 54rpx;
+  height: 54rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  color: #b8b8b8;
+  background: #f2f2f2;
+}
+
+.calendar-weekday-date.is-today {
+  background: #ff6b6b;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.calendar-weekday-date.is-selected {
+  border: 2rpx solid #ff6b6b;
+  color: #ff6b6b;
+  background: #ffffff;
+  font-weight: 600;
+}
+
+.calendar-weekday-date.is-selected.is-today {
+  border: none;
+  background: #ff6b6b;
+  color: #ffffff;
+}
+
+.calendar-weekday-today {
+  font-size: 22rpx;
+}
+
+.fortune-summary {
+  background: #fff1f1;
+  border-radius: 20rpx;
+  padding: 28rpx 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.fortune-summary-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.fortune-summary-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10rpx;
+  min-width: 220rpx;
 }
 
 .fortune-score-value {
-  font-size: 56rpx;
+  font-size: 76rpx;
   font-weight: 700;
-  color: #f26565;
-}
-
-.fortune-score-label {
-  font-size: 26rpx;
-  color: #f26565;
+  color: #f46b6b;
+  line-height: 1;
 }
 
 .fortune-stars {
-  margin-bottom: 16rpx;
+  display: flex;
+  gap: 6rpx;
 }
 
 .star {
-  font-size: 28rpx;
-  color: #e0e0e0;
-  margin-right: 6rpx;
+  font-size: 30rpx;
+  color: #f2dede;
 }
 
 .star.on {
-  color: #f7b457;
+  color: #f6b24f;
 }
 
-.fortune-bars {
+.fortune-score-label {
+  font-size: 24rpx;
+  color: #f46b6b;
+  background: #ffe5e5;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+}
+
+.fortune-summary-right {
+  flex: 1;
   display: grid;
-  gap: 12rpx;
+  gap: 14rpx;
 }
 
 .fortune-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 72rpx 1fr;
   align-items: center;
   gap: 12rpx;
 }
 
 .fortune-bar-label {
-  width: 84rpx;
   font-size: 24rpx;
-  color: #8a8a8a;
+  color: #f46b6b;
+  text-align: left;
 }
 
 .fortune-bar-track {
-  flex: 1;
-  height: 12rpx;
-  background: #f1d9d9;
+  height: 14rpx;
+  background: #f7dede;
   border-radius: 999rpx;
   overflow: hidden;
 }
 
 .fortune-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ff8b8b, #f5b15d);
+  background: linear-gradient(90deg, #ff8b8b, #f3a464);
   border-radius: 999rpx;
 }
 
@@ -346,4 +491,46 @@
   font-size: 25rpx;
   color: #626262;
   line-height: 1.7;
+}
+
+.fortune-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-bottom: 12rpx;
+}
+
+.fortune-tag {
+  font-size: 20rpx;
+  color: #f46b6b;
+  background: #fff1f1;
+  padding: 6rpx 12rpx;
+  border-radius: 999rpx;
+}
+
+.fortune-detail-advice {
+  display: grid;
+  gap: 10rpx;
+  margin-top: 12rpx;
+}
+
+.advice-item {
+  font-size: 24rpx;
+  color: #6a6a6a;
+  line-height: 1.6;
+  background: #fafafa;
+  padding: 10rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.advice-action {
+  border-left: 6rpx solid #7bc27e;
+}
+
+.advice-risk {
+  border-left: 6rpx solid #f07272;
+}
+
+.advice-boost {
+  border-left: 6rpx solid #f7b457;
 }

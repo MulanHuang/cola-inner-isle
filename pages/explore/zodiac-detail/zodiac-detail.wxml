@@ -43,30 +43,76 @@
 
   <view class="section-card">
     <view class="section-title">今日运势</view>
-    <view class="fortune-quote">“{{fortune.quote}}”</view>
-    <view class="fortune-summary">
-      <view class="fortune-score">
-        <view class="fortune-score-value">{{fortune.overall}}</view>
-        <view class="fortune-score-label">综合运势</view>
+    <view class="fortune-quote">
+      <text class="quote-mark">“</text>
+      <text class="quote-text">{{fortune.quote}}</text>
+      <text class="quote-mark">”</text>
+    </view>
+    <view class="fortune-calendar">
+      <view class="calendar-header">
+        <view class="calendar-date">
+          <text class="calendar-date-day">{{calendarDisplay.day}}</text>
+          <text class="calendar-date-month">/{{calendarDisplay.month}}月</text>
+        </view>
+        <view class="calendar-tabs">
+          <view
+            wx:for="{{calendarTabs}}"
+            wx:key="key"
+            class="calendar-tab {{activeCalendarTab === item.key ? 'active' : ''}}"
+            data-key="{{item.key}}"
+            bindtap="onCalendarTabChange"
+          >
+            {{item.label}}
+          </view>
+        </view>
       </view>
-      <view class="fortune-stars">
-        <text
-          wx:for="{{starIndexes}}"
-          wx:for-item="star"
-          wx:key="*this"
-          class="star {{star < fortune.overall ? 'on' : ''}}"
+      <view class="calendar-week">
+        <view
+          wx:for="{{weekDays}}"
+          wx:key="label"
+          class="calendar-weekday"
+          data-date="{{item.dateKey}}"
+          bindtap="onCalendarDayTap"
         >
-          ★
-        </text>
+          <view
+            class="calendar-weekday-label {{item.isToday ? 'is-today' : ''}}"
+          >
+            {{item.label}}
+          </view>
+          <view
+            class="calendar-weekday-date {{item.isToday ? 'is-today' : ''}} {{item.isSelected ? 'is-selected' : ''}}"
+          >
+            <text wx:if="{{item.isToday}}" class="calendar-weekday-today">今</text>
+            <text wx:else>{{item.date}}</text>
+          </view>
+        </view>
       </view>
-      <view class="fortune-bars">
-        <view wx:for="{{fortune.scores}}" wx:key="label" class="fortune-bar">
-          <view class="fortune-bar-label">{{item.label}}</view>
-          <view class="fortune-bar-track">
-            <view
-              class="fortune-bar-fill"
-              style="width: {{item.score * 20}}%;"
-            ></view>
+    </view>
+    <view class="fortune-summary">
+      <view class="fortune-summary-inner">
+        <view class="fortune-summary-left">
+          <view class="fortune-score-value">{{fortune.overall}}</view>
+          <view class="fortune-stars">
+            <text
+              wx:for="{{starIndexes}}"
+              wx:for-item="star"
+              wx:key="*this"
+              class="star {{star < fortune.overall ? 'on' : ''}}"
+            >
+              ★
+            </text>
+          </view>
+          <view class="fortune-score-label">综合运势</view>
+        </view>
+        <view class="fortune-summary-right">
+          <view wx:for="{{fortune.scores}}" wx:key="label" class="fortune-bar">
+            <view class="fortune-bar-label">{{item.label}}</view>
+            <view class="fortune-bar-track">
+              <view
+                class="fortune-bar-fill"
+                style="width: {{item.score * 20}}%;"
+              ></view>
+            </view>
           </view>
         </view>
       </view>
@@ -106,7 +152,20 @@
             </text>
           </view>
         </view>
+        <view
+          wx:if="{{item.tags && item.tags.length}}"
+          class="fortune-detail-tags"
+        >
+          <text wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this" class="fortune-tag">
+            {{tag}}
+          </text>
+        </view>
         <view class="fortune-detail-text">{{item.text}}</view>
+        <view class="fortune-detail-advice">
+          <view class="advice-item advice-action">{{item.action}}</view>
+          <view class="advice-item advice-risk">{{item.risk}}</view>
+          <view class="advice-item advice-boost">{{item.boost}}</view>
+        </view>
       </view>
     </view>
   </view>
