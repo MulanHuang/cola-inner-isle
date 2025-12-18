@@ -223,15 +223,11 @@ Page({
 
   onZodiacTap(e) {
     const zodiacId = e.currentTarget.dataset.id;
-    if (!zodiacId || !this.data.zodiacInfo[zodiacId]) {
+    if (!zodiacId) {
       return;
     }
-
-    const info = this.data.zodiacInfo[zodiacId];
-    wx.showModal({
-      title: info.name,
-      content: `${info.date}\n${info.desc}`,
-      showCancel: false,
+    wx.navigateTo({
+      url: `/pages/explore/zodiac-detail/zodiac-detail?id=${zodiacId}`,
     });
   },
 

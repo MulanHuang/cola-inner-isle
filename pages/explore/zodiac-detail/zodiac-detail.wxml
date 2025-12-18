@@ -1,0 +1,113 @@
+<!-- pages/explore/zodiac-detail/zodiac-detail.wxml -->
+<brand-navbar title="星座查询" showBack="{{true}}" bind:ready="onNavReady" />
+
+<view class="container zodiac-detail-container" style="padding-top: {{navBarHeight}}px;">
+  <view class="hero-card">
+    <view class="hero-icon">{{zodiac.icon}}</view>
+    <view class="hero-name">{{zodiac.name}}</view>
+    <view class="hero-subtitle">太阳星座</view>
+    <view class="hero-date">{{zodiac.date}}</view>
+  </view>
+
+  <view class="fact-card">
+    <view class="fact-grid">
+      <view wx:for="{{profileFacts}}" wx:key="label" class="fact-item">
+        <view class="fact-label">{{item.label}}</view>
+        <view class="fact-value">{{item.value}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="trait-card">
+    <view class="trait-row">
+      <view class="trait-tag trait-tag--good">表现</view>
+      <view class="trait-text">{{traits.expression}}</view>
+    </view>
+    <view class="trait-row">
+      <view class="trait-tag trait-tag--strong">优点</view>
+      <view class="trait-text">{{traits.strengths}}</view>
+    </view>
+    <view class="trait-row">
+      <view class="trait-tag trait-tag--weak">缺点</view>
+      <view class="trait-text">{{traits.weaknesses}}</view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">星座分析</view>
+    <view wx:for="{{analysisSections}}" wx:key="title" class="analysis-block">
+      <view class="analysis-title">{{item.title}}：</view>
+      <view class="analysis-text">{{item.content}}</view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">今日运势</view>
+    <view class="fortune-quote">“{{fortune.quote}}”</view>
+    <view class="fortune-summary">
+      <view class="fortune-score">
+        <view class="fortune-score-value">{{fortune.overall}}</view>
+        <view class="fortune-score-label">综合运势</view>
+      </view>
+      <view class="fortune-stars">
+        <text
+          wx:for="{{starIndexes}}"
+          wx:for-item="star"
+          wx:key="*this"
+          class="star {{star < fortune.overall ? 'on' : ''}}"
+        >
+          ★
+        </text>
+      </view>
+      <view class="fortune-bars">
+        <view wx:for="{{fortune.scores}}" wx:key="label" class="fortune-bar">
+          <view class="fortune-bar-label">{{item.label}}</view>
+          <view class="fortune-bar-track">
+            <view
+              class="fortune-bar-fill"
+              style="width: {{item.score * 20}}%;"
+            ></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="fortune-cards">
+      <view wx:for="{{fortune.lucky}}" wx:key="label" class="fortune-card">
+        <view class="fortune-card-label">{{item.label}}</view>
+        <view class="fortune-card-value">{{item.value}}</view>
+      </view>
+    </view>
+
+    <view class="fortune-actions">
+      <view class="fortune-action fortune-action--good">
+        <view class="fortune-action-label">宜</view>
+        <view class="fortune-action-text">{{fortune.good}}</view>
+      </view>
+      <view class="fortune-action fortune-action--bad">
+        <view class="fortune-action-label">忌</view>
+        <view class="fortune-action-text">{{fortune.bad}}</view>
+      </view>
+    </view>
+
+    <view class="fortune-detail-list">
+      <view wx:for="{{fortune.details}}" wx:key="title" class="fortune-detail">
+        <view class="fortune-detail-header">
+          <view class="fortune-detail-icon">{{item.icon}}</view>
+          <view class="fortune-detail-title">{{item.title}}</view>
+          <view class="fortune-detail-stars">
+            <text
+              wx:for="{{starIndexes}}"
+              wx:for-item="star"
+              wx:key="*this"
+              class="star {{star < item.score ? 'on' : ''}}"
+            >
+              ★
+            </text>
+          </view>
+        </view>
+        <view class="fortune-detail-text">{{item.text}}</view>
+      </view>
+    </view>
+  </view>
+</view>

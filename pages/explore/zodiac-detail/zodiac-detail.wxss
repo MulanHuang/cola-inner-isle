@@ -1,0 +1,349 @@
+/* pages/explore/zodiac-detail/zodiac-detail.wxss */
+.zodiac-detail-container {
+  padding: 20rpx 20rpx 60rpx;
+  background: linear-gradient(180deg, #e9eeff 0%, #f7f7fb 40%, #f7f7fb 100%);
+  min-height: 100vh;
+}
+
+.hero-card {
+  background: linear-gradient(160deg, #6d7cff 0%, #5665e5 100%);
+  border-radius: 24rpx;
+  padding: 40rpx 24rpx;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 12rpx 24rpx rgba(82, 96, 194, 0.25);
+  margin-bottom: 24rpx;
+}
+
+.hero-icon {
+  font-size: 84rpx;
+  margin-bottom: 12rpx;
+}
+
+.hero-name {
+  font-size: 42rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.hero-subtitle {
+  font-size: 24rpx;
+  opacity: 0.9;
+  margin-bottom: 8rpx;
+}
+
+.hero-date {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.fact-card {
+  background: #5867e6;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  color: #ffffff;
+  margin-bottom: 24rpx;
+}
+
+.fact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx 24rpx;
+}
+
+.fact-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.fact-label {
+  font-size: 22rpx;
+  opacity: 0.75;
+}
+
+.fact-value {
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.trait-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(35, 39, 77, 0.08);
+  margin-bottom: 24rpx;
+}
+
+.trait-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.trait-row:last-child {
+  margin-bottom: 0;
+}
+
+.trait-tag {
+  min-width: 84rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  text-align: center;
+  color: #ffffff;
+}
+
+.trait-tag--good {
+  background: #7bc27e;
+}
+
+.trait-tag--strong {
+  background: #f29ba5;
+}
+
+.trait-tag--weak {
+  background: #83a9f5;
+}
+
+.trait-text {
+  font-size: 26rpx;
+  color: #4c4c4c;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.section-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(35, 39, 77, 0.08);
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #3a3a3a;
+  margin-bottom: 20rpx;
+}
+
+.analysis-block {
+  margin-bottom: 18rpx;
+}
+
+.analysis-block:last-child {
+  margin-bottom: 0;
+}
+
+.analysis-title {
+  font-size: 26rpx;
+  color: #5a6ff2;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.analysis-text {
+  font-size: 26rpx;
+  color: #5a5a5a;
+  line-height: 1.7;
+}
+
+.fortune-quote {
+  font-size: 26rpx;
+  color: #6c6c6c;
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.fortune-summary {
+  background: #fff4f4;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.fortune-score {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.fortune-score-value {
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #f26565;
+}
+
+.fortune-score-label {
+  font-size: 26rpx;
+  color: #f26565;
+}
+
+.fortune-stars {
+  margin-bottom: 16rpx;
+}
+
+.star {
+  font-size: 28rpx;
+  color: #e0e0e0;
+  margin-right: 6rpx;
+}
+
+.star.on {
+  color: #f7b457;
+}
+
+.fortune-bars {
+  display: grid;
+  gap: 12rpx;
+}
+
+.fortune-bar {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.fortune-bar-label {
+  width: 84rpx;
+  font-size: 24rpx;
+  color: #8a8a8a;
+}
+
+.fortune-bar-track {
+  flex: 1;
+  height: 12rpx;
+  background: #f1d9d9;
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+
+.fortune-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff8b8b, #f5b15d);
+  border-radius: 999rpx;
+}
+
+.fortune-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.fortune-card {
+  background: #f3f6ff;
+  border-radius: 18rpx;
+  padding: 16rpx;
+  text-align: center;
+}
+
+.fortune-card-label {
+  font-size: 22rpx;
+  color: #7a7a7a;
+  margin-bottom: 8rpx;
+}
+
+.fortune-card-value {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #5565e6;
+}
+
+.fortune-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.fortune-action {
+  border-radius: 18rpx;
+  padding: 18rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.fortune-action--good {
+  background: #ecf9f0;
+}
+
+.fortune-action--bad {
+  background: #fff0f0;
+}
+
+.fortune-action-label {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.fortune-action--good .fortune-action-label {
+  background: #63c08d;
+}
+
+.fortune-action--bad .fortune-action-label {
+  background: #f07272;
+}
+
+.fortune-action-text {
+  font-size: 24rpx;
+  color: #4f4f4f;
+}
+
+.fortune-detail-list {
+  display: grid;
+  gap: 20rpx;
+}
+
+.fortune-detail {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  border: 1rpx solid #f0f0f5;
+}
+
+.fortune-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.fortune-detail-icon {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 18rpx;
+  background: #f3f6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.fortune-detail-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #3f3f3f;
+  flex: 1;
+}
+
+.fortune-detail-stars {
+  display: flex;
+}
+
+.fortune-detail-text {
+  font-size: 25rpx;
+  color: #626262;
+  line-height: 1.7;
+}

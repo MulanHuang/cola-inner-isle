@@ -11,6 +11,7 @@
     "pages/explore/explore",
     "pages/explore/mbti/mbti",
     "pages/explore/zodiac/zodiac",
+    "pages/explore/zodiac-detail/zodiac-detail",
     "pages/explore/innerchild/innerchild",
     "pages/mbti-test/mbti-test",
     "pages/mbti-result/mbti-result",

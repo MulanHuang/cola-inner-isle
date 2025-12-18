@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarBackgroundColor": "#F7F7FB",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#F7F7FB",
+  "usingComponents": {
+    "brand-navbar": "/components/brand-navbar/brand-navbar"
+  }
+}
