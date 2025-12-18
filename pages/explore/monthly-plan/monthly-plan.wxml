@@ -111,14 +111,14 @@
     <!-- 🧭 AI 成长教练模块（必须在复盘模块下方） -->
     <view class="section-block ai-coach-section">
       <view class="ai-coach-header">
-        <text class="ai-coach-title">🧭 和成长教练一起看这个月</text>
+        <text class="ai-coach-title">🧭 和成长教练一起复盘本月</text>
       </view>
       <view class="ai-coach-desc">
         <text class="ai-coach-desc-line">当时间拉长，</text>
         <text class="ai-coach-desc-line">有些模式会慢慢浮现。</text>
       </view>
       <button class="ai-coach-btn" bindtap="triggerMonthlyAICoach" disabled="{{aiCoachLoading}}">
-        <text wx:if="{{!aiCoachLoading}}">换一个角度看看这个月</text>
+        <text wx:if="{{!aiCoachLoading}}">复盘本月</text>
         <text wx:else>正在整理思绪...</text>
       </button>
       <view class="ai-coach-tip">AI生成，仅供参考</view>

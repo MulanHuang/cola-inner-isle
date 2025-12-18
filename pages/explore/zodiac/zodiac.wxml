@@ -43,10 +43,19 @@
   <view class="zodiac-list">
     <view class="section-title">十二星座</view>
     <view class="zodiac-grid">
-      <view wx:for="{{zodiacList}}" wx:key="id" class="zodiac-item">
+      <view
+        wx:for="{{zodiacList}}"
+        wx:key="id"
+        class="zodiac-item {{currentZodiac === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onZodiacTap"
+      >
         <view class="zodiac-item-icon">{{item.icon}}</view>
         <view class="zodiac-item-name">{{item.name}}</view>
         <view class="zodiac-item-date">{{item.date}}</view>
+        <view wx:if="{{currentZodiac === item.id}}" class="zodiac-item-tag">
+          我的星座
+        </view>
       </view>
     </view>
   </view>

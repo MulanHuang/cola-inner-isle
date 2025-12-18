@@ -171,14 +171,14 @@
         <!-- 🌱 AI 成长教练模块（必须在复盘模块下方） -->
         <view class="ai-coach-section">
           <view class="ai-coach-header">
-            <text class="ai-coach-title">🌱 和成长教练一起回顾这一周</text>
+            <text class="ai-coach-title">🌱 和成长教练一起复盘本周</text>
           </view>
           <view class="ai-coach-desc">
             <text class="ai-coach-desc-line">不是对错判断，</text>
             <text class="ai-coach-desc-line">只是换一个角度看看你正在如何生活。</text>
           </view>
           <button class="ai-coach-btn" bindtap="triggerWeeklyAICoach" disabled="{{aiCoachLoading}}">
-            <text wx:if="{{!aiCoachLoading}}">换一个视角看看这一周</text>
+            <text wx:if="{{!aiCoachLoading}}">复盘本周</text>
             <text wx:else>正在整理思绪...</text>
           </button>
           <view class="ai-coach-tip">AI生成，仅供参考</view>

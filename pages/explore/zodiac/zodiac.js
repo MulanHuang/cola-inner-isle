@@ -98,7 +98,10 @@ Page({
   },
 
   onLoad() {
-    this.loadBirthday();
+    const hasProfileBirthday = this.applyBirthdayFromProfile();
+    if (!hasProfileBirthday) {
+      this.loadBirthdayFromCloud();
+    }
     this.checkProfileTip();
   },
 
@@ -130,8 +133,27 @@ Page({
     this.setData({ showProfileTip: false });
   },
 
-  // 加载生日
-  async loadBirthday() {
+  applyBirthdayFromProfile() {
+    const profile = wx.getStorageSync("userProfile");
+    if (profile && profile.birthDate) {
+      const birthday = this.normalizeBirthday(profile.birthDate);
+      const zodiac = this.calculateZodiac(profile.birthDate);
+      this.setData({
+        birthday,
+        currentZodiac: zodiac,
+      });
+      return true;
+    }
+
+    return false;
+  },
+
+  normalizeBirthday(birthday) {
+    return birthday ? birthday.replace(/\//g, "-") : "";
+  },
+
+  // 加载生日（云端）
+  async loadBirthdayFromCloud() {
     try {
       const res = await db
         .collection("users")
@@ -142,8 +164,8 @@ Page({
         .get();
 
       if (res.data && res.data.length > 0 && res.data[0].birthday) {
-        const birthday = res.data[0].birthday;
-        const zodiac = this.calculateZodiac(birthday);
+        const birthday = this.normalizeBirthday(res.data[0].birthday);
+        const zodiac = this.calculateZodiac(res.data[0].birthday);
 
         this.setData({
           birthday,
@@ -197,6 +219,20 @@ Page({
       return "pisces";
 
     return "";
+  },
+
+  onZodiacTap(e) {
+    const zodiacId = e.currentTarget.dataset.id;
+    if (!zodiacId || !this.data.zodiacInfo[zodiacId]) {
+      return;
+    }
+
+    const info = this.data.zodiacInfo[zodiacId];
+    wx.showModal({
+      title: info.name,
+      content: `${info.date}\n${info.desc}`,
+      showCancel: false,
+    });
   },
 
   // 保存生日

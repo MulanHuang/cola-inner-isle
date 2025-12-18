@@ -109,14 +109,26 @@ Page({
 
       if (res.data && res.data.length > 0) {
         // 更新
-        await db
-          .collection("users")
-          .doc(res.data[0]._id)
-          .update({
+        try {
+          await db
+            .collection("users")
+            .doc(res.data[0]._id)
+            .update({
+              data: {
+                mbti: this.data.selectedMBTI,
+                updateTime: db.serverDate(),
+              },
+            });
+        } catch (updateErr) {
+          // 更新失败（可能是权限问题），尝试新增
+          console.warn("更新失败，尝试新增", updateErr);
+          await db.collection("users").add({
             data: {
               mbti: this.data.selectedMBTI,
+              createTime: db.serverDate(),
             },
           });
+        }
       } else {
         // 新增
         await db.collection("users").add({

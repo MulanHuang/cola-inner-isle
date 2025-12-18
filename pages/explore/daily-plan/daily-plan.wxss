@@ -1,6 +1,6 @@
 /* pages/explore/daily-plan/daily-plan.wxss */
 .daily-plan-container {
-  padding: 0 16rpx 200rpx;
+  padding: 0 16rpx 320rpx;
   padding-top: calc(env(safe-area-inset-top, 44px) + 8rpx);
   background: linear-gradient(180deg, #ede6de 0%, #e6dcd1 60%, #e0d3c7 100%);
   min-height: 100vh;
@@ -463,8 +463,10 @@
 .perspective-links {
   display: flex;
   gap: 16rpx;
-  margin-top: 24rpx;
-  padding: 0 8rpx;
+  margin: 24rpx 8rpx 0;
+  padding: 0;
+  position: relative;
+  z-index: 10;
 }
 
 .perspective-item {
@@ -472,22 +474,34 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20rpx 24rpx;
-  background: rgba(200, 184, 160, 0.1);
-  border-radius: 12rpx;
-  border: 1rpx dashed #c8b8a0;
+  padding: 24rpx 28rpx;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(250, 245, 241, 0.95)
+  );
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(200, 168, 184, 0.3);
+  box-shadow: 0 4rpx 16rpx rgba(90, 70, 80, 0.1);
 }
 
 .perspective-label {
-  font-size: 24rpx;
-  color: #6a5a4a;
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #5a4a5a;
 }
 
 .perspective-arrow {
-  font-size: 26rpx;
-  color: #a09080;
+  font-size: 32rpx;
+  color: #a08090;
+  font-weight: bold;
 }
 
 .perspective-item:active {
-  background: rgba(200, 184, 160, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(240, 230, 235, 0.95),
+    rgba(235, 225, 230, 0.98)
+  );
+  transform: scale(0.98);
 }

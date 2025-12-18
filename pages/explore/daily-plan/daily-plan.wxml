@@ -176,16 +176,17 @@
       </view>
     </view>
 
-    <!-- 视角切换入口（联动功能） -->
-    <view class="perspective-links">
-      <view class="perspective-item" bindtap="goToWeekPlan">
-        <text class="perspective-label">看看这一周</text>
-        <text class="perspective-arrow">›</text>
-      </view>
-      <view class="perspective-item" bindtap="goToMonthPlan">
-        <text class="perspective-label">看看这个月</text>
-        <text class="perspective-arrow">›</text>
-      </view>
+  </view>
+
+  <!-- 视角切换入口（联动功能）- 移到notebook外面 -->
+  <view class="perspective-links">
+    <view class="perspective-item" bindtap="goToWeekPlan">
+      <text class="perspective-label">看看这一周</text>
+      <text class="perspective-arrow">›</text>
+    </view>
+    <view class="perspective-item" bindtap="goToMonthPlan">
+      <text class="perspective-label">看看这个月</text>
+      <text class="perspective-arrow">›</text>
     </view>
   </view>
 
