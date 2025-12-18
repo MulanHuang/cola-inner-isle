@@ -408,11 +408,11 @@ Page({
     }
   },
 
-  // 跳转到塔罗页面
+  // 跳转到塔罗页面（直接进入抽取流程，不显示历史结果）
   goToTarot() {
     this.triggerTapFeedback();
     wx.navigateTo({
-      url: "/pages/tarot/tarot",
+      url: "/pages/tarot/tarot?reset=1",
     });
   },
 

@@ -45,7 +45,7 @@
   </view>
 
   <!-- 轻量步骤指示 -->
-  <view class="stepper">
+  <view class="stepper stepper-card">
     <view class="step-item {{!selectedImageCard ? 'active' : 'done'}}">
       <view class="step-dot">1</view>
       <view class="step-label">抽卡</view>
@@ -88,12 +88,11 @@
         {{drawing ? '抽取中...' : (mode === 'imageOnly' ? '抽一张OH卡' : '抽一张图卡与字卡')}}
       </button>
 
-      <view class="pre-draw-hint">
-        先抽一张图卡，看看它和你此刻的状态有什么联系。
-      </view>
-
-      <view class="micro-copy">
-        不需要想到「正确答案」，只要对这张卡片的一点点感觉，就已经足够开始了。
+      <view class="hint-card">
+        <view class="pre-draw-hint">
+          先抽一张图卡，看看它和你此刻的状态有什么联系。
+        </view>
+        <view class="micro-copy">先感受，再记录，不必急着解释。</view>
       </view>
 
     </view>
@@ -160,10 +159,17 @@
 
     <!-- 用户输入区 -->
     <view class="input-section">
+      <view class="input-header">
+        <view class="input-title">写下你的感受</view>
+        <view class="input-subtitle">不需要完整答案，抓住第一反应即可。</view>
+      </view>
+
+      <view class="input-guide-card">
       <view class="input-guide input-guide-merged">
         <view class="guide-line">「关于这张卡，你看到了什么？」</view>
         <view class="guide-line">「你的第一感受是什么？」</view>
         <view class="guide-line">「你现在最想探索的是什么问题？」</view>
+      </view>
       </view>
 
       <view class="input-tags">
@@ -182,7 +188,7 @@
 
       <textarea
         class="user-input {{inputJustShown ? 'just-drawn' : ''}}"
-        placeholder="简单描述下你看到了什么，写下你的第一反应、当下的问题或情绪..."
+        placeholder="记录此刻的所见、所感或所问。"
         value="{{userInput}}"
         bindinput="onInputChange"
         maxlength="500"
@@ -196,6 +202,8 @@
         <view class="input-hint-soft">随手写几个关键词也可以</view>
       </view>
     </view>
+
+    <view class="section-divider"></view>
 
     <!-- 解读按钮 -->
     <view class="action-footer">

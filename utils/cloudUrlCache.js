@@ -101,7 +101,11 @@ async function getTempUrlsWithCache(cloudUrls) {
             time: now,
           };
         } else {
-          console.warn("[cloudUrlCache] ⚠️ 获取失败:", item.fileID, item.status);
+          console.warn(
+            "[cloudUrlCache] ⚠️ 获取失败:",
+            item.fileID,
+            item.status
+          );
         }
       });
 
@@ -127,10 +131,47 @@ async function getTempUrlWithCache(cloudUrl) {
   return urlMap[cloudUrl] || cloudUrl;
 }
 
+/**
+ * 清除指定 URL 的缓存（用于强制刷新）
+ * @param {string|string[]} cloudUrls - 要清除的 cloud:// 路径（单个或数组）
+ */
+function invalidateCache(cloudUrls) {
+  const cache = getCache();
+  const urls = Array.isArray(cloudUrls) ? cloudUrls : [cloudUrls];
+  let cleared = 0;
+
+  urls.forEach((url) => {
+    if (cache[url]) {
+      delete cache[url];
+      cleared++;
+    }
+  });
+
+  if (cleared > 0) {
+    saveCache(cache);
+    console.log("[cloudUrlCache] 🗑️ 已清除缓存:", cleared, "条");
+  }
+
+  return cleared;
+}
+
+/**
+ * 清除所有缓存
+ */
+function clearAllCache() {
+  try {
+    wx.removeStorageSync(CACHE_KEY);
+    console.log("[cloudUrlCache] 🗑️ 已清除全部缓存");
+  } catch (err) {
+    console.warn("[cloudUrlCache] 清除缓存失败:", err.message);
+  }
+}
+
 module.exports = {
   getTempUrlsWithCache,
   getTempUrlWithCache,
   cleanExpiredCache,
+  invalidateCache,
+  clearAllCache,
   CACHE_DURATION,
 };
-

@@ -2,7 +2,7 @@
 <view class="history-container">
   <view class="section-header">
     <view class="title">塔罗历史</view>
-    <view class="subtitle">记录你的问题、解读与行动</view>
+    <view class="subtitle">记录你的问题与解读</view>
   </view>
 
   <view wx:if="{{list.length === 0 && !loading}}" class="empty">
@@ -28,14 +28,6 @@
           </view>
           <view wx:if="{{item.interpretation}}" class="card-field">
             <text class="label">解读：</text><text class="value" user-select="{{true}}">{{item.interpretation}}</text>
-          </view>
-          <view wx:if="{{item.actionPlans && item.actionPlans.length}}" class="card-field">
-            <text class="label">行动：</text>
-            <view class="value action-list">
-              <view wx:for="{{item.actionPlans}}" wx:key="index" class="action-line">
-                <text class="dot">•</text><text user-select="{{true}}">{{item}}</text>
-              </view>
-            </view>
           </view>
         </view>
       </view>

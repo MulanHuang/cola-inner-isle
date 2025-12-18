@@ -7,10 +7,15 @@
 const db = wx.cloud.database();
 
 // 🚀 云存储临时 URL 智能缓存工具
-const { getTempUrlWithCache } = require("../../utils/cloudUrlCache.js");
+const {
+  getTempUrlWithCache,
+  invalidateCache,
+} = require("../../utils/cloudUrlCache.js");
 
 // 牌堆展示的卡片数量（环形建议 12-14）
-const DECK_LAYER_COUNT = 14;
+const DECK_LAYER_COUNT = 15;
+// 预取的卡牌数量
+const PREFETCH_COUNT = 6;
 
 // 固定的觉察引导问题
 const REFLECTION_QUESTIONS = [
@@ -41,6 +46,11 @@ Page({
     // 固定的觉察引导问题
     reflectionQuestions: REFLECTION_QUESTIONS,
 
+    // 卡牌图片加载状态
+    cardImageStatus: "idle", // idle | loading | loaded | error
+    cardImageSrc: "",
+    cardImageThumbSrc: "",
+
     // 自定义导航栏高度
     statusBarHeight: 0,
     navBarHeight: 0,
@@ -54,6 +64,7 @@ Page({
     this.setNavBarHeight();
     this.resetState();
     this.loadBackCardImage();
+    this.prefetchCards();
   },
 
   onUnload() {
@@ -96,12 +107,14 @@ Page({
         return;
       }
 
-      // 转换 cloud:// 为临时 URL
+      // 转换 cloud:// 为临时 URL（强制刷新，确保获取最新图片）
       if (cloudUrl.startsWith("cloud://")) {
+        // 先清除旧缓存，确保获取最新的临时 URL
+        invalidateCache(cloudUrl);
         const tempUrl = await getTempUrlWithCache(cloudUrl);
         if (tempUrl && tempUrl !== cloudUrl) {
           cloudUrl = tempUrl;
-          console.log("[aroma-card] ✅ 卡背临时URL转换成功");
+          console.log("[aroma-card] ✅ 卡背临时URL转换成功（已强制刷新）");
         }
       }
 
@@ -140,7 +153,85 @@ Page({
       drawing: false,
       cardFlipActive: false,
       cardMessageLines: [],
+      cardImageStatus: "idle",
+      cardImageSrc: "",
+      cardImageThumbSrc: "",
     });
+  },
+
+  isRemoteUrl(url) {
+    return typeof url === "string" && url.startsWith("http");
+  },
+
+  buildThumbUrl(url) {
+    if (!url) return "";
+    if (!this.isRemoteUrl(url)) return url;
+    const param = "imageView2/2/w/480/q/80";
+    return url.includes("?") ? `${url}&${param}` : `${url}?${param}`;
+  },
+
+  getLocalImagePath(url) {
+    return new Promise((resolve) => {
+      if (!url) return resolve("");
+      wx.getImageInfo({
+        src: url,
+        success: (res) => resolve(res.path || ""),
+        fail: () => resolve(""),
+      });
+    });
+  },
+
+  async prefetchCards() {
+    if (this._prefetching) return;
+    this._prefetching = true;
+    if (!this._prefetchPool) {
+      this._prefetchPool = new Map();
+    }
+
+    try {
+      const result = await db
+        .collection("aromatherapyCards")
+        .aggregate()
+        .match({ name: db.command.neq("back") })
+        .sample({ size: PREFETCH_COUNT })
+        .end();
+
+      const cards = result.list || [];
+      await Promise.all(cards.map((card) => this.prefetchCard(card)));
+    } catch (err) {
+      console.warn("[aroma-card] ⚠️ 预取卡牌失败:", err.message);
+    } finally {
+      this._prefetching = false;
+    }
+  },
+
+  async prefetchCard(card) {
+    if (!card || !card.fileId || card.name === "back") return;
+    try {
+      let fullUrl = card.fileId;
+
+      if (fullUrl.startsWith("cloud://")) {
+        const tempUrl = await getTempUrlWithCache(fullUrl);
+        if (tempUrl) {
+          fullUrl = tempUrl;
+        }
+      }
+
+      const thumbUrl = this.buildThumbUrl(fullUrl);
+      const [thumbLocal, fullLocal] = await Promise.all([
+        this.getLocalImagePath(thumbUrl),
+        this.getLocalImagePath(fullUrl),
+      ]);
+
+      this._prefetchPool.set(card.id, {
+        fullUrl,
+        thumbUrl,
+        thumbLocal,
+        fullLocal,
+      });
+    } catch (err) {
+      console.warn("[aroma-card] ⚠️ 预取单张失败:", err.message);
+    }
   },
 
   // ============================================================
@@ -189,12 +280,24 @@ Page({
         }
       }
 
+      const prefetched = this._prefetchPool?.get(card.id);
+      const resolvedImageSrc =
+        prefetched?.fullLocal || prefetched?.fullUrl || cardFileId;
+      const resolvedThumbSrc =
+        prefetched?.thumbLocal ||
+        prefetched?.thumbUrl ||
+        this.buildThumbUrl(cardFileId);
+
       // �🚀 预热卡牌图片（让微信客户端提前下载）
-      if (cardFileId) {
+      if (cardFileId && this.isRemoteUrl(cardFileId) && !prefetched?.fullLocal) {
         wx.getImageInfo({
           src: cardFileId,
-          success: () =>
-            console.log("[aroma-card] ✅ 卡牌图片预热成功:", card.name),
+          success: (res) => {
+            console.log("[aroma-card] ✅ 卡牌图片预热成功:", card.name);
+            if (res.path) {
+              this.setData({ cardImageSrc: res.path });
+            }
+          },
           fail: () =>
             console.warn("[aroma-card] ⚠️ 卡牌图片预热失败:", card.name),
         });
@@ -214,6 +317,9 @@ Page({
         drawing: false,
         cardFlipActive: false,
         cardMessageLines: this.splitMessageLines(card.message),
+        cardImageStatus: "loading",
+        cardImageSrc: resolvedImageSrc,
+        cardImageThumbSrc: resolvedThumbSrc,
       });
 
       this.triggerCardFlip();
@@ -272,6 +378,16 @@ Page({
         current: url,
       });
     }
+  },
+
+  handleCardImageLoad() {
+    if (this.data.cardImageStatus !== "loaded") {
+      this.setData({ cardImageStatus: "loaded" });
+    }
+  },
+
+  handleCardImageError() {
+    this.setData({ cardImageStatus: "error" });
   },
 
   /**

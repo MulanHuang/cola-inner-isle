@@ -68,14 +68,6 @@ Page({
   async fetchHistoryFromDBSimple(page, pageSize) {
     const buildList = (items = []) =>
       items.map((item) => {
-        const plans = Array.isArray(item.actionPlan)
-          ? item.actionPlan
-          : item.actionPlan
-          ? [item.actionPlan]
-          : [];
-        const cleanedPlans = plans
-          .map((p) => (p || "").trim())
-          .filter((p) => !!p);
         return {
           _id: item._id,
           cardId: item.cardId,
@@ -84,8 +76,6 @@ Page({
           isReversed: !!item.isReversed,
           question: item.question || "",
           interpretation: item.interpretation || "",
-          actionPlan: cleanedPlans.join(" / "),
-          actionPlans: cleanedPlans,
           date: item.date || "",
           createTime: item.createTime,
         };
@@ -129,21 +119,5 @@ Page({
       }
       throw err;
     }
-  },
-
-  formatActionPlans(list = []) {
-    return list.map((item) => {
-      const plans = Array.isArray(item.actionPlan)
-        ? item.actionPlan
-        : item.actionPlan
-        ? [item.actionPlan]
-        : [];
-      const cleaned = plans.map((p) => (p || "").trim()).filter((p) => !!p);
-      return {
-        ...item,
-        actionPlans: cleaned,
-        actionPlan: cleaned.join(" / "),
-      };
-    });
   },
 });

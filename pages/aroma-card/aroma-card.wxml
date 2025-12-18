@@ -81,14 +81,34 @@
           bindtap="previewImage"
           data-url="{{selectedCard.fileId}}"
         >
-          <image
-            class="card-image"
-            src="{{selectedCard.fileId}}"
-            mode="aspectFit"
-          />
+          <view class="card-image-shell">
+            <image
+              class="card-image-placeholder {{cardImageStatus === 'loaded' ? 'is-hidden' : ''}}"
+              src="{{cardImageThumbSrc ? cardImageThumbSrc : backImage}}"
+              mode="aspectFit"
+              wx:if="{{cardImageThumbSrc || backImage}}"
+            />
+            <view
+              class="card-image-skeleton {{cardImageStatus === 'loading' ? '' : 'is-hidden'}}"
+            ></view>
+            <image
+              class="card-image {{cardImageStatus === 'loaded' ? 'is-loaded' : ''}}"
+              src="{{cardImageSrc}}"
+              mode="aspectFit"
+              lazy-load="{{false}}"
+              bindload="handleCardImageLoad"
+              binderror="handleCardImageError"
+            />
+            <view class="card-image-error" wx:if="{{cardImageStatus === 'error'}}">
+              图片加载失败
+            </view>
+          </view>
         </view>
       </view>
     </view>
+
+    <!-- 轻质过渡带 -->
+    <view class="transition-band"></view>
 
     <!-- 卡牌信息 -->
     <view class="card-info">

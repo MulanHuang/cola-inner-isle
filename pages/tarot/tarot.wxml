@@ -20,6 +20,7 @@
 
   <!-- 星光粒子效果层 - 细腻轻柔 -->
   <view class="stars-container">
+    <view class="constellation-layer"></view>
     <view class="star star-1"></view>
     <view class="star star-2"></view>
     <view class="star star-3"></view>
@@ -129,8 +130,8 @@
             </view>
           </block>
         </view>
-        <view class="shuffle-text">
-          {{phase === 'idle' ? '🃏 准备好你的问题，开始洗牌' : (shuffleFadeOut ? '✨ 牌阵展开中...' : '✨ 正在洗牌...')}}
+        <view wx:if="{{phase !== 'idle'}}" class="shuffle-text">
+          {{shuffleFadeOut ? '✨ 牌阵展开中...' : '✨ 正在洗牌...'}}
         </view>
       </view>
     </view>
@@ -143,7 +144,7 @@
       </view>
 
       <view
-        class="fan-container {{phase === 'selected' ? 'cards-fading' : ''}} {{isDragging ? 'is-dragging' : ''}}"
+        class="fan-container {{phase === 'selected' ? 'cards-fading' : ''}} {{isDragging ? 'is-dragging' : ''}} {{pendingConfirmIndex >= 0 ? 'has-pending-confirm' : ''}}"
         bindtouchstart="onFanTouchStart"
         bindtouchmove="onFanTouchMove"
         bindtouchend="onFanTouchEnd"
@@ -154,7 +155,7 @@
           <view
             wx:for="{{deckCards}}"
             wx:key="id"
-            class="fan-card-item {{item.isSpread ? 'spread' : ''}} {{item.isChosen ? 'card-chosen' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex === index ? 'card-flying' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex !== index ? 'card-dimmed' : ''}}"
+            class="fan-card-item {{item.isSpread ? 'spread' : ''}} {{item.isChosen ? 'card-chosen' : ''}} {{item.isPendingConfirm ? 'card-pending-confirm' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex === index ? 'card-flying' : ''}} {{phase === 'selected' && showFlyingCard && selectedCardIndex !== index ? 'card-dimmed' : ''}}"
             style="--base-angle: {{item.angle}}deg; --x: {{item.x}}rpx; --y: {{item.y}}rpx; --z-index: {{item.zIndex}}; --delay: {{item.animationDelay}}ms;"
             bindtap="onFanCardTap"
             data-index="{{index}}"
@@ -165,14 +166,28 @@
             <view wx:if="{{item.isChosen && item.selectionOrder > 0}}" class="card-selected-badge">
               <text>{{item.selectionOrder}}</text>
             </view>
+
+            <!-- 待确认状态：显示位置名称 -->
+            <view wx:if="{{item.isPendingConfirm}}" class="card-confirm-label">
+              <text class="confirm-position-name">{{pendingPositionName}}</text>
+            </view>
           </view>
         </view>
 
-        <view class="select-hint" wx:if="{{phase === 'selecting' || phase === 'selected'}}">
-          <text wx:if="{{remainingCardCount === requiredCardCount}}">
-            ✨ 请跟随直觉，选择 {{requiredCardCount}} 张牌
-          </text>
-          <text wx:elif="{{remainingCardCount > 0}}">
+        <!-- 待确认状态的确认按钮区域 -->
+        <view wx:if="{{pendingConfirmIndex >= 0}}" class="confirm-buttons-container">
+          <view class="confirm-buttons">
+            <view class="confirm-btn cancel-btn" catchtap="cancelCardConfirm">
+              <text>取消</text>
+            </view>
+            <view class="confirm-btn ok-btn" catchtap="confirmCardSelection">
+              <text>确定选择</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="select-hint" wx:if="{{(phase === 'selecting' || phase === 'selected') && pendingConfirmIndex < 0}}">
+          <text wx:if="{{remainingCardCount > 0}}">
             ✨ 还需选择 {{remainingCardCount}} 张牌
           </text>
           <text wx:else>✨ 牌已选完，正在揭示...</text>
@@ -307,25 +322,6 @@
       <navigator url="/pages/tarot/history/history" class="btn-secondary nav-btn">
         <text>查看历史</text>
       </navigator>
-    </view>
-
-    <!-- 行动计划 -->
-    <view wx:if="{{drawnCard}}" class="action-section">
-      <view class="section-title action-title">☀ 今日行动 · 最多 3 条小步骤</view>
-      <view class="action-hint">一张卡对应一个行动框，按行列出 1-3 条小步骤，想好再写也没关系。</view>
-
-      <view class="action-onebox">
-        <textarea
-          class="action-input single"
-          placeholder="1) 写下第一个可执行的小动作&#10;2) 写下第二个小动作（可选）&#10;3) 写下第三个小动作（可选）"
-          value="{{actionText}}"
-          bindinput="onActionInput"
-          maxlength="300"
-        ></textarea>
-        <view class="action-count">{{actionText.length || 0}}/300</view>
-      </view>
-
-      <button class="btn-secondary solid" bindtap="saveActionPlan">保存行动计划</button>
     </view>
 
   </view> <!-- result-section END -->

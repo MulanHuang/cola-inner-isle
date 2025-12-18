@@ -355,6 +355,10 @@ Page({
     requiredCardCount: 4, // 当前牌阵需要抽取的牌数（默认自我探索=4张）
     remainingCardCount: 4, // 剩余需要抽取的牌数
 
+    // ========== 选牌确认状态（原位放大确认机制）==========
+    pendingConfirmIndex: -1, // 待确认的牌索引，-1表示无待确认
+    pendingPositionName: "", // 待确认牌的位置名称（如"现状"、"外在"等）
+
     // ========== 原有业务数据 ==========
     cards: [1, 2, 3, 4, 5], // 牌阵中的位置编号(兼容旧逻辑)
     selectedIndex: -1,
@@ -362,8 +366,6 @@ Page({
     drawnCardIds: [], // 所有已抽取牌的数据库记录ID
     currentDrawId: null, // 兼容旧逻辑
     question: "",
-    actionText: "",
-    actionPlan: "",
     interpretation: "",
     interpretationBlocks: [], // 结构化解读块 [{title, content}, ...]
     todayCount: 0,
@@ -731,7 +733,6 @@ Page({
           },
           currentDrawId: draw._id, // 保存当前抽牌记录的ID
           question: draw.question || "",
-          actionPlan: draw.actionPlan || "",
           interpretation: interpretationText,
           interpretationBlocks: blocks,
         });
@@ -774,8 +775,8 @@ Page({
   // ============================================================
 
   /**
-   * 点击扇形中的牌 - 显示确认弹窗，用户确认后才选牌
-   * 🆕 增强防误触机制：需要满足严格的点击条件 + 确认弹窗
+   * 点击扇形中的牌 - 原位放大显示确认UI，用户确认后才选牌
+   * 🆕 增强防误触机制：需要满足严格的点击条件 + 原位确认
    */
   onFanCardTap(e) {
     if (this.data.phase !== "selecting") return;
@@ -815,7 +816,13 @@ Page({
       return;
     }
 
-    const { selectedCardIndices } = this.data;
+    const { selectedCardIndices, pendingConfirmIndex } = this.data;
+
+    // 如果点击的是当前待确认的牌，视为确认选择
+    if (pendingConfirmIndex === index) {
+      this._confirmCardSelection(index);
+      return;
+    }
 
     // 如果这张牌已经被选中，忽略
     if (selectedCardIndices.includes(index)) {
@@ -830,25 +837,58 @@ Page({
     // 触觉反馈 - 轻触反馈提示用户点击到了牌
     wx.vibrateShort({ type: "light" });
 
-    // 🆕 显示确认弹窗，让用户确认选择
+    // 🆕 设置待确认状态，在原位显示放大效果和位置名称
     const positionIndex = selectedCardIndices.length;
     const positionName =
       this.data.selectedSpread?.positions?.[positionIndex] ||
       `第${positionIndex + 1}张牌`;
 
-    wx.showModal({
-      title: "确认选牌",
-      content: `确定选择这张牌作为「${positionName}」吗？`,
-      confirmText: "确定选择",
-      cancelText: "取消",
-      confirmColor: "#d4af37",
-      success: (res) => {
-        if (res.confirm) {
-          // 用户确认后执行选牌
-          this._confirmCardSelection(index);
-        }
-      },
+    // 更新 deckCards 中对应牌的待确认状态
+    const updatedDeckCards = this.data.deckCards.map((card, idx) => ({
+      ...card,
+      isPendingConfirm: idx === index,
+    }));
+
+    this.setData({
+      pendingConfirmIndex: index,
+      pendingPositionName: positionName,
+      deckCards: updatedDeckCards,
     });
+
+    console.log(
+      `[Tarot] Card pending confirm: ${index}, position: ${positionName}`
+    );
+  },
+
+  /**
+   * 取消选牌确认 - 点击遮罩或取消按钮时调用
+   */
+  cancelCardConfirm() {
+    // 清除待确认状态
+    const updatedDeckCards = this.data.deckCards.map((card) => ({
+      ...card,
+      isPendingConfirm: false,
+    }));
+
+    this.setData({
+      pendingConfirmIndex: -1,
+      pendingPositionName: "",
+      deckCards: updatedDeckCards,
+    });
+
+    // 轻触反馈
+    wx.vibrateShort({ type: "light" });
+    console.log("[Tarot] Card confirm cancelled");
+  },
+
+  /**
+   * 确认选牌 - 点击确认按钮时调用
+   */
+  confirmCardSelection() {
+    const { pendingConfirmIndex } = this.data;
+    if (pendingConfirmIndex >= 0) {
+      this._confirmCardSelection(pendingConfirmIndex);
+    }
   },
 
   /**
@@ -885,7 +925,7 @@ Page({
     const newRemainingCount = remainingCardCount - 1;
 
     // 更新每张牌的 isChosen 状态和选择顺序，用于高亮和显示顺序数字
-    // 确保比较时使用相同的数字类型
+    // 同时清除待确认状态（isPendingConfirm）
     const updatedDeckCards = deckCards.map((card, idx) => {
       const selectionIndex = newSelectedIndices.indexOf(idx);
       return {
@@ -893,6 +933,8 @@ Page({
         isChosen: selectionIndex !== -1,
         // 存储选择顺序（1-based），未选中的为0
         selectionOrder: selectionIndex !== -1 ? selectionIndex + 1 : 0,
+        // 清除待确认状态
+        isPendingConfirm: false,
       };
     });
 
@@ -905,6 +947,9 @@ Page({
       selectedCardIndices: newSelectedIndices,
       selectedCardIndex: index, // 记录最后选中的牌，用于飞出动画
       remainingCardCount: newRemainingCount,
+      // 清除待确认状态
+      pendingConfirmIndex: -1,
+      pendingPositionName: "",
     });
 
     // 已选够所有牌 → 进入 selected 阶段，触发飞出动画
@@ -1199,7 +1244,6 @@ Page({
                 date: today,
                 createTime: db.serverDate(),
                 question: this.data.question || "",
-                actionPlan: this.data.actionPlan || "",
                 interpretation: "",
                 spread: this.data.selectedSpread?.name || "",
                 spreadCount: cardCount,
@@ -1223,7 +1267,6 @@ Page({
                     date: today,
                     createTime: db.serverDate(),
                     question: this.data.question || "",
-                    actionPlan: this.data.actionPlan || "",
                     interpretation: "",
                     spread: this.data.selectedSpread?.name || "",
                     spreadCount: cardCount,
@@ -1586,14 +1629,6 @@ ${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未�
     });
   },
 
-  // 输入行动计划
-  onActionInput(e) {
-    this.setData({
-      actionText: e.detail.value,
-      actionPlan: e.detail.value,
-    });
-  },
-
   // ============================================================
   // 重置方法 (Reset)
   // ============================================================
@@ -1620,12 +1655,13 @@ ${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未�
       drawnCardIds: [],
       requiredCardCount: defaultCardCount,
       remainingCardCount: defaultCardCount,
+      // 选牌确认状态重置
+      pendingConfirmIndex: -1,
+      pendingPositionName: "",
       // 原有状态重置
       drawnCard: null,
       currentDrawId: null,
       question: "",
-      actionText: "",
-      actionPlan: "",
       interpretation: "",
       interpretationBlocks: [], // 重置解读块
       hasShuffled: false,
@@ -1654,49 +1690,6 @@ ${cardName} 在此刻出现，更像是一个温柔的提醒，而不是对未�
    */
   startNewDraw() {
     this.resetDraw();
-  },
-
-  // 保存行动计划（通过云函数，解决前端权限问题）
-  async saveActionPlan() {
-    if (!this.data.drawnCard || !this.data.currentDrawId) return;
-
-    wx.showLoading({ title: "保存中..." });
-
-    try {
-      const collection = this.data.tarotCollection;
-      const res = await wx.cloud.callFunction({
-        name: "updateTarotDraw",
-        data: {
-          drawId: this.data.currentDrawId,
-          collection,
-          data: {
-            actionPlan: this.data.actionPlan || "",
-          },
-        },
-      });
-
-      wx.hideLoading();
-
-      if (res.result && res.result.success) {
-        wx.showToast({
-          title: "已保存",
-          icon: "success",
-        });
-      } else {
-        console.warn("[tarot] 保存行动计划返回失败:", res.result);
-        wx.showToast({
-          title: "保存失败，请稍后再试",
-          icon: "none",
-        });
-      }
-    } catch (err) {
-      console.error("保存行动计划失败", err);
-      wx.hideLoading();
-      wx.showToast({
-        title: "保存失败，请稍后再试",
-        icon: "none",
-      });
-    }
   },
 
   // ============================================================
