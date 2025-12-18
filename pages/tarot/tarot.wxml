@@ -6,7 +6,12 @@
 <!-- 360度无限旋转: 支持左右滑动连续旋转卡牌圆环                       -->
 <!-- ============================================================ -->
 
-<view class="container tarot-container phase-{{phase}} {{isDragging ? 'is-dragging' : ''}}">
+<brand-navbar title="可乐心岛" showBack="{{true}}" bind:ready="onNavReady" />
+
+<view
+  class="container tarot-container page-with-custom-navbar phase-{{phase}} {{isDragging ? 'is-dragging' : ''}}"
+  style="padding-top: {{navBarHeight}}px;"
+>
 
   <!-- 档案完善提示条 -->
   <view class="profile-tip-banner" wx:if="{{showProfileTip && phase === 'idle'}}">

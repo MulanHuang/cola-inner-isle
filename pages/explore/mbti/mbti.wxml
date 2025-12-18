@@ -49,12 +49,36 @@
 
   <!-- 测试入口 -->
   <view class="test-section">
-    <view class="test-card">
-      <view class="test-icon">📝</view>
-      <view class="test-title">不知道自己的类型？</view>
-      <view class="test-desc">通过 70 道专业测试题，准确了解你的 MBTI 性格类型</view>
-      <button class="btn-primary test-btn" bindtap="startTest">
-        开始 MBTI 测试
+    <view class="test-section-title">🧪 不知道自己的类型？</view>
+
+    <!-- A版：最新版测试（推荐） -->
+    <view class="test-card test-card-primary" bindtap="startTestA">
+      <view class="test-badge">推荐</view>
+      <view class="test-card-header">
+        <view class="test-icon">✨</view>
+        <view class="test-info">
+          <view class="test-title">最新官方版测试</view>
+          <view class="test-subtitle">60 道题 · 约 8 分钟</view>
+        </view>
+      </view>
+      <view class="test-desc">基于 16Personalities 官方风格，题目表述简洁直接，测试体验更流畅</view>
+      <button class="btn-primary test-btn">
+        开始最新版测试
+      </button>
+    </view>
+
+    <!-- B版：传统版测试 -->
+    <view class="test-card test-card-secondary" bindtap="startTestB">
+      <view class="test-card-header">
+        <view class="test-icon">📝</view>
+        <view class="test-info">
+          <view class="test-title">传统完整版测试</view>
+          <view class="test-subtitle">70 道题 · 约 10 分钟</view>
+        </view>
+      </view>
+      <view class="test-desc">经典测试题库，题目描述详细，覆盖范围更广</view>
+      <button class="btn-secondary test-btn">
+        开始传统版测试
       </button>
     </view>
   </view>

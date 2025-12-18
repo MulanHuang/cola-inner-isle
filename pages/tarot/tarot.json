@@ -1,4 +1,7 @@
 {
-  "navigationBarTitleText": "可乐心岛",
-  "usingComponents": {}
+  "navigationBarTitleText": "",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "brand-navbar": "/components/brand-navbar/brand-navbar"
+  }
 }

@@ -41,7 +41,7 @@
               </view>
               <view wx:for="{{item.tasks}}" wx:for-item="task" wx:for-index="taskIndex" wx:key="taskIndex" class="task-row">
                 <view class="task-dot" style="background: {{item.dotColor}};"></view>
-                <text class="task-text">{{task}}</text>
+                <text class="task-text">{{task.text}}</text>
               </view>
             </view>
           </view>

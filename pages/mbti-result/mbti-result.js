@@ -14,7 +14,10 @@ Page({
     scores: {}, // 分数对象
     dimensions: [], // 四个维度的对比数据
     analysis: "", // AI 解读内容
-    showAnalysis: false, // 是否显示 AI 解读
+    analysisSections: [], // AI 解读分段内容
+    aiState: "idle", // idle | loading | success | error
+    analysisError: "", // AI 解读错误信息
+    analysisStyleLabel: "清晰洞见",
   },
 
   // 导航栏准备完成
@@ -175,10 +178,16 @@ Page({
    * 获取 AI 深度解读
    */
   getAiAnalysis() {
+    if (this.data.aiState === "loading") return;
     console.log("🔍 点击了 AI 解读按钮");
     console.log("📊 当前数据：", this.data.type, this.data.scores);
 
-    wx.showLoading({ title: "生成中...", mask: true });
+    this.setData({
+      aiState: "loading",
+      analysis: "",
+      analysisSections: [],
+      analysisError: "",
+    });
 
     const { type, scores } = this.data;
 
@@ -193,23 +202,8 @@ Page({
   callBackendAPI(type, scores) {
     console.log("[MBTI] 🔥 开始流式请求:", { type, scores });
 
-    // 系统提示词
-    const systemPrompt = `你是一位温柔、真实、有边界感的心灵陪伴者。
-你的任务是根据用户的 MBTI 测试结果，为他们提供深度的性格解读。
-
-请做到以下几点：
-1. 语言温柔、人性化、带共情，不使用生硬的心理学术语
-2. 不要下定论，不贴标签，只描述倾向并给出理解与支持
-3. 使用第二人称 "你"，像一个温暖但专业的朋友在对话
-4. 结合维度得分差异，给出更精准的描述
-5. 避免过度美化或批判，保持客观但温暖的态度
-
-输出结构要求：
-- 核心特质总结（1 段，80-120 字）
-- 能量与情绪模式（1 段，100-150 字）
-- 人际与关系风格（1 段，100-150 字）
-- 工作与学习风格（1 段，100-150 字）
-- 温柔的成长建议（3-5 条，每条 30-50 字）`;
+    // 根据风格选择不同的系统提示词
+    const systemPrompt = this.getSystemPrompt();
 
     // 构建用户提示词
     const dimensions = [
@@ -262,33 +256,8 @@ Page({
       })
       .join("\n");
 
-    const userPrompt = `请根据以下 MBTI 测试结果，为用户生成一份温柔、细腻、贴心的深度性格解读：
-
-【基本信息】
-MBTI 类型：${type}
-
-【维度得分】
-${dimensionAnalysis}
-
-【总体得分】
-E（外向）：${scores.E}
-I（内向）：${scores.I}
-S（实感）：${scores.S}
-N（直觉）：${scores.N}
-T（思考）：${scores.T}
-F（情感）：${scores.F}
-J（判断）：${scores.J}
-P（感知）：${scores.P}
-
-请输出一份符合以下结构的中文分析：
-
-1. **核心特质总结**（1 段）
-2. **能量与情绪模式**（1 段）
-3. **人际与关系风格**（1 段）
-4. **工作与学习风格**（1 段）
-5. **温柔的成长建议**（3-5 条）
-
-请确保语言温柔、真实、有共情，像一个懂他的朋友在说话。`;
+    // 根据风格生成用户提示词
+    const userPrompt = this.getUserPrompt(type, scores, dimensionAnalysis);
 
     const messages = [
       { role: "system", content: systemPrompt },
@@ -302,57 +271,171 @@ P（感知）：${scores.P}
       temperature: 1,
       onChunk: (chunk, fullText) => {
         // 实时更新解读内容，让用户看到流式输出
-        this.setData({ analysis: fullText, showAnalysis: true });
+        this.setData({ analysis: fullText });
       },
       onComplete: (fullText) => {
         console.log("[MBTI] ✅ 流式输出完成");
-        wx.hideLoading();
+        let sections = [];
+        try {
+          sections = JSON.parse(fullText);
+        } catch (parseErr) {
+          console.error("[MBTI] ❌ JSON 解析失败:", parseErr.message);
+          this.setData({
+            aiState: "error",
+            analysisError: "解读格式异常，请稍后重试。",
+          });
+          this._currentStreamTask = null;
+          return;
+        }
+
         wx.showToast({
           title: "解读生成成功",
           icon: "success",
           duration: 1500,
         });
-        this.setData({ analysis: fullText, showAnalysis: true });
+        this.setData({
+          analysis: "",
+          analysisSections: sections,
+          aiState: "success",
+        });
         this._currentStreamTask = null;
       },
       onError: (err) => {
         console.error("[MBTI] ❌ AI 调用失败:", err.message);
-        wx.hideLoading();
         wx.showToast({
-          title: "正在使用默认解读",
+          title: "解读生成失败",
           icon: "none",
           duration: 2000,
         });
-        this.showDefaultAnalysis();
+        this.setData({
+          aiState: "error",
+          analysisError: err.message || "暂时无法连接，请稍后再试。",
+        });
         this._currentStreamTask = null;
       },
     });
   },
 
   /**
-   * 显示默认解读（当 API 未实现时）
+   * 获取系统提示词（清晰洞见）
    */
-  showDefaultAnalysis() {
-    const { type, typeInfo } = this.data;
+  getSystemPrompt() {
+    return `你是一位对 MBTI 有深入理解的认知结构分析者。
 
-    const defaultAnalysis = `你的 MBTI 类型是 ${type} - ${typeInfo.name}。
+你所提供的内容不是心理诊断，也不是性格评判，
+而是用于帮助使用者理解：
+自己在思考、反应、决策与消耗能量时的内在运作方式。
 
-${typeInfo.desc}
+请将 MBTI 视为一种「认知能量的使用偏好」
+以及「个体与世界互动时形成的稳定习惯结构」，而非性格标签。
 
-作为 ${type} 类型的人，你具有独特的性格特质和优势。这个类型的人通常在特定领域表现出色，同时也有自己需要注意的成长方向。
+你的分析目标不是描述类型特征，
+而是揭示：
+这些认知偏好在现实生活中如何带来优势，
+又如何同时制造张力、盲点与代价。
 
-建议：
-1. 发挥你的优势，在适合的领域深耕
-2. 了解并接纳自己的特点
-3. 与不同类型的人交流，拓展视野
-4. 持续学习和成长
+请保持语言冷静、不评判、以洞见为导向，
+避免励志、安慰或总结式表达。
+`;
+  },
 
-注：AI 深度解读功能需要配置后端接口才能使用。当前显示的是默认解读内容。`;
+  /**
+   * 获取用户提示词（清晰洞见 JSON）
+   */
+  getUserPrompt(type, scores, dimensionAnalysis) {
+    const baseInfo = `【基本信息】
+MBTI 类型：${type}
 
+【维度得分】
+${dimensionAnalysis}
+
+【总体得分】
+E（外向）：${scores.E}
+I（内向）：${scores.I}
+S（实感）：${scores.S}
+N（直觉）：${scores.N}
+T（思考）：${scores.T}
+F（情感）：${scores.F}
+J（判断）：${scores.J}
+P（感知）：${scores.P}`;
+
+    return `请根据以下 MBTI 测试结果，
+为用户生成一份具有洞见、深度与自我觉察价值的 MBTI 解读。
+
+${baseInfo}
+
+【输出格式要求】
+请只输出严格的 JSON 数组，不要添加任何解释性文字，不要使用 Markdown。
+JSON 结构必须完全符合以下规范：
+
+[
+  {
+    "key": "core",
+    "title": "核心特质",
+    "insight": "一句高度概括的洞见句（不超过20字）",
+    "body": [
+      "正文说明一句",
+      "正文说明一句"
+    ],
+    "bullets": [
+      "要点一",
+      "要点二"
+    ]
+  },
+  {
+    "key": "emotion",
+    "title": "情绪模式",
+    "insight": "...",
+    "body": [...],
+    "bullets": [...]
+  },
+  {
+    "key": "relationship",
+    "title": "人际风格",
+    "insight": "...",
+    "body": [...],
+    "bullets": [...]
+  },
+  {
+    "key": "work",
+    "title": "工作与学习方式",
+    "insight": "...",
+    "body": [...],
+    "bullets": [...]
+  },
+  {
+    "key": "growth",
+    "title": "成长建议",
+    "insight": "...",
+    "body": [],
+    "bullets": [
+      "觉察方向一",
+      "觉察方向二",
+      "觉察方向三"
+    ]
+  }
+]
+
+【内容要求】
+- 总共 5 个模块，必须包含以上 key
+- insight 不超过 20 字
+- body 为 5-6 句具体说明
+- bullets 为 2-4 条要点
+- 成长建议模块可不写 body
+- 使用冷静、克制、不评判的表达
+- 目标是"让用户对自己的运作方式产生新的理解"`;
+  },
+  resetAnalysis() {
     this.setData({
-      analysis: defaultAnalysis,
-      showAnalysis: true,
+      aiState: "idle",
+      analysis: "",
+      analysisSections: [],
+      analysisError: "",
     });
+  },
+
+  retryAiAnalysis() {
+    this.getAiAnalysis();
   },
 
   /**

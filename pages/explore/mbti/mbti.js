@@ -146,11 +146,23 @@ Page({
     }
   },
 
-  // 开始测试
-  startTest() {
+  // 开始测试（A版/最新版 - 60题）
+  startTestA() {
     wx.navigateTo({
-      url: "/pages/mbti-test/mbti-test",
+      url: "/pages/mbti-test/mbti-test?version=A",
     });
+  },
+
+  // 开始测试（B版/传统版 - 70题）
+  startTestB() {
+    wx.navigateTo({
+      url: "/pages/mbti-test/mbti-test?version=B",
+    });
+  },
+
+  // 兼容旧方法：默认使用A版
+  startTest() {
+    this.startTestA();
   },
 
   // 查看测试历史

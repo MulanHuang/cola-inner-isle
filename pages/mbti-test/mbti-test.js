@@ -1,15 +1,19 @@
 // pages/mbti-test/mbti-test.js
 const {
   getMbtiQuestions,
+  getMbtiQuestionsA,
   calcMbtiScores,
   calcMbtiType,
 } = require("../../utils/mbti.js");
 // 兜底：直接引用题库，避免相对路径 require 失败导致页面空白
-const mbtiQuestionsFallback = require("../../pages/explore/mbti/data/mbtiQuestions.js");
+const mbtiQuestionsFallbackB = require("../../pages/explore/mbti/data/mbtiQuestions.js");
+const mbtiQuestionsFallbackA = require("../../pages/explore/mbti/data/mbtiQuestionsA.js");
 
 Page({
   data: {
     navBarHeight: 0, // 导航栏高度
+    version: "A", // 测试版本：A=最新版(60题)，B=传统版(70题)
+    versionName: "最新版", // 版本名称
     questions: [], // 所有题目
     currentIndex: 0, // 当前题目索引
     currentQuestion: {}, // 当前题目
@@ -19,7 +23,11 @@ Page({
     debugInfo: "", // 调试信息，方便用户查看题库加载情况
   },
 
-  onLoad() {
+  onLoad(options) {
+    // 获取版本参数，默认为A版（最新版）
+    const version = options.version || "A";
+    const versionName = version === "A" ? "最新版" : "传统版";
+    this.setData({ version, versionName });
     this.initTest();
   },
 
@@ -41,11 +49,17 @@ Page({
    * 初始化测试
    */
   initTest() {
-    // 从本地存储加载 载题目
+    const { version, versionName } = this.data;
+
+    // 根据版本加载题目
     let questions = [];
     let source = "utils";
     try {
-      questions = getMbtiQuestions();
+      if (version === "A") {
+        questions = getMbtiQuestionsA();
+      } else {
+        questions = getMbtiQuestions();
+      }
     } catch (err) {
       console.error("加载题库失败", err);
       source = "utils-error";
@@ -53,9 +67,9 @@ Page({
 
     // 兜底：如果 utils 加载失败，直接使用本地引用
     if (!Array.isArray(questions) || questions.length === 0) {
-      questions = Array.isArray(mbtiQuestionsFallback)
-        ? mbtiQuestionsFallback
-        : [];
+      const fallback =
+        version === "A" ? mbtiQuestionsFallbackA : mbtiQuestionsFallbackB;
+      questions = Array.isArray(fallback) ? fallback : [];
       source = "fallback";
     }
 
@@ -71,16 +85,17 @@ Page({
     }
 
     // 调试信息：在页面上显示题目数和来源，帮助定位是否打包成功
-    const debugInfo = `题目数：${questions.length}（来源：${source}）`;
+    const debugInfo = `${versionName}题目数：${questions.length}（来源：${source}）`;
     this.setData({ debugInfo });
     wx.showToast({
-      title: debugInfo,
+      title: `${versionName} ${questions.length}题`,
       icon: "none",
       duration: 1200,
     });
 
-    // 尝试恢复之前的测试状态
-    const savedState = wx.getStorageSync("mbtiTestState");
+    // 尝试恢复之前的测试状态（根据版本区分存储）
+    const stateKey = `mbtiTestState_${version}`;
+    const savedState = wx.getStorageSync(stateKey);
 
     let currentIndex = 0;
     let answers = [];
@@ -91,7 +106,7 @@ Page({
 
       wx.showModal({
         title: "继续测试",
-        content: "检测到未完成的测试，是否继续？",
+        content: `检测到未完成的${versionName}测试，是否继续？`,
         confirmText: "继续",
         cancelText: "重新开始",
         success: (res) => {
@@ -131,7 +146,7 @@ Page({
     if (currentIndex >= totalCount || currentIndex < 0) {
       currentIndex = 0;
       answers = [];
-      wx.removeStorageSync("mbtiTestState");
+      wx.removeStorageSync(`mbtiTestState_${this.data.version}`);
     }
 
     const progress = Math.round((currentIndex / totalCount) * 100);
@@ -292,7 +307,8 @@ Page({
    * 保存测试状态
    */
   saveTestState(currentIndex, answers) {
-    wx.setStorageSync("mbtiTestState", {
+    const stateKey = `mbtiTestState_${this.data.version}`;
+    wx.setStorageSync(stateKey, {
       currentIndex,
       answers,
       timestamp: Date.now(),
@@ -314,9 +330,9 @@ Page({
     wx.hideLoading();
 
     // 清除保存的测试状态
-    wx.removeStorageSync("mbtiTestState");
+    wx.removeStorageSync(`mbtiTestState_${this.data.version}`);
 
-    // 跳转到结果页
+    // 跳转到结果页（传递版本信息）
     wx.navigateTo({
       url: `/pages/mbti-result/mbti-result?type=${type}&scores=${JSON.stringify(
         scores
