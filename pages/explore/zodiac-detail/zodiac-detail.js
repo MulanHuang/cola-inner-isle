@@ -637,26 +637,61 @@ const ZODIAC_TONES = {
 };
 
 function buildAnalysis(profile) {
+  const formatContentNodes = (content) => {
+    const marker = "比如：";
+    const idx = content.indexOf(marker);
+    if (idx === -1) {
+      return [{ type: "text", text: content }];
+    }
+    const before = content.slice(0, idx).trim();
+    const after = content.slice(idx + marker.length).trim();
+    return [
+      { type: "text", text: before },
+      { name: "br" },
+      {
+        name: "div",
+        attrs: { class: "analysis-example-block" },
+        children: [
+          {
+            name: "div",
+            attrs: { class: "analysis-example-label" },
+            children: [{ type: "text", text: marker }],
+          },
+          {
+            name: "div",
+            attrs: { class: "analysis-example-text" },
+            children: [{ type: "text", text: after }],
+          },
+        ],
+      },
+    ];
+  };
+
   return [
     {
       title: "基本特质",
       content: profile.analysis.basic,
+      contentNodes: formatContentNodes(profile.analysis.basic),
     },
     {
       title: "具体特质",
       content: profile.analysis.specific,
+      contentNodes: formatContentNodes(profile.analysis.specific),
     },
     {
       title: "行事风格",
       content: profile.analysis.style,
+      contentNodes: formatContentNodes(profile.analysis.style),
     },
     {
       title: "个性盲点",
       content: profile.analysis.blind,
+      contentNodes: formatContentNodes(profile.analysis.blind),
     },
     {
       title: "总结",
       content: profile.analysis.summary,
+      contentNodes: formatContentNodes(profile.analysis.summary),
     },
   ];
 }

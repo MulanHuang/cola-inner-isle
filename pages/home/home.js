@@ -146,6 +146,24 @@ Page({
         bgEnd: "#ffc970",
       },
       {
+        key: "behaviorStrength",
+        title: "优势画像",
+        desc: "发现优势",
+        icon: "💪",
+        badge: "NEW",
+        bgStart: "#d4f1f9",
+        bgEnd: "#8fd3e8",
+      },
+      {
+        key: "careerPortrait",
+        title: "职业画像",
+        desc: "兴趣探索",
+        icon: "🧭",
+        badge: "NEW",
+        bgStart: "#e7f4ff",
+        bgEnd: "#a9d7ff",
+      },
+      {
         key: "innerChild",
         title: "内在小孩",
         desc: "疗愈自己",
@@ -488,6 +506,22 @@ Page({
     });
   },
 
+  // 跳转到优势画像
+  goToBehaviorStrength() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/behavior-strength/behavior-strength",
+    });
+  },
+
+  // 跳转到职业画像
+  goToCareerPortrait() {
+    this.triggerTapFeedback();
+    wx.navigateTo({
+      url: "/pages/holland-career-interest/holland-career-interest",
+    });
+  },
+
   // 统一处理自我探索工具点击
   handleToolTap(e) {
     const key = e.currentTarget.dataset.key;
@@ -505,6 +539,10 @@ Page({
         return this.goToMBTI();
       case "zodiac":
         return this.goToZodiac();
+      case "behaviorStrength":
+        return this.goToBehaviorStrength();
+      case "careerPortrait":
+        return this.goToCareerPortrait();
       case "innerChild":
         return this.goToInnerChild();
       case "chakra":

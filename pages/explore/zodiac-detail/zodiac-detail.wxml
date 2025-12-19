@@ -34,15 +34,15 @@
   </view>
 
   <view class="section-card">
-    <view class="section-title">星座分析</view>
+    <view class="section-title section-title--accent">星座分析</view>
     <view wx:for="{{analysisSections}}" wx:key="title" class="analysis-block">
       <view class="analysis-title">{{item.title}}：</view>
-      <view class="analysis-text">{{item.content}}</view>
+      <rich-text class="analysis-text" nodes="{{item.contentNodes}}" />
     </view>
   </view>
 
   <view class="section-card">
-    <view class="section-title">今日运势</view>
+    <view class="section-title section-title--accent">今日运势</view>
     <view class="fortune-quote">
       <text class="quote-mark">“</text>
       <text class="quote-text">{{fortune.quote}}</text>

@@ -1,54 +1,57 @@
 /* pages/explore/zodiac-detail/zodiac-detail.wxss */
 .zodiac-detail-container {
   padding: 20rpx 20rpx 60rpx;
-  background: linear-gradient(180deg, #e9eeff 0%, #f7f7fb 40%, #f7f7fb 100%);
+  background: linear-gradient(180deg, #eef1ff 0%, #f6f7fb 45%, #f6f7fb 100%);
   min-height: 100vh;
 }
 
 .hero-card {
-  background: linear-gradient(160deg, #6d7cff 0%, #5665e5 100%);
+  background: linear-gradient(160deg, #5c6beb 0%, #5563db 100%);
   border-radius: 24rpx;
-  padding: 40rpx 24rpx;
+  padding: 44rpx 28rpx;
   text-align: center;
   color: #ffffff;
-  box-shadow: 0 12rpx 24rpx rgba(82, 96, 194, 0.25);
+  box-shadow: 0 10rpx 22rpx rgba(92, 107, 235, 0.22);
   margin-bottom: 24rpx;
 }
 
 .hero-icon {
   font-size: 84rpx;
-  margin-bottom: 12rpx;
+  margin-bottom: 14rpx;
+  text-shadow: 0 6rpx 16rpx rgba(58, 66, 160, 0.35);
 }
 
 .hero-name {
   font-size: 42rpx;
   font-weight: 600;
-  margin-bottom: 8rpx;
+  margin-bottom: 10rpx;
 }
 
 .hero-subtitle {
-  font-size: 24rpx;
+  font-size: 26rpx;
   opacity: 0.9;
-  margin-bottom: 8rpx;
+  margin-bottom: 10rpx;
 }
 
 .hero-date {
-  font-size: 24rpx;
+  font-size: 26rpx;
   opacity: 0.9;
 }
 
 .fact-card {
-  background: #5867e6;
+  background: #ffffff;
   border-radius: 20rpx;
-  padding: 24rpx;
-  color: #ffffff;
+  padding: 26rpx 24rpx;
+  color: #3f3f3f;
   margin-bottom: 24rpx;
+  border: 1rpx solid #e9ecf5;
+  box-shadow: 0 6rpx 16rpx rgba(35, 39, 77, 0.06);
 }
 
 .fact-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16rpx 24rpx;
+  gap: 18rpx 26rpx;
 }
 
 .fact-item {
@@ -58,21 +61,24 @@
 }
 
 .fact-label {
-  font-size: 22rpx;
-  opacity: 0.75;
+  font-size: 24rpx;
+  color: #7c86e6;
+  opacity: 1;
 }
 
 .fact-value {
-  font-size: 26rpx;
-  font-weight: 500;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #3f3f3f;
 }
 
 .trait-card {
   background: #ffffff;
   border-radius: 20rpx;
   padding: 24rpx;
-  box-shadow: 0 8rpx 20rpx rgba(35, 39, 77, 0.08);
+  box-shadow: 0 6rpx 16rpx rgba(35, 39, 77, 0.06);
   margin-bottom: 24rpx;
+  border: 1rpx solid #e9ecf5;
 }
 
 .trait-row {
@@ -90,25 +96,25 @@
   min-width: 84rpx;
   padding: 6rpx 12rpx;
   border-radius: 12rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   text-align: center;
   color: #ffffff;
 }
 
 .trait-tag--good {
-  background: #7bc27e;
+  background: #7c86e6;
 }
 
 .trait-tag--strong {
-  background: #f29ba5;
+  background: #8f9bff;
 }
 
 .trait-tag--weak {
-  background: #83a9f5;
+  background: #a5b1ff;
 }
 
 .trait-text {
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: #4c4c4c;
   line-height: 1.6;
   flex: 1;
@@ -118,15 +124,32 @@
   background: #ffffff;
   border-radius: 20rpx;
   padding: 24rpx;
-  box-shadow: 0 8rpx 20rpx rgba(35, 39, 77, 0.08);
+  box-shadow: 0 6rpx 16rpx rgba(35, 39, 77, 0.06);
   margin-bottom: 24rpx;
+  border: 1rpx solid #e9ecf5;
 }
 
 .section-title {
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: 600;
   color: #3a3a3a;
   margin-bottom: 20rpx;
+}
+
+.section-title--accent {
+  position: relative;
+  padding-left: 18rpx;
+}
+
+.section-title--accent::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6rpx;
+  width: 6rpx;
+  height: 26rpx;
+  border-radius: 999rpx;
+  background: #5c6beb;
 }
 
 .analysis-block {
@@ -138,24 +161,43 @@
 }
 
 .analysis-title {
-  font-size: 26rpx;
-  color: #5a6ff2;
+  font-size: 28rpx;
+  color: #5c6beb;
   font-weight: 600;
   margin-bottom: 8rpx;
 }
 
 .analysis-text {
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: #5a5a5a;
   line-height: 1.7;
 }
+
+.analysis-example-block {
+  margin-top: 14rpx;
+  display: block;
+}
+
+.analysis-example-label {
+  color: #5c6beb;
+  font-weight: 600;
+  font-size: 26rpx;
+  margin-bottom: 6rpx;
+}
+
+.analysis-example-text {
+  color: #5f6368;
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
 
 .fortune-quote {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12rpx;
-  color: #6c6c6c;
+  color: #6b7280;
   text-align: center;
   margin-bottom: 20rpx;
 }
@@ -168,7 +210,7 @@
 
 .quote-text {
   font-size: 30rpx;
-  color: #4f4f4f;
+  color: #4b5563;
   font-weight: 600;
 }
 
@@ -198,7 +240,7 @@
 }
 
 .calendar-date-month {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #9d9d9d;
 }
 
@@ -208,14 +250,14 @@
 }
 
 .calendar-tab {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #9a9a9a;
   position: relative;
   padding-bottom: 8rpx;
 }
 
 .calendar-tab.active {
-  color: #ff6b6b;
+  color: #5c6beb;
   font-weight: 600;
 }
 
@@ -228,7 +270,7 @@
   width: 26rpx;
   height: 6rpx;
   border-radius: 999rpx;
-  background: #ff6b6b;
+  background: #5c6beb;
 }
 
 .calendar-week {
@@ -245,7 +287,7 @@
 }
 
 .calendar-weekday-label {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #b6b6b6;
 }
 
@@ -261,39 +303,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #b8b8b8;
   background: #f2f2f2;
 }
 
 .calendar-weekday-date.is-today {
-  background: #ff6b6b;
+  background: #5c6beb;
   color: #ffffff;
   font-weight: 600;
 }
 
 .calendar-weekday-date.is-selected {
-  border: 2rpx solid #ff6b6b;
-  color: #ff6b6b;
+  border: 2rpx solid #5c6beb;
+  color: #5c6beb;
   background: #ffffff;
   font-weight: 600;
 }
 
 .calendar-weekday-date.is-selected.is-today {
   border: none;
-  background: #ff6b6b;
+  background: #5c6beb;
   color: #ffffff;
 }
 
 .calendar-weekday-today {
-  font-size: 22rpx;
+  font-size: 24rpx;
 }
 
 .fortune-summary {
-  background: #fff1f1;
+  background: #f2f4ff;
   border-radius: 20rpx;
   padding: 28rpx 24rpx;
   margin-bottom: 20rpx;
+  border: 1rpx solid #e3e7ff;
 }
 
 .fortune-summary-inner {
@@ -314,7 +357,7 @@
 .fortune-score-value {
   font-size: 76rpx;
   font-weight: 700;
-  color: #f46b6b;
+  color: #5c6beb;
   line-height: 1;
 }
 
@@ -325,17 +368,17 @@
 
 .star {
   font-size: 30rpx;
-  color: #f2dede;
+  color: #d8defb;
 }
 
 .star.on {
-  color: #f6b24f;
+  color: #f3c26d;
 }
 
 .fortune-score-label {
-  font-size: 24rpx;
-  color: #f46b6b;
-  background: #ffe5e5;
+  font-size: 26rpx;
+  color: #5c6beb;
+  background: #e9ecff;
   padding: 6rpx 14rpx;
   border-radius: 999rpx;
 }
@@ -354,21 +397,21 @@
 }
 
 .fortune-bar-label {
-  font-size: 24rpx;
-  color: #f46b6b;
+  font-size: 26rpx;
+  color: #5c6beb;
   text-align: left;
 }
 
 .fortune-bar-track {
   height: 14rpx;
-  background: #f7dede;
+  background: #e9ecff;
   border-radius: 999rpx;
   overflow: hidden;
 }
 
 .fortune-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ff8b8b, #f3a464);
+  background: linear-gradient(90deg, #7d88f4, #5c6beb);
   border-radius: 999rpx;
 }
 
@@ -380,22 +423,23 @@
 }
 
 .fortune-card {
-  background: #f3f6ff;
+  background: #f4f6ff;
   border-radius: 18rpx;
   padding: 16rpx;
   text-align: center;
+  border: 1rpx solid #e6e9ff;
 }
 
 .fortune-card-label {
-  font-size: 22rpx;
-  color: #7a7a7a;
+  font-size: 24rpx;
+  color: #8b92a5;
   margin-bottom: 8rpx;
 }
 
 .fortune-card-value {
-  font-size: 26rpx;
+  font-size: 28rpx;
   font-weight: 600;
-  color: #5565e6;
+  color: #5c6beb;
 }
 
 .fortune-actions {
@@ -414,11 +458,11 @@
 }
 
 .fortune-action--good {
-  background: #ecf9f0;
+  background: #eef6ff;
 }
 
 .fortune-action--bad {
-  background: #fff0f0;
+  background: #fff4f4;
 }
 
 .fortune-action-label {
@@ -428,13 +472,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   color: #ffffff;
 }
 
 .fortune-action--good .fortune-action-label {
-  background: #63c08d;
+  background: #5c6beb;
 }
 
 .fortune-action--bad .fortune-action-label {
@@ -442,7 +486,7 @@
 }
 
 .fortune-action-text {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #4f4f4f;
 }
 
@@ -455,7 +499,8 @@
   background: #ffffff;
   border-radius: 20rpx;
   padding: 20rpx;
-  border: 1rpx solid #f0f0f5;
+  border: 1rpx solid #e9ecf5;
+  box-shadow: 0 6rpx 16rpx rgba(35, 39, 77, 0.05);
 }
 
 .fortune-detail-header {
@@ -469,15 +514,16 @@
   width: 56rpx;
   height: 56rpx;
   border-radius: 18rpx;
-  background: #f3f6ff;
+  background: #f2f4ff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 28rpx;
+  color: #5c6beb;
 }
 
 .fortune-detail-title {
-  font-size: 26rpx;
+  font-size: 28rpx;
   font-weight: 600;
   color: #3f3f3f;
   flex: 1;
@@ -488,7 +534,7 @@
 }
 
 .fortune-detail-text {
-  font-size: 25rpx;
+  font-size: 27rpx;
   color: #626262;
   line-height: 1.7;
 }
@@ -501,9 +547,9 @@
 }
 
 .fortune-tag {
-  font-size: 20rpx;
-  color: #f46b6b;
-  background: #fff1f1;
+  font-size: 22rpx;
+  color: #5c6beb;
+  background: #eef1ff;
   padding: 6rpx 12rpx;
   border-radius: 999rpx;
 }
@@ -515,16 +561,16 @@
 }
 
 .advice-item {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #6a6a6a;
   line-height: 1.6;
-  background: #fafafa;
+  background: #f7f8fc;
   padding: 10rpx 12rpx;
   border-radius: 12rpx;
 }
 
 .advice-action {
-  border-left: 6rpx solid #7bc27e;
+  border-left: 6rpx solid #5c6beb;
 }
 
 .advice-risk {
@@ -532,5 +578,5 @@
 }
 
 .advice-boost {
-  border-left: 6rpx solid #f7b457;
+  border-left: 6rpx solid #f3c26d;
 }

@@ -1,0 +1,27 @@
+<!-- pages/holland-career-interest/holland-career-interest-history.wxml -->
+
+<view class="container">
+  <view wx:if="{{!historyList.length}}" class="empty">
+    <view class="empty-title">还没有历史记录</view>
+    <view class="empty-desc">完成一次探索后，这里会保存你的职业画像。</view>
+  </view>
+
+  <view wx:else>
+    <view class="list">
+      <view class="history-card" wx:for="{{historyList}}" wx:key="*this" wx:for-item="record" wx:for-index="index" data-key="{{record.meta.completedAt || index}}" bindtap="openReport">
+        <view class="history-header">
+          <view class="history-header-left">
+            <text class="history-date">{{record.displayTime}}</text>
+            <text class="history-tag">TOP 3</text>
+          </view>
+          <text class="history-delete" data-key="{{record.meta.completedAt || index}}" catchtap="deleteHistoryItem">删除</text>
+        </view>
+        <view class="history-top">
+          <view class="history-chip" wx:for="{{record.topNames}}" wx:key="*this" wx:for-item="name">
+            {{name}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

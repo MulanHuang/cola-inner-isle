@@ -1,0 +1,67 @@
+{
+  "id": "holland-combination-rules",
+  "name": "霍兰德三字母组合 · 行动能量组合规则",
+  "model": "RIASEC",
+  "principle": "组合用于理解多种行动能量如何同时发挥作用，不构成性格或能力判断",
+  "logic": {
+    "orderMeaning": {
+      "first": "最主要的能量来源，最容易让你进入状态",
+      "second": "在主要能量之上，进一步支持你持续投入的方式",
+      "third": "在合适条件下，会增强稳定性或拓展可能性的辅助能量"
+    }
+  },
+  "generationRules": [
+    {
+      "type": "opening",
+      "template": "你的行动能量主要由【{firstName}】驱动，同时受到【{secondName}】的支持，并在合适情境下融合【{thirdName}】的特质。"
+    },
+    {
+      "type": "interaction",
+      "template": "这意味着，当你既能满足【{firstShort}】的需要，又能兼顾【{secondShort}】的方式时，更容易保持投入感；而【{thirdShort}】则在环境允许时，为你提供额外的稳定或弹性。"
+    },
+    {
+      "type": "balance",
+      "template": "如果其中某一层能量长期被忽视，你可能会感到消耗或失衡。关注三者之间的配合，有助于你更自然地调整节奏。"
+    }
+  ],
+  "dimensionMeta": {
+    "R": {
+      "name": "实用型",
+      "short": "行动与操作"
+    },
+    "I": {
+      "name": "研究型",
+      "short": "思考与理解"
+    },
+    "A": {
+      "name": "艺术型",
+      "short": "创造与表达"
+    },
+    "S": {
+      "name": "社会型",
+      "short": "连接与支持"
+    },
+    "E": {
+      "name": "企业型",
+      "short": "推动与影响"
+    },
+    "C": {
+      "name": "务实型",
+      "short": "秩序与稳定"
+    }
+  },
+  "exampleCombinations": [
+    {
+      "code": "RIA",
+      "exampleText": "你往往在动手解决具体问题的过程中获得动力，同时需要理解事情背后的逻辑来保持投入，而创造性的空间会让你在合适的时候感到更加完整。"
+    },
+    {
+      "code": "IAS",
+      "exampleText": "你在思考和理解中建立安全感，也需要表达和创造来保持活力，而与人的连接会在关键时刻支持你继续前行。"
+    },
+    {
+      "code": "SEC",
+      "exampleText": "你在与人互动中感受到意义，同时通过推动事情向前获得动力，而清晰的结构和规则能帮助你长期保持稳定。"
+    }
+  ]
+}

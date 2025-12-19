@@ -38,7 +38,13 @@
     "pages/explore/week-plan/history/history",
     "pages/explore/week-plan/detail/detail",
     "pages/explore/monthly-plan/monthly-plan",
-    "pages/explore/monthly-plan/history/history"
+    "pages/explore/monthly-plan/history/history",
+    "pages/behavior-strength/behavior-strength",
+    "pages/behavior-strength/behavior-strength-history",
+    "pages/behavior-strength/behavior-strength-report",
+    "pages/holland-career-interest/holland-career-interest",
+    "pages/holland-career-interest/holland-career-interest-history",
+    "pages/holland-career-interest/holland-career-interest-report"
   ],
   "window": {
     "backgroundTextStyle": "light",
