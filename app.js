@@ -12,6 +12,10 @@ const {
   cleanExpiredCache,
 } = require("./utils/cloudUrlCache.js");
 
+// 🔧 公共工具模块（主包引用，供分包共享）
+const dateUtils = require("./utils/dateUtils.js");
+const mbtiUtils = require("./utils/mbti.js");
+
 function getCloudEnvId() {
   try {
     const info = wx.getAccountInfoSync?.();
@@ -193,5 +197,11 @@ App({
     cloudEnvId: "", // 云开发环境 ID
     loginInfo: null, // 登录信息
     preloadedImages: {}, // 🚀 预加载的图片临时 URL 缓存
+  },
+
+  // 🔧 公共工具模块（挂载到 App 实例，分包可通过 getApp().utils 访问）
+  utils: {
+    dateUtils,
+    mbtiUtils,
   },
 });

@@ -14,12 +14,6 @@
   ],
   "subpackages": [
     {
-      "root": "subpackages/common",
-      "name": "common",
-      "pages": [],
-      "independent": false
-    },
-    {
       "root": "pages/explore",
       "name": "explore",
       "pages": [

@@ -1,5 +1,6 @@
 // pages/mbti-result/mbti-result.js
-const { getMbtiTypeInfo } = require("../../subpackages/common/mbti.js");
+// 从主包 utils 加载（解决跨分包 require 问题）
+const { getMbtiTypeInfo } = require("../../utils/mbti.js");
 // ✅ AI 解读改为前端直连 Vercel 代理（流式输出）
 // 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 

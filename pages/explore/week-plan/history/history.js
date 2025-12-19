@@ -2,7 +2,7 @@
 const {
   getWeekNumber,
   getLocalWeekRange,
-} = require("../../../../subpackages/common/dateUtils.js");
+} = require("../../../../utils/dateUtils.js");
 
 Page({
   data: {

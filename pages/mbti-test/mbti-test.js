@@ -1,11 +1,12 @@
 // pages/mbti-test/mbti-test.js
+// 从主包 utils 加载 MBTI 工具函数（解决跨分包 require 问题）
 const {
   getMbtiQuestions,
   getMbtiQuestionsA,
   calcMbtiScores,
   calcMbtiType,
-} = require("../../subpackages/common/mbti.js");
-// 兜底：直接引用题库，避免相对路径 require 失败导致页面空白
+} = require("../../utils/mbti.js");
+// 兜底：直接引用题库（从主包路径）
 const mbtiQuestionsFallbackB = require("../../pages/explore/mbti/data/mbtiQuestions.js");
 const mbtiQuestionsFallbackA = require("../../pages/explore/mbti/data/mbtiQuestionsA.js");
 

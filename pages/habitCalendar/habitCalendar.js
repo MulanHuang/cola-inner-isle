@@ -9,7 +9,7 @@ const {
   getWeekNumber,
   getDateRange,
   getTimezoneOffsetMinutes,
-} = require("../../subpackages/common/dateUtils.js");
+} = require("../../utils/dateUtils.js");
 
 // 习惯配置 - 仅显示塔罗、冥想、情绪记录三项
 const HABIT_CONFIG = [
