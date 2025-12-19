@@ -219,16 +219,18 @@ exports.main = async (event, context) => {
 
     // 调用 OpenAI 进行分析
     console.log("📡 开始调用 OpenAI API...");
-    console.log("模型:gpt-5.1");
-    console.log("温度: 0.7");
+    console.log("模型: gpt-5.2");
+    console.log("推理强度: low");
+    console.log("温度: 1");
     console.log("最大 tokens: 1500");
 
     const rawAnalysis = await callOpenAI({
       systemPrompt: SYSTEM_PROMPT,
       userPrompt: userPrompt,
       options: {
-        model: "gpt-5-mini", // 可以改为 gpt-4o 获得更好效果
+        model: "gpt-5.2",
         temperature: 1,
+        reasoning_effort: "low", // 低推理，提高响应速度
         maxTokens: 1500,
         timeout: 30000,
       },

@@ -56,12 +56,13 @@ exports.main = async (event, context) => {
     console.log("📡 开始调用 OpenAI 代理...");
 
     // 调用统一的 OpenAI 客户端
-    // 注意：gpt-5-mini 不支持自定义 temperature，只能使用默认值 1
     const rawReply = await callOpenAI({
       systemPrompt,
       userPrompt,
       options: {
-        model: "gpt-5-mini",
+        model: "gpt-5.2",
+        temperature: 1,
+        reasoning_effort: "low", // 低推理，提高响应速度
         maxTokens: 600,
         timeout: 2500,
       },

@@ -26,8 +26,9 @@ async function callOpenAI({
 
   // ======== OpenAI 接口必需参数 ========
   const config = {
-    model: options.model || "gpt-5.1", // 默认使用 GPT-5.1
+    model: options.model || "gpt-5.2", // 默认使用 GPT-5.2
     temperature: options.temperature ?? 0.9,
+    reasoning_effort: options.reasoning_effort || "low", // 低推理，提高响应速度
     // 增加超时时间到 55 秒（微信云函数最大 60 秒）
     timeout: options.timeout || 55000,
   };
@@ -39,6 +40,7 @@ async function callOpenAI({
   const postData = JSON.stringify({
     model: config.model,
     temperature: config.temperature,
+    reasoning_effort: config.reasoning_effort,
     messages: finalMessages,
   });
 

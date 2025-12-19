@@ -28,12 +28,13 @@ async function callOpenAI({
   }
 
   // ======== OpenAI 接口必需参数 ========
-  //gpt-5.1 是推理模型，需要更多 token（推理 + 输出）
+  //gpt-5.2 是推理模型，需要更多 token（推理 + 输出）
   // 默认给 16000 tokens，确保有足够空间输出
   const config = {
-    model: options.model || "gpt-5-mini",
+    model: options.model || "gpt-5.2",
     temperature: options.temperature ?? 1,
     max_completion_tokens: options.max_completion_tokens || 16000,
+    reasoning_effort: options.reasoning_effort || "low", // 低推理，提高响应速度
     timeout: Math.min(options.timeout || 30000, 55000),
   };
 
@@ -43,6 +44,7 @@ async function callOpenAI({
     model: config.model,
     temperature: config.temperature,
     max_completion_tokens: config.max_completion_tokens,
+    reasoning_effort: config.reasoning_effort,
     messages: finalMessages,
   });
 

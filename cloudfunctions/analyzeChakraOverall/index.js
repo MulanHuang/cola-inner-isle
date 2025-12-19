@@ -108,8 +108,9 @@ exports.main = async (event, context) => {
       systemPrompt,
       userPrompt,
       options: {
-        model: "gpt-5-mini",
+        model: "gpt-5.2",
         temperature: 1,
+        reasoning_effort: "low", // 低推理，提高响应速度
         maxTokens: 1500,
         timeout: 30000,
       },

@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "openapi": ["aiVoice.translateVoice"]
-  },
-  "timeout": 60,
-  "memorySize": 256
-}
