@@ -660,11 +660,11 @@
 }
 
 .content-chip.primary {
-  background: linear-gradient(135deg, #fff7ec 0%, #f0ddc3 100%);
-  box-shadow: 0 12rpx 22rpx rgba(139, 115, 85, 0.16),
-    0 6rpx 12rpx rgba(139, 115, 85, 0.12);
-  border-color: rgba(200, 162, 126, 0.46);
-  color: #4a3727;
+  background: linear-gradient(135deg, #ffffff 0%, #fffaf3 100%);
+  box-shadow: 0 10rpx 20rpx rgba(139, 115, 85, 0.12),
+    0 4rpx 8rpx rgba(139, 115, 85, 0.08);
+  border-color: rgba(200, 162, 126, 0.3);
+  color: #6b523c;
 }
 
 .chip-icon {

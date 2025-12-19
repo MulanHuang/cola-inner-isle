@@ -41,8 +41,9 @@ page {
   --aurora-cyan: rgba(100, 200, 255, 0.06);
   --aurora-violet: rgba(180, 100, 255, 0.05);
   --aurora-gold: rgba(212, 175, 55, 0.05);
-  /* 覆盖全局背景色 - 神秘紫色 */
-  background: linear-gradient(
+  /* 覆盖全局背景色 - 神秘紫色 + 底部纯色兜底 */
+  background-color: #5a4a7b !important; /* 纯色兜底 */
+  background-image: linear-gradient(
     180deg,
     #1a1428 0%,
     #2d2440 25%,
@@ -52,20 +53,35 @@ page {
   ) !important;
 }
 
+/* 固定定位背景层 - 覆盖整个屏幕包括溢出区域 */
+.tarot-bg-layer {
+  position: fixed;
+  top: -100rpx; /* 向上延伸 */
+  left: -20rpx;
+  right: -20rpx;
+  bottom: -500rpx; /* 大幅向下延伸确保覆盖溢出区域 */
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    #1a1428 0%,
+    #2d2440 20%,
+    #3d2a5c 40%,
+    #4a3a6b 60%,
+    #5a4a7b 80%,
+    #5a4a7b 100%
+  );
+  pointer-events: none;
+}
+
 .tarot-container {
   padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
   padding-top: env(safe-area-inset-top);
   min-height: 100vh;
-  overflow: hidden;
-  /* 神秘紫色渐变背景 - 覆盖全局米色背景 */
-  background: linear-gradient(
-    180deg,
-    #1a1428 0%,
-    #2d2440 25%,
-    #3d2a5c 50%,
-    #4a3a6b 75%,
-    #5a4a7b 100%
-  );
+  overflow: visible; /* 改为 visible 允许溢出 */
+  position: relative;
+  z-index: 1; /* 确保在背景层上方 */
+  /* 移除背景，使用固定背景层代替 */
+  background: transparent;
 }
 
 /* 档案完善提示条 - 塔罗主题配色 */
@@ -466,6 +482,8 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* 允许圆环溢出可见，防止被裁切 */
+  overflow: visible;
 }
 
 /* idle阶段的静态预览区域 */
@@ -1365,13 +1383,20 @@ page {
 .fan-container {
   position: relative;
   width: 100%;
-  height: 520rpx;
+  /* 增加高度以完整容纳圆环，圆环半径260rpx，需要直径520rpx + 牌高52rpx + 边距 */
+  height: 640rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 40rpx;
-  animation: fan-container-fade-in 0.6s ease-out forwards;
+  /* 改为居中对齐，确保圆环不被裁切 */
+  justify-content: center;
+  padding-bottom: 20rpx;
+  /* 🔥 圆环入场动画：先淡入，然后整体向上平移 */
+  animation: fan-container-fade-in 0.6s ease-out forwards,
+    fan-container-slide-up 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s
+      forwards;
+  /* 允许内容溢出可见，防止圆环被裁切 */
+  overflow: visible;
 }
 
 /* 扇形区域淡入动画 - 从洗牌区域平滑过渡 */
@@ -1386,11 +1411,21 @@ page {
   }
 }
 
+/* 🔥 圆环上移动画 - 从原位置平滑上移到更高的位置 */
+@keyframes fan-container-slide-up {
+  0% {
+    margin-top: 0;
+  }
+  100% {
+    margin-top: -240rpx;
+  }
+}
+
 .fan-deck {
   position: relative;
   width: 100%;
-  /* 360度圆环需要足够高度容纳完整圆形 */
-  height: 620rpx;
+  /* 360度圆环需要足够高度容纳完整圆形: 圆环直径520rpx + 牌高52rpx × 2 */
+  height: 640rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3041,6 +3076,13 @@ page {
 .phase-shuffling .question-section,
 .phase-shuffling .spread-info {
   display: none;
+}
+
+/* spreading/selecting/selected 阶段 - 允许圆环完整显示 */
+.phase-spreading.tarot-container,
+.phase-selecting.tarot-container,
+.phase-selected.tarot-container {
+  overflow: visible;
 }
 
 /* selecting 阶段 - 可交互 */

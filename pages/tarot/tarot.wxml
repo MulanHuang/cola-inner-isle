@@ -6,6 +6,9 @@
 <!-- 360度无限旋转: 支持左右滑动连续旋转卡牌圆环                       -->
 <!-- ============================================================ -->
 
+<!-- 固定定位背景层 - 确保覆盖整个屏幕包括溢出区域 -->
+<view class="tarot-bg-layer"></view>
+
 <brand-navbar title="可乐心岛" showBack="{{true}}" bind:ready="onNavReady" />
 
 <view
@@ -179,24 +182,22 @@
           </view>
         </view>
 
-        <!-- 待确认状态的确认按钮区域 -->
+        <!-- 待确认状态的撤销按钮区域 -->
         <view wx:if="{{pendingConfirmIndex >= 0}}" class="confirm-buttons-container">
           <view class="confirm-buttons">
             <view class="confirm-btn cancel-btn" catchtap="cancelCardConfirm">
-              <text>取消</text>
-            </view>
-            <view class="confirm-btn ok-btn" catchtap="confirmCardSelection">
-              <text>确定选择</text>
+              <text>撤销</text>
             </view>
           </view>
         </view>
 
-        <view class="select-hint" wx:if="{{(phase === 'selecting' || phase === 'selected') && pendingConfirmIndex < 0}}">
+        <!-- 选牌提示 - 已隐藏 -->
+        <!-- <view class="select-hint" wx:if="{{(phase === 'selecting' || phase === 'selected') && pendingConfirmIndex < 0}}">
           <text wx:if="{{remainingCardCount > 0}}">
             ✨ 还需选择 {{remainingCardCount}} 张牌
           </text>
           <text wx:else>✨ 牌已选完，正在揭示...</text>
-        </view>
+        </view> -->
       </view>
 
       <!-- 飞出放大 -->

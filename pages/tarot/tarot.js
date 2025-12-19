@@ -970,13 +970,8 @@ Page({
       setTimeout(() => {
         this.performCardDraw();
       }, ANIMATION_CONFIG.flyOut.duration + 200);
-    } else {
-      wx.showToast({
-        title: `还需选择 ${newRemainingCount} 张牌`,
-        icon: "none",
-        duration: 1500,
-      });
     }
+    // 选牌提示已隐藏，保留功能逻辑
   },
 
   /**
@@ -1009,28 +1004,18 @@ Page({
     this.setPhase("shuffling");
     this.setData({ isShuffling: true, shuffleFadeOut: false });
 
-    // 播放洗牌音效，音效完成后展示卡牌
-    this.playShuffleSound(() => {
-      // 音效播放完成，开始淡出过渡并展示卡牌
+    // 🔇 已移除洗牌音效，使用定时器控制洗牌动画时长
+    // 洗牌动画持续约2秒后进入扇形铺开
+    const shuffleDisplayDuration = 2000;
+    setTimeout(() => {
+      // 开始淡出过渡并展示卡牌
       this.setData({ shuffleFadeOut: true });
 
       // 短暂延迟后进入扇形铺开（让淡出动画有时间执行）
       setTimeout(() => {
         this.startSpreadAnimation();
       }, 650);
-    });
-
-    // 备用定时器：如果音效加载失败，确保流程继续
-    const fallbackDuration = ANIMATION_CONFIG.shuffle.soundDuration + 500;
-    this._shuffleFallbackTimer = setTimeout(() => {
-      if (this.data.phase === "shuffling" && !this.data.shuffleFadeOut) {
-        console.warn("[Tarot] 洗牌音效超时，使用备用定时器继续流程");
-        this.setData({ shuffleFadeOut: true });
-        setTimeout(() => {
-          this.startSpreadAnimation();
-        }, 650);
-      }
-    }, fallbackDuration);
+    }, shuffleDisplayDuration);
   },
 
   /**
