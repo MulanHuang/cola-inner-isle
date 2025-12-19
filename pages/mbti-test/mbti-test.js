@@ -4,7 +4,7 @@ const {
   getMbtiQuestionsA,
   calcMbtiScores,
   calcMbtiType,
-} = require("../../utils/mbti.js");
+} = require("../../subpackages/common/mbti.js");
 // 兜底：直接引用题库，避免相对路径 require 失败导致页面空白
 const mbtiQuestionsFallbackB = require("../../pages/explore/mbti/data/mbtiQuestions.js");
 const mbtiQuestionsFallbackA = require("../../pages/explore/mbti/data/mbtiQuestionsA.js");

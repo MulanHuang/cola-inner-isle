@@ -1,5 +1,8 @@
 // pages/explore/week-plan/history/history.js
-const { getWeekNumber, getLocalWeekRange } = require("../../../../utils/dateUtils.js");
+const {
+  getWeekNumber,
+  getLocalWeekRange,
+} = require("../../../../subpackages/common/dateUtils.js");
 
 Page({
   data: {
@@ -21,10 +24,12 @@ Page({
   loadWeekList() {
     const { currentYear } = this.data;
     const records = wx.getStorageSync("weekPlanRecords") || {};
-    
+
     // 筛选当前年份的记录
-    const yearRecords = Object.values(records).filter((r) => r.year === currentYear);
-    
+    const yearRecords = Object.values(records).filter(
+      (r) => r.year === currentYear
+    );
+
     // 按周序号排序（降序，最新的在前）
     yearRecords.sort((a, b) => {
       const weekA = parseInt(a.weekKey.split("-W")[1]);
@@ -89,4 +94,3 @@ Page({
     wx.navigateBack();
   },
 });
-

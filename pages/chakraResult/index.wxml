@@ -253,6 +253,11 @@
     </view>
   </view>
 
+  <!-- 合规免责声明 -->
+  <view class="compliance-disclaimer">
+    本内容由AI生成，仅供自我探索参考，不构成心理诊断或医疗建议
+  </view>
+
   <!-- 底部按钮 -->
   <view class="button-group">
     <button class="btn-secondary" bindtap="retakeTest">

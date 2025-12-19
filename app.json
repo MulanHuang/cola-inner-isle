@@ -8,43 +8,124 @@
     "pages/meditation/player/player",
     "pages/emotion/emotion",
     "pages/emotion/history/history",
-    "pages/explore/explore",
-    "pages/explore/mbti/mbti",
-    "pages/explore/zodiac/zodiac",
-    "pages/explore/zodiac-detail/zodiac-detail",
-    "pages/explore/innerchild/innerchild",
-    "pages/mbti-test/mbti-test",
-    "pages/mbti-result/mbti-result",
-    "pages/mbti-history/mbti-history",
-    "pages/chakraTest/index",
-    "pages/chakraResult/index",
-    "pages/chakraHistory/index",
     "pages/profile/profile",
     "pages/profile/profile-info/profile-info",
-    "pages/meditation/history/history",
-    "pages/tarot/tarot",
-    "pages/tarot/history/history",
-    "pages/dreamGrid/dreamGrid",
-    "pages/planning/planning",
-    "pages/habitCalendar/habitCalendar",
-    "pages/oh/oh",
-    "pages/oh-chat/oh-chat",
-    "pages/aroma-card/aroma-card",
-    "pages/aroma-chat/aroma-chat",
-    "pages/explore/daily-plan/daily-plan",
-    "pages/explore/daily-plan/history/history",
-    "pages/explore/daily-plan/detail/detail",
-    "pages/explore/week-plan/week-plan",
-    "pages/explore/week-plan/history/history",
-    "pages/explore/week-plan/detail/detail",
-    "pages/explore/monthly-plan/monthly-plan",
-    "pages/explore/monthly-plan/history/history",
-    "pages/behavior-strength/behavior-strength",
-    "pages/behavior-strength/behavior-strength-history",
-    "pages/behavior-strength/behavior-strength-report",
-    "pages/holland-career-interest/holland-career-interest",
-    "pages/holland-career-interest/holland-career-interest-history",
-    "pages/holland-career-interest/holland-career-interest-report"
+    "pages/meditation/history/history"
+  ],
+  "subpackages": [
+    {
+      "root": "subpackages/common",
+      "name": "common",
+      "pages": [],
+      "independent": false
+    },
+    {
+      "root": "pages/explore",
+      "name": "explore",
+      "pages": [
+        "explore",
+        "mbti/mbti",
+        "zodiac/zodiac",
+        "zodiac-detail/zodiac-detail",
+        "innerchild/innerchild",
+        "daily-plan/daily-plan",
+        "daily-plan/history/history",
+        "daily-plan/detail/detail",
+        "week-plan/week-plan",
+        "week-plan/history/history",
+        "week-plan/detail/detail",
+        "monthly-plan/monthly-plan",
+        "monthly-plan/history/history"
+      ]
+    },
+    {
+      "root": "pages/tarot",
+      "name": "tarot",
+      "pages": ["tarot", "history/history"]
+    },
+    {
+      "root": "pages/mbti-test",
+      "name": "mbti",
+      "pages": ["mbti-test"]
+    },
+    {
+      "root": "pages/mbti-result",
+      "name": "mbtiResult",
+      "pages": ["mbti-result"]
+    },
+    {
+      "root": "pages/mbti-history",
+      "name": "mbtiHistory",
+      "pages": ["mbti-history"]
+    },
+    {
+      "root": "pages/chakraTest",
+      "name": "chakra",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/chakraResult",
+      "name": "chakraResult",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/chakraHistory",
+      "name": "chakraHistory",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/oh",
+      "name": "oh",
+      "pages": ["oh"]
+    },
+    {
+      "root": "pages/oh-chat",
+      "name": "ohChat",
+      "pages": ["oh-chat"]
+    },
+    {
+      "root": "pages/aroma-card",
+      "name": "aromaCard",
+      "pages": ["aroma-card"]
+    },
+    {
+      "root": "pages/aroma-chat",
+      "name": "aromaChat",
+      "pages": ["aroma-chat"]
+    },
+    {
+      "root": "pages/dreamGrid",
+      "name": "dreamGrid",
+      "pages": ["dreamGrid"]
+    },
+    {
+      "root": "pages/planning",
+      "name": "planning",
+      "pages": ["planning"]
+    },
+    {
+      "root": "pages/habitCalendar",
+      "name": "habitCalendar",
+      "pages": ["habitCalendar"]
+    },
+    {
+      "root": "pages/behavior-strength",
+      "name": "behaviorStrength",
+      "pages": [
+        "behavior-strength",
+        "behavior-strength-history",
+        "behavior-strength-report"
+      ]
+    },
+    {
+      "root": "pages/holland-career-interest",
+      "name": "hollandCareer",
+      "pages": [
+        "holland-career-interest",
+        "holland-career-interest-history",
+        "holland-career-interest-report"
+      ]
+    }
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -105,5 +186,11 @@
   },
   "cloud": true,
   "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.6",
+      "provider": "wx069ba97219f66d99"
+    }
+  }
 }

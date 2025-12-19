@@ -217,6 +217,11 @@
     <view wx:if="{{aiReply}}" class="ai-content">{{aiReply}}</view>
   </view>
 
+  <!-- 合规免责声明 -->
+  <view class="compliance-disclaimer">
+    本内容由AI生成，仅供自我探索参考，不构成心理诊断或医疗建议
+  </view>
+
   <!-- 底部操作条 -->
   <view class="action-bar">
     <button class="btn-secondary" bindtap="viewHistory">历史</button>

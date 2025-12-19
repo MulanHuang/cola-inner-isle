@@ -782,3 +782,15 @@
 .btn-save.btn-save-disabled {
   opacity: 0.5;
 }
+
+/* 合规免责声明 */
+.compliance-disclaimer {
+  margin: 20rpx;
+  padding: 20rpx 24rpx;
+  font-size: 22rpx;
+  color: #999;
+  text-align: center;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12rpx;
+}

@@ -1,5 +1,5 @@
 // pages/mbti-result/mbti-result.js
-const { getMbtiTypeInfo } = require("../../utils/mbti.js");
+const { getMbtiTypeInfo } = require("../../subpackages/common/mbti.js");
 // ✅ AI 解读改为前端直连 Vercel 代理（流式输出）
 // 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 

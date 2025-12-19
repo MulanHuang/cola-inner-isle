@@ -2,9 +2,9 @@
 
 // 题库：包装成 JS 模块，避免直接 require .json 在部分环境下失败
 // B版：传统版题库（70题）
-const questionsDataB = require("../pages/explore/mbti/data/mbtiQuestions.js");
+const questionsDataB = require("../../pages/explore/mbti/data/mbtiQuestions.js");
 // A版：最新版题库（60题，更接近官方）
-const questionsDataA = require("../pages/explore/mbti/data/mbtiQuestionsA.js");
+const questionsDataA = require("../../pages/explore/mbti/data/mbtiQuestionsA.js");
 
 /**
  * 校验题目数据

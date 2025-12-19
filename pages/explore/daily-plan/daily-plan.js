@@ -1,5 +1,5 @@
 // pages/explore/daily-plan/daily-plan.js
-const { formatLocalDate } = require("../../../utils/dateUtils.js");
+const { formatLocalDate } = require("../../../subpackages/common/dateUtils.js");
 
 Page({
   data: {

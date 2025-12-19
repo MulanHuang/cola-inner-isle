@@ -802,6 +802,18 @@
   font-style: italic;
 }
 
+/* 合规免责声明 */
+.compliance-disclaimer {
+  margin: 30rpx 20rpx;
+  padding: 20rpx 24rpx;
+  font-size: 22rpx;
+  color: #999;
+  text-align: center;
+  line-height: 1.6;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+}
+
 /* ??? */
 .button-group {
   display: flex;

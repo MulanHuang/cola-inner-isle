@@ -3,7 +3,7 @@ const {
   formatLocalDate,
   getLocalWeekRange,
   getWeekNumber,
-} = require("../../../utils/dateUtils.js");
+} = require("../../../subpackages/common/dateUtils.js");
 const { callAIStream } = require("../../../utils/aiStream.js");
 
 // AI 成长教练 System Prompt（严格按照需求文档，不可删改）

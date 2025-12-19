@@ -1,5 +1,7 @@
 // pages/explore/daily-plan/history/history.js
-const { formatLocalDate } = require("../../../../utils/dateUtils.js");
+const {
+  formatLocalDate,
+} = require("../../../../subpackages/common/dateUtils.js");
 
 Page({
   data: {
@@ -67,7 +69,10 @@ Page({
     // 当月每一天
     const today = formatLocalDate(new Date());
     for (let d = 1; d <= daysInMonth; d++) {
-      const dateStr = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const dateStr = `${currentYear}-${String(currentMonth).padStart(
+        2,
+        "0"
+      )}-${String(d).padStart(2, "0")}`;
       const hasRecord = !!recordDates[dateStr];
       const isToday = dateStr === today;
       days.push({
@@ -136,4 +141,3 @@ Page({
     wx.navigateBack();
   },
 });
-

@@ -177,26 +177,23 @@
       </view>
     </view>
 
-    <!-- 录音提示 -->
+    <!-- 录音/识别提示（合并为一个面板） -->
     <view wx:if="{{recording}}" class="recording-banner">
       <view class="recording-dot"></view>
       <view class="recording-texts">
-        <text class="recording-text">录音中 · {{recordTimeDisplay}}</text>
-        <text class="recording-subtext">点击麦克风结束</text>
+        <text class="recording-text">正在聆听 · {{recordTimeDisplay}}</text>
+        <text class="recording-subtext">{{voiceTip || '点击麦克风结束'}}</text>
       </view>
     </view>
 
-    <!-- 识别进度提示 -->
-    <view wx:if="{{recognizing}}" class="recognizing-banner">
+    <!-- 识别完成后的处理状态（非录音时） -->
+    <view wx:elif="{{recognizing && !recording}}" class="recognizing-banner">
       <view class="recognizing-spinner"></view>
       <view class="recording-texts">
-        <text class="recognizing-text">转写中…</text>
-        <text class="recognizing-subtext">请稍等，完成后可编辑再发送</text>
+        <text class="recognizing-text">正在识别…</text>
+        <text class="recognizing-subtext">请稍等</text>
       </view>
     </view>
-
-    <!-- 语音提示小字 -->
-    <view wx:if="{{voiceTip}}" class="voice-tip">{{voiceTip}}</view>
 
     <!-- 长文本编辑提示/辅助 -->
     <view wx:if="{{inputText && inputText.length > 80}}" class="edit-helper">

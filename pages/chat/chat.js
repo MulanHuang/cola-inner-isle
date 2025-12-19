@@ -3,10 +3,10 @@
 // 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 const recorderManager = wx.getRecorderManager();
 const db = wx.cloud.database();
-const SPEECH_API_ENDPOINTS = [
-  "https://speech.cola.center/api/speech",
-  "https://api.cola.center/api/speech",
-];
+
+// 微信同声传译插件（语音识别）
+const plugin = requirePlugin("WechatSI");
+const voiceRecognitionManager = plugin.getRecordRecognitionManager();
 
 // 引入依赖模块
 const { callAIStream } = require("../../utils/aiStream.js");
@@ -339,39 +339,73 @@ Page({
     }
   },
 
-  /* ================ 录音相关 ================ */
+  /* ================ 录音相关（使用微信同声传译插件） ================ */
 
   initRecorder() {
-    recorderManager.onStop((res) => {
+    // 初始化微信同声传译插件的语音识别
+    this._recognizedText = "";
+
+    // 识别结果事件（实时返回识别结果）
+    voiceRecognitionManager.onRecognize = (res) => {
+      console.log("[voice] 实时识别:", res);
+      // 实时显示识别中的文字，并累积结果
+      if (res.result) {
+        this._recognizedText = res.result; // 保存最新识别结果
+        this.setData({ voiceTip: res.result });
+      }
+    };
+
+    // 录音结束，返回最终识别结果
+    voiceRecognitionManager.onStop = (res) => {
+      console.log("[voice] 识别完成 res:", res);
+      // 如果 onStop 没有返回结果，使用 onRecognize 累积的结果
+      const finalResult = res.result || this._recognizedText || "";
+      console.log("[voice] 最终文本:", finalResult);
       this.stopRecordTimer();
+      this._recognizedText = ""; // 清空累积文本
       this.setData({
         recording: false,
+        recognizing: false,
         recordSeconds: 0,
         recordTimeDisplay: "00:00",
       });
-      const shouldHandle =
-        this._shouldHandleVoiceFile && !!res && !!res.tempFilePath;
-      this._shouldHandleVoiceFile = false;
 
-      if (shouldHandle) {
-        this.handleVoiceFile(res.tempFilePath);
+      const text = finalResult.trim();
+      if (text) {
+        this.setData({
+          inputText: text,
+          voiceTip: "转写完成，可编辑后发送",
+        });
+        wx.showToast({ title: "转写完成", icon: "none" });
+        this.triggerHaptic("light");
+      } else {
+        this.setData({ voiceTip: "" });
+        wx.showToast({ title: "未识别到语音内容", icon: "none" });
       }
-    });
+    };
 
-    recorderManager.onError((err) => {
+    // 识别错误
+    voiceRecognitionManager.onError = (err) => {
+      console.error("[voice] 识别出错:", err);
       this.stopRecordTimer();
-      console.error("录音出错", err);
-      this._shouldHandleVoiceFile = false;
       this.setData({
         recording: false,
+        recognizing: false,
         recordSeconds: 0,
         recordTimeDisplay: "00:00",
+        voiceTip: "",
       });
       wx.showToast({
-        title: "录音失败，请重试",
+        title: err.msg || "语音识别失败",
         icon: "none",
       });
-    });
+    };
+
+    // 开始识别
+    voiceRecognitionManager.onStart = () => {
+      console.log("[voice] 开始识别");
+      this.setData({ voiceTip: "正在聆听..." });
+    };
   },
 
   onInput(e) {
@@ -465,6 +499,14 @@ Page({
   },
 
   async onVoiceTap() {
+    // 如果正在录音，点击即停止
+    if (this.data.recording) {
+      this.triggerHaptic("light");
+      this.stopRecord();
+      return;
+    }
+
+    // 如果正在转写（非录音状态），提示等待
     if (this.data.recognizing) {
       wx.showToast({
         title: "正在转写，请稍等",
@@ -479,12 +521,6 @@ Page({
       this.setData({ micTapped: false });
     }, 180);
     this.triggerHaptic("light");
-
-    // 如果正在录音，点击即停止并识别
-    if (this.data.recording) {
-      this.stopRecord();
-      return;
-    }
 
     try {
       await this.ensureRecordPermission();
@@ -533,40 +569,45 @@ Page({
   },
 
   startRecord() {
-    this._shouldHandleVoiceFile = true;
     this.setData({
       recording: true,
+      recognizing: false, // 录音时不是 recognizing 状态
       recordSeconds: 0,
       recordTimeDisplay: "00:00",
-      voiceTip: "",
+      voiceTip: "正在聆听...",
     });
     this.startRecordTimer();
-    this.triggerHaptic("light");
 
-    recorderManager.start({
-      duration: 60000,
-      format: "mp3",
-      numberOfChannels: 1,
-      sampleRate: 16000,
+    // 使用微信同声传译插件开始语音识别
+    voiceRecognitionManager.start({
+      duration: 60000, // 最长60秒
+      lang: "zh_CN", // 中文
     });
   },
 
   stopRecord() {
-    this._shouldHandleVoiceFile = true;
     this.stopRecordTimer();
     this.triggerHaptic("medium");
-    recorderManager.stop();
+    // 停止录音，进入识别状态
+    this.setData({
+      recording: false,
+      recognizing: true,
+      voiceTip: "",
+    });
+    // 停止语音识别
+    voiceRecognitionManager.stop();
   },
 
   cancelRecord() {
-    this._shouldHandleVoiceFile = false;
     this.stopRecordTimer();
     this.setData({
       recording: false,
+      recognizing: false,
       recordSeconds: 0,
       recordTimeDisplay: "00:00",
+      voiceTip: "",
     });
-    recorderManager.stop();
+    voiceRecognitionManager.stop();
   },
 
   // 通过 HTTP 调用自建/代理的语音识别服务（不走云函数）
@@ -621,77 +662,9 @@ Page({
   },
 
   async handleVoiceFile(filePath) {
-    if (!filePath) {
-      wx.showToast({
-        title: "未获取到音频文件",
-        icon: "none",
-      });
-      return;
-    }
-
-    this.setData({ recognizing: true, voiceTip: "" });
-
-    try {
-      const cloudPath = `voice/${Date.now()}-${Math.floor(
-        Math.random() * 100000
-      )}.mp3`;
-
-      // 1) 上传音频到云存储
-      const uploadRes = await wx.cloud.uploadFile({
-        cloudPath,
-        filePath,
-      });
-
-      const fileId = uploadRes.fileID;
-      if (!fileId) {
-        throw new Error("上传录音失败");
-      }
-
-      // 2) 获取临时访问链接（用于云函数识别）
-      const tempUrlRes = await wx.cloud.getTempFileURL({
-        fileList: [fileId],
-      });
-
-      const fileUrl = tempUrlRes?.fileList?.[0]?.tempFileURL;
-      if (!fileUrl) {
-        throw new Error("获取音频链接失败");
-      }
-
-      // 3) 直接请求自建/代理的语音识别服务
-      const recognizedText = String(
-        (await this.transcribeSpeechByHttp(fileUrl)) || ""
-      ).trim();
-      if (!recognizedText) {
-        throw new Error("未识别到语音内容");
-      }
-
-      wx.showToast({
-        title: "转写完成，可编辑后发送",
-        icon: "none",
-      });
-
-      // 填充文本，交给用户确认后发送
-      this.setData({
-        inputText: recognizedText,
-        recognizing: false,
-        voiceTip: "转写完成，可编辑后发送",
-      });
-      this.triggerHaptic("light");
-    } catch (err) {
-      console.error("语音识别失败", err);
-      this.setData({ recognizing: false, voiceTip: "" });
-      wx.showModal({
-        title: "识别失败",
-        content: err.message || "识别失败，请重试",
-        confirmText: "重试",
-        cancelText: "取消",
-        success: (modalRes) => {
-          if (modalRes.confirm) {
-            this.onVoiceTap();
-          }
-        },
-      });
-    }
+    // 此方法暂时不使用（因云函数超时限制）
+    // 改用微信内置语音识别，见 startVoiceRecognition
+    console.log("[voice] handleVoiceFile 已弃用，使用内置识别");
   },
 
   /* ================ 云端 chatHistory 写入（用于打卡） ================ */

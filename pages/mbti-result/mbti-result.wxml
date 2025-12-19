@@ -195,6 +195,11 @@
     </view>
   </view>
 
+  <!-- 合规免责声明 -->
+  <view class="compliance-disclaimer">
+    本内容由AI生成，仅供自我探索参考，不构成心理诊断或医疗建议
+  </view>
+
   <!-- 操作按钮区域 -->
   <view class="action-section slide-up delay-4">
     <view class="action-buttons">

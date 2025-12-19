@@ -1,7 +1,48 @@
 {
   "description": "可乐心岛：用于情绪记录、自我反思与轻工具体验的小程序",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "utils/package"
+      },
+      {
+        "type": "folder",
+        "value": "md"
+      },
+      {
+        "type": "folder",
+        "value": "docs"
+      },
+      {
+        "type": "folder",
+        "value": "database"
+      },
+      {
+        "type": "folder",
+        "value": "scripts"
+      },
+      {
+        "type": "folder",
+        "value": "server"
+      },
+      {
+        "type": "folder",
+        "value": "vercel-proxy"
+      },
+      {
+        "type": "file",
+        "value": "area-data-1.5.2.tgz"
+      },
+      {
+        "type": "file",
+        "value": "area-data.tgz"
+      },
+      {
+        "type": "file",
+        "value": "fix-utf8.js"
+      }
+    ],
     "include": []
   },
   "setting": {
