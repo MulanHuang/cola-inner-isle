@@ -1,188 +1,57 @@
 <!-- pages/behavior-strength/behavior-strength.wxml -->
-
 <view class="container">
 
-  <!-- 介绍页 -->
-  <view wx:if="{{showIntro}}" class="intro">
-    <view class="intro-card">
-      <view class="history-entry history-entry-in-card" bindtap="handleHistoryNav" aria-label="历史记录">
-        <view class="history-entry-card">
-          <view class="history-icon history-icon-clipboard">
-            <view class="clipboard-tab"></view>
-            <view class="clipboard-body"></view>
-            <view class="clipboard-line clipboard-line-1"></view>
-            <view class="clipboard-line clipboard-line-2"></view>
-          </view>
-          <text class="history-entry-text">历史记录</text>
-          <view wx:if="{{historyList.length}}" class="history-entry-dot"></view>
-        </view>
-      </view>
-      <view class="intro-emblem">
-        <view class="intro-emblem-ring"></view>
-        <view class="intro-emblem-dot"></view>
-      </view>
-      <view class="intro-title">优势画像是什么？</view>
-      <view class="intro-subtitle">
-        基于“盖洛普优势”理念，聚焦优势而非短板。
-      </view>
-
-      <view class="intro-meta">
-        <view class="intro-chip">40 题</view>
-        <view class="intro-chip">5 维度</view>
-        <view class="intro-chip">约 3 分钟</view>
-      </view>
-
-      <view class="intro-desc">
-        用五维度雷达图快速认识你的行为优势分布。雷达图每个角代表一个维度，越靠外表示该维度更突出。
-      </view>
-      <view class="intro-desc">
-        盖洛普强调“优势优先”：识别并发挥天然优势，更容易带来持续表现。
-      </view>
-
-      <view class="intro-divider">
-        <view class="intro-divider-line"></view>
-        <view class="intro-divider-text">开启画像</view>
-        <view class="intro-divider-line"></view>
-      </view>
-
-      <view class="intro-radar">
-        <view class="intro-radar-shape"></view>
-        <view class="intro-radar-label top">推进执行</view>
-        <view class="intro-radar-label right">影响表达</view>
-        <view class="intro-radar-label bottom-right">关系协作</view>
-        <view class="intro-radar-label bottom-left">创新探索</view>
-        <view class="intro-radar-label left">情绪韧性</view>
-      </view>
-
-      <view class="intro-note">
-        这不是职业诊断，更像一面镜子，帮你找到优势分布。
-      </view>
-
-      <view class="intro-steps">
-        <view class="intro-step">
-          <text class="intro-step-index">1</text>
-          <text class="intro-step-text">直觉作答</text>
-        </view>
-        <view class="intro-step">
-          <text class="intro-step-index">2</text>
-          <text class="intro-step-text">完成 40 题</text>
-        </view>
-        <view class="intro-step">
-          <text class="intro-step-index">3</text>
-          <text class="intro-step-text">查看雷达画像</text>
-        </view>
-      </view>
-    </view>
-
-    <button class="btn primary" bindtap="handleStart">开始测试</button>
-  </view>
-
   <!-- 测试中 -->
-  <view wx:elif="{{!finished}}" class="quiz">
+  <view wx:if="{{!finished}}">
     <view class="progress">
-      <view class="progress-text">
-        <text class="progress-current">{{currentIndex + 1}}</text>
-        <text class="progress-sep">/</text>
-        <text class="progress-total">{{questions.length}}</text>
-      </view>
-      <view class="progress-bar">
-        <view class="progress-bar-inner" style="width: {{progressPercent}}%"></view>
+      {{currentIndex + 1}} / {{questions.length}}
+    </view>
+
+    <view class="question">
+      {{questions[currentIndex].text}}
+    </view>
+
+    <view class="options">
+      <view
+        class="option"
+        wx:for="{{[1,2,3,4,5]}}"
+        wx:key="*this"
+        data-value="{{item}}"
+        bindtap="handleSelect"
+      >
+        {{item}}
       </view>
     </view>
 
-    <view class="card">
-      <view class="dimension">{{questions[currentIndex].dimensionName}}</view>
-      <view class="question">
-        {{questions[currentIndex].text}}
-      </view>
-
-      <view class="options-bar">
-        <view
-          class="option-pill {{currentAnswer === item.value ? 'option-pill-active' : ''}}"
-          wx:for="{{scaleLabels}}"
-          wx:key="value"
-          data-value="{{item.value}}"
-          bindtap="handleSelect"
-        >
-          <text class="option-number">{{item.value}}</text>
-          <text class="option-label">{{item.shortLabel}}</text>
-        </view>
-      </view>
-
+    <view class="scale-hint">
+      <text>1 非常不像我</text>
+      <text>5 非常像我</text>
     </view>
-
-    <view class="actions">
-      <button class="btn ghost" bindtap="handlePrev" disabled="{{currentIndex === 0}}">
-        上一题
-      </button>
-      <button class="btn ghost" bindtap="handleRestart">重置</button>
-    </view>
-
-    <view class="scale-hint">直觉作答即可</view>
   </view>
 
   <!-- 结果页 -->
-  <view wx:else class="result">
-    <view class="history-entry" bindtap="handleHistoryNav" aria-label="历史记录">
-      <view class="history-entry-card">
-        <view class="history-icon history-icon-clipboard">
-          <view class="clipboard-tab"></view>
-          <view class="clipboard-body"></view>
-          <view class="clipboard-line clipboard-line-1"></view>
-          <view class="clipboard-line clipboard-line-2"></view>
-        </view>
-        <text class="history-entry-text">历史记录</text>
-        <view wx:if="{{historyList.length}}" class="history-entry-dot"></view>
-      </view>
-    </view>
+  <view wx:else>
     <view class="title">你的优势画像</view>
 
-    <canvas canvas-id="radarCanvas" class="radar" width="320" height="320"></canvas>
+    <canvas canvas-id="radarCanvas" class="radar"></canvas>
 
     <view class="result-list">
-      <view wx:for="{{resultList}}" wx:key="key" class="result-item">
-        <view class="result-header">
-          <text class="result-name">{{item.name}}</text>
-          <view class="result-meta">
-            <text class="result-score">{{item.score}}</text>
-            <text class="result-level">{{item.level}}</text>
-          </view>
-        </view>
-        <view class="energy-bar energy-{{item.levelKey}}">
-          <view class="energy-fill" style="width: {{item.percent}}%"></view>
-          <text class="energy-percent">{{item.percent}}%</text>
-        </view>
-        <text class="result-desc">{{item.description}}</text>
-        <view wx:if="{{item.detail}}" class="detail-list">
-          <view class="detail-item">
-            <text class="detail-label">典型表现</text>
-            <text class="detail-text">{{item.detail.typical}}</text>
-          </view>
-          <view class="detail-item">
-            <text class="detail-label">优势价值</text>
-            <text class="detail-text">{{item.detail.value}}</text>
-          </view>
-          <view class="detail-item">
-            <text class="detail-label">可能盲区</text>
-            <text class="detail-text">{{item.detail.blindspot}}</text>
-          </view>
-          <view class="detail-item">
-            <text class="detail-label">微行动建议</text>
-            <text class="detail-text">{{item.detail.action}}</text>
-          </view>
-        </view>
+      <view
+        wx:for="{{Object.keys(result.result)}}"
+        wx:key="*this"
+        class="result-item"
+      >
+        <text>{{item}}</text>
+        <text>{{result.result[item].score}}</text>
+        <text>{{result.result[item].level}}</text>
       </view>
     </view>
 
     <view class="top-title">TOP 3 优势</view>
     <view class="top-list">
-      <view wx:for="{{topStrengths}}" wx:key="*this" class="top-item">
+      <view wx:for="{{result.topStrengths}}" wx:key="*this" class="top-item">
         {{item}}
       </view>
-    </view>
-
-    <view class="actions">
-      <button class="btn" bindtap="handleRestart">再测一次</button>
     </view>
   </view>
 
