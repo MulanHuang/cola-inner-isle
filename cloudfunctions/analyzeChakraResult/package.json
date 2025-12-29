@@ -1,9 +1,10 @@
 {
   "name": "analyzeChakraResult",
   "version": "1.0.0",
-  "description": "脉轮测试结果分析云函数",
+  "description": "脉轮测试结果分析云函数 - 通过腾讯云服务器调用 DeepSeek",
   "main": "index.js",
   "dependencies": {
+    "node-fetch": "^2.6.7",
     "wx-server-sdk": "~2.6.3"
   }
 }

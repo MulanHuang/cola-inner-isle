@@ -1,9 +1,17 @@
 // cloudfunctions/aiChat/openai.js
-// 统一调用阿里云代理（HTTPS）
-// 地址：https://api.cola.center/api/openai
+// ============================================================
+// AI 聊天云函数 AI 调用模块
+// 通过腾讯云服务器转发到 DeepSeek API
+// ============================================================
 
-const https = require("https");
+const fetch = require("node-fetch");
 
+// 腾讯云服务器地址（请替换为实际 IP）
+const SERVER_URL = "http://114.132.210.92:3001/v1/chat/completions";
+
+/**
+ * 调用 AI 接口（通过腾讯云服务器转发到 DeepSeek）
+ */
 async function callOpenAI({
   systemPrompt,
   userPrompt,
@@ -12,9 +20,8 @@ async function callOpenAI({
 }) {
   console.log("=== callOpenAI 开始执行 ===");
 
-  // ======== 构建 messages ========
+  // 构建 messages
   let finalMessages = [];
-
   if (Array.isArray(messages) && messages.length > 0) {
     finalMessages = messages;
   } else {
@@ -24,113 +31,37 @@ async function callOpenAI({
     ];
   }
 
-  // ======== OpenAI 接口必需参数 ========
-  const config = {
-    model: options.model || "gpt-5.2", // 默认使用 GPT-5.2
-    temperature: options.temperature ?? 0.9,
-    reasoning_effort: options.reasoning_effort || "low", // 低推理，提高响应速度
-    // 增加超时时间到 55 秒（微信云函数最大 60 秒）
-    timeout: options.timeout || 55000,
-  };
-
-  console.log("📝 最终模型配置:", JSON.stringify(config));
   console.log("📝 消息数量:", finalMessages.length);
 
-  // 注意：不传 max_completion_tokens，让代理服务器使用默认值
-  const postData = JSON.stringify({
-    model: config.model,
-    temperature: config.temperature,
-    reasoning_effort: config.reasoning_effort,
-    messages: finalMessages,
-  });
-
-  const requestOptions = {
-    hostname: "api.cola.center",
-    port: 443,
-    path: "/api/openai",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": Buffer.byteLength(postData),
-    },
-    timeout: config.timeout,
-  };
-
-  console.log("🌐 请求地址：https://api.cola.center/api/openai");
-  console.log("📦 请求大小:", Buffer.byteLength(postData), "bytes");
-
-  return new Promise((resolve, reject) => {
-    const req = https.request(requestOptions, (res) => {
-      let raw = "";
-
-      console.log("✅ HTTP 状态码:", res.statusCode);
-      console.log("✅ Content-Type:", res.headers["content-type"]);
-
-      res.on("data", (chunk) => {
-        raw += chunk;
-      });
-
-      res.on("end", () => {
-        console.log("📥 响应长度:", raw.length, "bytes");
-        console.log("📥 响应前 500 字符:", raw.substring(0, 500));
-
-        // 检查是否是空响应
-        if (!raw || raw.trim() === "") {
-          console.error("❌ 服务器返回空响应");
-          return reject(new Error("AI 服务返回空响应"));
-        }
-
-        try {
-          const json = JSON.parse(raw);
-
-          // ============ 格式 A: 代理封装格式 =============
-          if (json.success === true && json.content) {
-            console.log("✅ 解析成功 (格式 A)");
-            return resolve(json.content);
-          }
-
-          // ============ 格式 B: OpenAI 原始格式 =============
-          if (json.choices?.[0]?.message?.content) {
-            console.log("✅ 解析成功 (格式 B)");
-            return resolve(json.choices[0].message.content);
-          }
-
-          // ============ 错误格式 =============
-          console.error("❌ 代理返回格式无法解析");
-          console.error(
-            "❌ JSON 结构:",
-            JSON.stringify(json).substring(0, 500)
-          );
-          return reject(
-            new Error(json.error || json.message || "AI 返回格式异常")
-          );
-        } catch (err) {
-          console.error("❌ JSON 解析失败:", err.message);
-          console.error("❌ 原始响应:", raw.substring(0, 500));
-          // 检查是否是 HTML 错误页面
-          if (raw.includes("<html") || raw.includes("<!DOCTYPE")) {
-            reject(new Error("AI 代理服务返回 HTML 错误页面，请检查服务状态"));
-          } else {
-            reject(new Error("AI 服务解析失败: " + raw.substring(0, 100)));
-          }
-        }
-      });
+  try {
+    const response = await fetch(SERVER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: finalMessages }),
+      timeout: 55000,
     });
 
-    req.on("error", (err) => {
-      console.error("❌ 网络请求失败:", err.message);
-      reject(new Error("AI 网络请求失败: " + err.message));
-    });
+    if (!response.ok) {
+      throw new Error(`服务器错误: ${response.status}`);
+    }
 
-    req.on("timeout", () => {
-      console.error("❌ 请求超时 (" + config.timeout + "ms)");
-      req.destroy();
-      reject(new Error("AI 请求超时"));
-    });
+    const json = await response.json();
 
-    req.write(postData);
-    req.end();
-  });
+    if (json.error) {
+      throw new Error(json.error.message || json.error || "AI 服务错误");
+    }
+
+    const content = json?.choices?.[0]?.message?.content;
+    if (content && content.trim() !== "") {
+      console.log("✅ 解析成功，内容长度:", content.length);
+      return content;
+    }
+
+    throw new Error("AI 返回了空内容");
+  } catch (err) {
+    console.error("❌ 请求失败:", err.message);
+    throw err;
+  }
 }
 
 module.exports = {

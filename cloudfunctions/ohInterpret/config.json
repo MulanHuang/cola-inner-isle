@@ -1,5 +1,9 @@
 {
   "permissions": {
     "openapi": []
-  }
+  },
+  "timeout": 60,
+  "vpc": false,
+  "publicNet": true,
+  "eip": false
 }

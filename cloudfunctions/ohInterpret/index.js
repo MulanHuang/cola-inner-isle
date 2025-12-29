@@ -2,14 +2,13 @@
 // ============================================================
 // OH卡解读云函数
 // 风格：心理学洞察 + 行动力教练
+// 通过腾讯云服务器转发到 DeepSeek API
 // ============================================================
 const cloud = require("wx-server-sdk");
-// ✅ 统一通过公用 OpenAI 客户端，经由阿里云代理 https://api.cola.center/api/openai 调用
-const {
-  callOpenAI,
-  safeAIResponse,
-  getFallbackMessage,
-} = require("./index.js");
+// ✅ 统一通过 openai.js 调用腾讯云服务器转发到 DeepSeek
+const { callOpenAI } = require("./openai.js");
+// 内容安全检查模块
+const { safeAIResponse, getFallbackMessage } = require("./msgSecCheck.js");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,
@@ -138,17 +137,13 @@ exports.main = async (event, context) => {
     // 生成提示词
     const userPrompt = generateUserPrompt(mode, userInput, imageCard, wordCard);
 
-    console.log("📡 开始调用 阿里云 OpenAI 代理...");
+    console.log("📡 开始调用腾讯云服务器 DeepSeek API...");
 
-    // 调用阿里云代理（使用上面实现的 callOpenAI）
+    // 调用腾讯云服务器转发到 DeepSeek
     const rawResponse = await callOpenAI({
       systemPrompt: SYSTEM_PROMPT,
       userPrompt,
       options: {
-        model: "gpt-5.2", // 升级到 GPT-5.2
-        temperature: 1,
-        reasoning_effort: "low", // 低推理，提高响应速度
-        maxTokens: 2000,
         timeout: 45000,
       },
     });

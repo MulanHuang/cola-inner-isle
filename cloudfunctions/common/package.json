@@ -1,7 +1,10 @@
 {
   "name": "common",
   "version": "1.0.0",
-  "description": "Shared OpenAI proxy client for all cloud functions",
+  "description": "Shared AI proxy client for all cloud functions (DeepSeek via Tencent Server)",
   "main": "index.js",
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "wx-server-sdk": "~2.6.3"
+  }
 }

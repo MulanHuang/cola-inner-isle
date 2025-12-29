@@ -1,9 +1,11 @@
 {
   "name": "analyzeChakraOverall",
   "version": "1.0.0",
+  "description": "脉轮整体分析云函数 - 通过腾讯云服务器调用 DeepSeek",
   "main": "index.js",
   "license": "ISC",
   "dependencies": {
-    "wx-server-sdk": "latest"
+    "node-fetch": "^2.6.7",
+    "wx-server-sdk": "~2.6.3"
   }
 }

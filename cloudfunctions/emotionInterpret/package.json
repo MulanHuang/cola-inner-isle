@@ -1,7 +1,7 @@
 {
   "name": "emotionInterpret",
   "version": "1.0.0",
-  "description": "情绪解读云函数 - 通过阿里云代理调用 OpenAI",
+  "description": "情绪解读云函数 - 通过腾讯云服务器调用 DeepSeek",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "node-fetch": "^2.6.7",
     "wx-server-sdk": "~2.6.3"
   }
 }

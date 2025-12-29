@@ -1,5 +1,5 @@
 // pages/chat/chat.js
-// 聊天页，心语 AI 直连阿里云代理 https://api.cola.center/api/openai
+// 聊天页，心语 AI 通过云函数 aiProxy 调用腾讯云服务器转发到 DeepSeek API
 // 🔥 已升级为流式输出，用户可在 0.2 秒内看到字符开始出现
 const recorderManager = wx.getRecorderManager();
 const db = wx.cloud.database();

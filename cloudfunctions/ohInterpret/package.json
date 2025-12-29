@@ -1,9 +1,10 @@
 {
   "name": "ohInterpret",
   "version": "1.0.0",
-  "description": "OH卡解读云函数 - 心理学洞察 + 行动力教练风格",
+  "description": "OH卡解读云函数 - 通过腾讯云服务器调用 DeepSeek",
   "main": "index.js",
   "dependencies": {
+    "node-fetch": "^2.6.7",
     "wx-server-sdk": "~2.6.3"
   }
 }
